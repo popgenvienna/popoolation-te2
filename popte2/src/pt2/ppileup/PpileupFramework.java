@@ -3,8 +3,9 @@ package pt2.ppileup;
 import corete.data.SamRecord;
 import corete.data.hier.TEHierarchy;
 
+import corete.io.AutoDetectSamBamReader;
 import corete.io.BamReader;
-
+import corete.io.ISamBamReader;
 
 
 import java.util.ArrayList;
@@ -20,13 +21,17 @@ public class PpileupFramework {
 	private final ArrayList<String> inputFiles;
 	private final String outputFile;
 	private final int minmapqual;
+	private final int srmd;
+	private final double idof;
 	private final String hierFile;
 
-	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile,int minmapqual, Logger logger)
+	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile,int minmapqual,int srmd,double idof, Logger logger)
 	{   this.inputFiles=inputFiles;
 		this.outputFile=outputFile;
 		this.hierFile=hierFile;
 		this.minmapqual=minmapqual;
+		this.srmd=srmd;
+		this.idof=idof;
 		this.logger=logger;
 
 	}
@@ -34,11 +39,11 @@ public class PpileupFramework {
 	public void run()
 	{
 		TEHierarchy hier= new corete.io.HierarchyReader(this.hierFile,this.logger).getHierarchy();
-		BamReader br=new BamReader(inputFiles.get(0),this.logger);
+		ISamBamReader reader=new AutoDetectSamBamReader(this.inputFiles.get(0),this.logger);
 
-		while(br.hasNext())
+		while(reader.hasNext())
 		{
-			SamRecord sr=br.next();
+			SamRecord sr=reader.next();
 			sr.getEnd();
 		}
 	}

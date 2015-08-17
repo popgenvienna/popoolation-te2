@@ -79,6 +79,12 @@ public class TEHierarchy{
 		return s.size();
 	}
 
+	public boolean containsRefid(String id)
+	{
+		return h.containsKey(id);
+	}
+
+
 
 
 }

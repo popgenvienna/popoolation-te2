@@ -1,12 +1,13 @@
 package corete.io;
 
 import corete.data.SamRecord;
-import htsjdk.samtools.SAMRecord;
+import corete.io.Parser.CigarParser;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.SAMRecordIterator;
 
 import java.io.File;
+import java.security.InvalidParameterException;
 import java.util.logging.Logger;
 
 /**
@@ -21,6 +22,8 @@ public class BamReader implements ISamBamReader {
 	private final Logger logger;
 	private final SAMRecordIterator sri;
 	private SamRecord next=null;
+
+
 
 	public BamReader(String file, Logger logger)
 	{
@@ -56,6 +59,7 @@ public class BamReader implements ISamBamReader {
 	 */
 	public SamRecord next()
 	{
+		if(!this.hasNext()) throw new InvalidParameterException("no next record!");
 		SamRecord toret=next;
 		next=this.read_next();
 		return toret;
@@ -68,19 +72,24 @@ public class BamReader implements ISamBamReader {
 	 */
 	private SamRecord read_next()
 	{
-		while(sri.hasNext())
+		if(sri.hasNext())
 		{
 			SamRecord sr=translate(sri.next());
 			return sr;
 		}
-		return null;
+		else
+		{
+			sri.close();
+			return null;
+		}
 	}
 
 	private corete.data.SamRecord translate(htsjdk.samtools.SAMRecord sr)
 	{
 
+		CigarParser cp=new CigarParser(sr.getCigarString(),sr.getAlignmentStart());
 
-		corete.data.SamRecord toret=new SamRecord(sr.getReadName(),sr.getFlags(),sr.getReferenceName(),sr.getAlignmentStart(),sr.getMappingQuality(),
+		corete.data.SamRecord toret=new SamRecord(sr.getReadName(),sr.getFlags(),sr.getReferenceName(),cp.getStart(),cp.getEnd(),cp.getStart_withs(),cp.getEnd_withs() ,sr.getMappingQuality(),
 				sr.getCigarString(),sr.getMateReferenceName(),sr.getMateAlignmentStart(),sr.getInferredInsertSize(),sr.getReadString(),sr.getBaseQualityString(),"");
 
 		return toret;
