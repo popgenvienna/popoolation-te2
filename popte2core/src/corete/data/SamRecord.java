@@ -1,8 +1,8 @@
 package corete.data;
 
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import corete.io.Parser.SamFlagParser;
+
+import java.security.InvalidParameterException;
 
 /**
  * Created by robertkofler on 6/30/15.
@@ -24,17 +24,22 @@ public class SamRecord {
 	private final String qual;
 	private final String comment;
 	//\*|([0-9]+[MIDNSHPX=])+ CIGAR string
-	private static final Pattern cigarparser = Pattern.compile("(\\d+)([SMHDI])");
 
 
 
-	public SamRecord(String readname, int flag, String refChr, int pos, int mapq, String cigar, String refChrMate,
+
+	public SamRecord(String readname, int flag, String refChr, int start, int end, int start_withs, int end_withs, int mapq, String cigar, String refChrMate,
 					   int posMate, int len, String seq, String qual, String comment)
 	{
+		if(start_withs > start) throw new InvalidParameterException("soft clipped start position has to be smaller or equal to start position");
+		if(end_withs < end) throw new InvalidParameterException("soft clipped end position has to be larger or equal to end position");
+		if(end<start) throw new InvalidParameterException("start position has to be larger than end position");
+		if(end_withs<start_withs) throw new InvalidParameterException("Soft clipped start position has to be larger than soft clipped end position");
 		this.readname=readname;
 		this.flag=flag;
 		this.refChr=refChr;
-		this.start=pos;
+		this.start=start;
+		this.end=end;
 		this.mapq=mapq;
 		this.cigar=cigar;
 		this.refChrMate=refChrMate;
@@ -43,32 +48,8 @@ public class SamRecord {
 		this.seq=seq;
 		this.qual=qual;
 		this.comment=comment;
-
-		// Parsing the cigar  and update the positions
-		int preStart=0;
-		int postEnd=0;
-		int alignmentLeng=0;
-
-		ArrayList<CigarEntry> parseCigar = this.parseCigar(cigar);
-		if(parseCigar.get(0).key.equals("S"))
-		{
-			preStart=parseCigar.get(0).count;
-		}
-		if(parseCigar.get(parseCigar.size()-1).key.equals("S"))
-		{
-			postEnd=parseCigar.get(parseCigar.size()-1).count;
-		}
-		for(CigarEntry ci: parseCigar)
-		{
-			if(ci.key.equals("M") || ci.key.equals("D") || ci.key.equals("N"))
-			{
-				 alignmentLeng+=ci.count;
-			}
-		}
-		this.end=this.start+alignmentLeng-1;
-		this.end_withs=this.end+postEnd;
-		this.start_withs=this.start-preStart;
-
+		this.start_withs=start_withs;
+		this.end_withs=end_withs;
 	}
 
 	public String getReadname()
@@ -117,6 +98,25 @@ public class SamRecord {
 	}
 
 	/**
+	 * Does the read map to the forward strand
+	 * @return
+	 */
+	public boolean isForwardStrand()
+	{
+		return SamFlagParser.isForwardStrand(this.flag);
+	}
+
+	public boolean isUnmapped()
+	{
+		return SamFlagParser.isUnmapped(this.flag);
+	}
+
+	public boolean isUnmappedMate()
+	{
+		return SamFlagParser.isUnmappedMate(this.flag);
+	}
+
+	/**
 	 * End position of alignment (excluding soft/hard clipping);
 	 * Last position that matches (start+len-1)
 	 * @return
@@ -143,38 +143,6 @@ public class SamRecord {
 	{
 		return this.end_withs;
 	}
-
-
-
-
-	private  class CigarEntry
-	{
-		public CigarEntry(int count, String key)
-		{
-			this.count=count;
-			this.key=key;
-		}
-		public int count;
-		public String key;
-	}
-
-
-	private  ArrayList<CigarEntry> parseCigar(String cigar)
-	{
-		//60S41M
-		Matcher m= cigarparser.matcher(cigar);
-		ArrayList<CigarEntry> ci=new ArrayList<CigarEntry>();
-		while(m.find())
-		{
-			int count = Integer.getInteger(m.group(1));
-			String key = m.group(2);
-			ci.add(new CigarEntry(count,key));
-		}
-		return ci;
-
-	}
-
-
 
 
 }
