@@ -1,6 +1,8 @@
 package corete.io;
 
 import corete.data.SamRecord;
+import corete.io.SamValidator.ISamValidator;
+import corete.io.SamValidator.SamValidatorAllValid;
 
 import java.security.InvalidParameterException;
 import java.util.logging.Logger;
@@ -10,18 +12,23 @@ import java.util.logging.Logger;
  */
 public class AutoDetectSamBamReader implements ISamBamReader {
 	private ISamBamReader sbr;
-	public AutoDetectSamBamReader(String inputFile,Logger logger)
+
+
+
+	public AutoDetectSamBamReader(String inputFile,Logger logger){this(inputFile,logger,new SamValidatorAllValid());}
+
+	public AutoDetectSamBamReader(String inputFile,Logger logger,ISamValidator validator)
 	{
 		logger.info("Auto detecting sam or bam file by extension");
 		if(inputFile.endsWith(".bam"))
 		{
 			logger.fine("Detected .bam file " + inputFile);
-			sbr=new BamReader(inputFile,logger);
+			sbr=new BamReader(inputFile,logger,validator);
 		}
 		else if(inputFile.endsWith(".sam"))
 		{
 			logger.fine("Detected .sam file");
-			sbr=new SamReader(inputFile,logger);
+			sbr=new SamReader(inputFile,logger,validator);
 		}
 		else
 		{
@@ -37,6 +44,8 @@ public class AutoDetectSamBamReader implements ISamBamReader {
 
 
 	public SamRecord next() {
-		return sbr.next();
+		SamRecord sr =sbr.next();
+
+		return sr;
 	}
 }

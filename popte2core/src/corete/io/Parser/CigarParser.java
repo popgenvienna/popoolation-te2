@@ -83,7 +83,7 @@ public class CigarParser {
 		ArrayList<CigarEntry> ci=new ArrayList<CigarEntry>();
 		while(m.find())
 		{
-			int count = Integer.getInteger(m.group(1));
+			int count = Integer.parseInt(m.group(1));
 			String key = m.group(2);
 			ci.add(new CigarEntry(count,key));
 		}
