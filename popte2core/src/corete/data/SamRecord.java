@@ -144,5 +144,11 @@ public class SamRecord {
 		return this.end_withs;
 	}
 
+	public String shortID()
+	{
+		return "Chr:"+this.refChr+";Pos:"+this.getStart()+";Readname:"+this.getReadname();
+	}
+
+
 
 }

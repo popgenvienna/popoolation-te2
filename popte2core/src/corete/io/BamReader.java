@@ -1,7 +1,10 @@
 package corete.io;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import corete.data.SamRecord;
 import corete.io.Parser.CigarParser;
+import corete.io.SamValidator.ISamValidator;
+import corete.io.SamValidator.SamValidatorAllValid;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 import htsjdk.samtools.SAMRecordIterator;
@@ -22,10 +25,11 @@ public class BamReader implements ISamBamReader {
 	private final Logger logger;
 	private final SAMRecordIterator sri;
 	private SamRecord next=null;
+	private final ISamValidator validator;
 
 
 
-	public BamReader(String file, Logger logger)
+	public BamReader(String file, Logger logger, ISamValidator validator)
 	{
 		this.bamfile=file;
 		this.logger=logger;
@@ -34,7 +38,16 @@ public class BamReader implements ISamBamReader {
 		srf.validationStringency(ValidationStringency.LENIENT);
 		htsjdk.samtools.SamReader samreader = srf.open(new File(this.bamfile));
 		sri= samreader.iterator();
+		this.validator=validator;
+
+		// must be the last thing
 		next=this.read_next();        // read the first entry
+	}
+
+
+	public BamReader(String file, Logger logger)
+	{
+		      this(file,logger,new SamValidatorAllValid());
 	}
 
 	/**
@@ -61,7 +74,9 @@ public class BamReader implements ISamBamReader {
 	{
 		if(!this.hasNext()) throw new InvalidParameterException("no next record!");
 		SamRecord toret=next;
+		if(!validator.isValid(toret)) throw new InvalidParameterException(validator.errorMessage(toret));
 		next=this.read_next();
+
 		return toret;
 	}
 

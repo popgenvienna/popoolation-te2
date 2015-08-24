@@ -20,7 +20,8 @@ public class PpileupParser {
 			int mapQual=15;
 			String hierFile="";
 			int srmd=10000;
-			double idof=0.01;
+			float idof=0.01F;
+			String shortcuts="";
 
 			while(args.size()>0)
 			{
@@ -40,19 +41,23 @@ public class PpileupParser {
 				}
 				else if(cu.equals("--map-qual"))
 				{
-					     mapQual = Integer.getInteger(args.remove(0));
+					     mapQual = Integer.parseInt(args.remove(0));
 				}
 				else if(cu.equals("--detailed-log"))
 				{
 					detailedLog=true;
 				}
+				else if(cu.equals("--te-shortcuts"))
+				{
+					    shortcuts=args.remove(0);
+				}
 				else if(cu.equals("--sr-mindist"))
 				{
 					srmd=Integer.parseInt(args.remove(0));
 				}
-				else if(cu.equals("--id-outfrac"))
+				else if(cu.equals("--id-up-quant"))
 				{
-					  idof=Double.parseDouble(args.remove(0));
+					  idof=  Float.parseFloat(args.remove(0));
 				}
 				else if(cu.equals("--help"))
 				{
@@ -76,7 +81,7 @@ public class PpileupParser {
 
 			// Create a logger
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			PpileupFramework pfp =new PpileupFramework(inputFiles,outputFile,hierFile,mapQual,srmd,idof,logger);
+			PpileupFramework pfp =new PpileupFramework(inputFiles,outputFile,hierFile,mapQual,srmd,idof,shortcuts,logger);
 			pfp.run();
 		}
 
@@ -84,15 +89,17 @@ public class PpileupParser {
 		{
 			StringBuilder sb=new StringBuilder();
 			sb.append("create a physical pileup file from one or multiple bam files\n\n");
-			sb.append("Main parameters\n");
-			sb.append(String.format("%-22s%s","--bam","bam file\n"));
+			sb.append("== Main parameters ==\n");
+			sb.append(String.format("%-22s%s","--bam","bam files; multiple may be specified\n"));
 			sb.append(String.format("%-22s%s","--map-qual","minimum mapping quality; default=15\n"));
 			sb.append(String.format("%-22s%s","--hier","TE hierarchy file\n"));
 			sb.append(String.format("%-22s%s","--output","the output file\n"));
 			sb.append(String.format("%-22s%s","--help","show help\n"));
-			sb.append("\nParameters for fine tuning\n");
+			sb.append("\n");
+			sb.append("== Parameters for fine tuning =="+"\n");
+			sb.append(String.format("%-22s%s","--te-shortcuts","use a predifined list of TE family shortcuts; default=""\n"));
 			sb.append(String.format("%-22s%s","--sr-mindist","structural rearrangement minimum distance; default=10000\n"));
-			sb.append(String.format("%-22s%s","--id-outfrac","inner distance outlier fraction; default=0.01\n"));
+			sb.append(String.format("%-22s%s","--id-up-quant","upper quantile of inner distance will be ignored; [fraction] default=0.01\n"));
 			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
 			sb.append("See the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());

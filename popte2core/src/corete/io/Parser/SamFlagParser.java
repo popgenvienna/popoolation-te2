@@ -5,10 +5,10 @@ package corete.io.Parser;
  */
 public class SamFlagParser {
 
-	private static final int revcomplement=0x10F;
-	private static final int unmapped=0x4F;
-	private static final int mateunmapped=0x8F;
-	private static final int pairedinsequencing=0x1F;
+	private static final int revcomplement=0x10;
+	private static final int unmapped=0x4;
+	private static final int mateunmapped=0x8;
+	private static final int pairedinsequencing=0x1;
 
 	public static boolean isForwardStrand(int samflag)
 	{
