@@ -206,7 +206,7 @@ public class PpileupBuilder {
 		// initate the whole stretch
 		for(int i=start;i<=end; i++)
 		{
-			this.construction.putIfAbsent(i,new new ArrayList<String>());
+			this.construction.putIfAbsent(i, new ArrayList<String>());
 		}
 
 		// add symbols including start and end positions

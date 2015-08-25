@@ -4,16 +4,15 @@ import corete.data.SamRecord;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
 
+import corete.data.ppileup.PpileupMultipopBuilder;
 import corete.data.stat.ISDSummary;
 import corete.data.stat.RefChrSortingGeneratorSampleConsensus;
-import corete.io.AutoDetectSamBamReader;
-import corete.io.BamReader;
-import corete.io.ISamBamReader;
-import corete.io.SamPairReader;
+import corete.io.*;
 import corete.io.misc.PpileupHelpStatReader;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 import java.io.File;
 
@@ -30,8 +29,9 @@ public class PpileupFramework {
 	private final float idof;
 	private final String hierFile;
 	private final String teshortcuts;
+	private final boolean zippedOutput;
 
-	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile,int minmapqual,int srmd, float idof, String shortcuts, Logger logger)
+	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile,int minmapqual,int srmd, float idof, String shortcuts, boolean zippedOutput, Logger logger)
 	{   this.inputFiles=inputFiles;
 		this.outputFile=outputFile;
 		this.hierFile=hierFile;
@@ -40,6 +40,7 @@ public class PpileupFramework {
 		this.idof=idof;
 		this.teshortcuts=shortcuts;
 		this.logger=logger;
+		this.zippedOutput=zippedOutput;
 
 	}
 
@@ -58,7 +59,12 @@ public class PpileupFramework {
 		ISDSummary isdsum=hsr.getInsertSizeDistribution().getISDSummary(this.idof);
 		// Get the Sorting of the reference chromosomes
 		ArrayList<String> rcs = new RefChrSortingGeneratorSampleConsensus(hsr.getRefChrSorting(),this.logger).getRefChrConsensusSorting();
+		HashMap<String,Integer> lastPositions = hsr.getLastPositionContainer().getLastPosition();
 
+		//Writer
+		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,this.logger);
+
+		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder();
 
 	}
 

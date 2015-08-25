@@ -22,6 +22,7 @@ public class PpileupParser {
 			int srmd=10000;
 			float idof=0.01F;
 			String shortcuts="";
+			boolean zippedOutput=true;
 
 			while(args.size()>0)
 			{
@@ -59,6 +60,10 @@ public class PpileupParser {
 				{
 					  idof=  Float.parseFloat(args.remove(0));
 				}
+				else if(cu.equals("--disable-zipped"))
+				{
+					zippedOutput=false;
+				}
 				else if(cu.equals("--help"))
 				{
 					printHelp();
@@ -81,7 +86,7 @@ public class PpileupParser {
 
 			// Create a logger
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			PpileupFramework pfp =new PpileupFramework(inputFiles,outputFile,hierFile,mapQual,srmd,idof,shortcuts,logger);
+			PpileupFramework pfp =new PpileupFramework(inputFiles,outputFile,hierFile,mapQual,srmd,idof,shortcuts,zippedOutput, logger);
 			pfp.run();
 		}
 
@@ -97,7 +102,8 @@ public class PpileupParser {
 			sb.append(String.format("%-22s%s","--help","show help\n"));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--te-shortcuts","use a predifined list of TE family shortcuts; default=""\n"));
+			sb.append(String.format("%-22s%s","--te-shortcuts","use a predefined list of TE family shortcuts; default=\"\"\n"));
+			sb.append(String.format("%-22s%s","--disable-zipped","flag; disable zipped output\n"));
 			sb.append(String.format("%-22s%s","--sr-mindist","structural rearrangement minimum distance; default=10000\n"));
 			sb.append(String.format("%-22s%s","--id-up-quant","upper quantile of inner distance will be ignored; [fraction] default=0.01\n"));
 			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
