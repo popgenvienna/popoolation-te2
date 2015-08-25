@@ -1,5 +1,6 @@
 package corete.data.hier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -9,10 +10,16 @@ import java.util.HashSet;
 public class TEHierarchy{
 	private final HashMap<String,HierarchyEntry> h;
 
-	public TEHierarchy(HashMap<String,HierarchyEntry> hier)
+	public TEHierarchy(ArrayList<HierarchyEntry> entries)
 	{
-		     h=new HashMap<String, HierarchyEntry>(hier);
+		HashMap<String,HierarchyEntry> tmp=new HashMap<String, HierarchyEntry>();
+		for(HierarchyEntry e: entries)
+		{
+			tmp.put(e.getID(),e);
+		}
+		this.h=tmp;
 	}
+
 
 	/**
 	 * Get the family for a TE of the given id

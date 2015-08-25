@@ -5,7 +5,9 @@ import corete.data.SamPairType;
 import corete.data.SamRecord;
 import corete.data.hier.TEHierarchy;
 import corete.io.SamValidator.SamValidatorIsSorted;
+import corete.misc.LogFactory;
 
+import java.io.BufferedReader;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -38,6 +40,21 @@ public class SamPairReader {
 
 		this.next=getNext();
 	}
+
+
+	/**
+	 * Constructor for Testing purposes
+	 */
+	public SamPairReader(BufferedReader reader, TEHierarchy hier,int srmd)
+	{
+		this.logger=LogFactory.getNullLogger();
+		this.tehier=hier;
+		this.srmd=srmd;
+		this.inputFile="null file";
+		this.sbr=new SamReader(reader);
+		this.next=getNext();
+	}
+
 
 
 	public boolean hasNext()

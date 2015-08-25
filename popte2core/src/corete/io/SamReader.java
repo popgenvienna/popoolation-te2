@@ -3,6 +3,8 @@ package corete.io;
 import corete.data.SamRecord;
 import corete.io.Parser.CigarParser;
 import corete.io.SamValidator.ISamValidator;
+import corete.io.SamValidator.SamValidatorAllValid;
+import corete.misc.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,6 +42,22 @@ public class SamReader implements ISamBamReader {
 		// must be the last thing
 		this.next=this.read_next();
 	}
+
+
+	/**
+	 *  Constructor for testing purposes only
+	 *  null logger + null validator
+	 */
+	public SamReader(BufferedReader br)
+	{
+		this.br=br;
+		this.logger= LogFactory.getNullLogger();
+		this.inputFile="";
+		this.next=this.read_next();
+		this.validator=new SamValidatorAllValid();
+
+	}
+
 
 	/**
 	 * is there a next entry?
