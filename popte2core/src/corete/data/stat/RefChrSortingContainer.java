@@ -41,7 +41,7 @@ public class RefChrSortingContainer {
 		ArrayList<ArrayList<String>> toret=new ArrayList<ArrayList<String>>();
 		for(ArrayList<String> al:this.rcs)
 		{
-			rcs.add(new ArrayList<String>(al));
+			toret.add(new ArrayList<String>(al));
 		}
 		return toret;
 	}

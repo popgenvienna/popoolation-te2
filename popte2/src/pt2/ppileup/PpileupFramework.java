@@ -1,6 +1,5 @@
 package pt2.ppileup;
 
-import corete.data.SamRecord;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
 
@@ -9,8 +8,11 @@ import corete.data.stat.ISDSummary;
 import corete.data.stat.RefChrSortingGeneratorSampleConsensus;
 import corete.io.*;
 import corete.io.misc.PpileupHelpStatReader;
+import pt2.Main;
 
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -31,8 +33,9 @@ public class PpileupFramework {
 	private final String teshortcuts;
 	private final boolean zippedOutput;
 
-	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile,int minmapqual,int srmd, float idof, String shortcuts, boolean zippedOutput, Logger logger)
-	{   this.inputFiles=inputFiles;
+	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile, int minmapqual,int srmd, float idof, String shortcuts, boolean zippedOutput, Logger logger)
+	{
+		this.inputFiles=inputFiles;
 		this.outputFile=outputFile;
 		this.hierFile=hierFile;
 		this.minmapqual=minmapqual;
@@ -42,17 +45,36 @@ public class PpileupFramework {
 		this.logger=logger;
 		this.zippedOutput=zippedOutput;
 
+		// Set
+		for(String file: inputFiles)
+		{
+			if(!new File(file).exists()) throw new IllegalArgumentException("Input file does not exist: "+file);
+		}
+		try{
+			new FileWriter(outputFile);
+		}
+		catch(IOException e)
+		{
+			throw new IllegalArgumentException("Can not create output file:" +outputFile);
+		}
+
+
+
+
+
+
+
 	}
 
 	public void run()
 	{
 		// Read the TE hierarchy
-		TEHierarchy hier= new corete.io.HierarchyReader(this.hierFile,this.logger).getHierarchy();
+		TEHierarchy hier= new TEHierarchyReader(this.hierFile,this.logger).getHierarchy();
 
 		// BASIC required statistics
 		PpileupHelpStatReader hsr=new PpileupHelpStatReader(inputFiles,hier,this.minmapqual,this.srmd, this.logger);
 		// Short cut translator
-		TEFamilyShortcutTranslator sctr;
+		TEFamilyShortcutTranslator sctr=null;
 		if(new File(this.teshortcuts).exists()){/*TODO read from file */ }
 		else{sctr = hsr.getTEabundance().getSCTAbundantShort();}
 		// insert size distribution
@@ -64,7 +86,16 @@ public class PpileupFramework {
 		//Writer
 		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,this.logger);
 
-		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder();
+		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,isdsum,this.inputFiles
+		,rcs,lastPositions,hier,minmapqual,srmd,writer,logger);
+		ppmpb.buildPpileup();
+
+		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
+
+
+
+
+
 
 	}
 

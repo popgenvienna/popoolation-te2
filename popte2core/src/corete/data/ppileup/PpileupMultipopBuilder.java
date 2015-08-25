@@ -70,23 +70,49 @@ public class PpileupMultipopBuilder {
 
 			for(String chr: this.refChrSorting)
 			{
-				 spool2Chromosome(chr);
+				this.logger.info("Building ppileup for chromosome "+chr);
+				spool2Chromosome(chr);       // spool all samples to the same reference chromosome
 				for(int pos=1;pos<=this.lastPositions.get(chr)+maxWorkDist;pos++)
 				{
+					//spool all samples to the same position
 					spool2Position(pos);
 
-
+					// write the position
+					ArrayList<String> pps=new ArrayList<String>();
+					for(PpileupBuilder b:this.builders)
+					{
+						pps.add(b.getSite(pos));
+					}
+					this.writer.writeEntry(chr,pos,pps);
 				}
 			}
+			this.logger.info("Finished writing ppileup");
+			this.writer.close();
 		}
 		private void spool2Chromosome(String chr)
 		{
+			for(PpileupBuilder builder:this.builders)
+			{
+				String activechr=builder.switchChromosome();
+				while(!activechr.equals((chr)))
+				{
+					activechr=builder.switchChromosome();
+				}
 
+			}
+			return;
 		}
 
 		private void spool2Position(int pos)
 		{
-
+			      for(PpileupBuilder builder:this.builders)
+				  {
+					  int doneuntil=builder.doneUntil();
+					  while(doneuntil>=pos)
+					  {
+						  builder.addRead();
+					  }
+				  }
 		}
 
 

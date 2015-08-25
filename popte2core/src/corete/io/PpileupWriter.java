@@ -13,13 +13,14 @@ import java.util.zip.GZIPOutputStream;
  */
 public class PpileupWriter {
 	private static final String sep="\t";
-	private BufferedWriter bw;
-	private Logger logger;
-	private boolean zipped;
+	private final BufferedWriter bw;
+	private final Logger logger;
+	private final boolean zipped;
 
 	public PpileupWriter(String outputFile, boolean zippedOutput,Logger logger)
 	{
 		this.zipped=zippedOutput;
+		this.logger=logger;
 		if(zippedOutput){
 				this.logger.info("Writing zipped ppileup-file to "+outputFile);
 				this.bw=getZippedWriter(outputFile);
@@ -54,7 +55,6 @@ public class PpileupWriter {
 	{
 
 		BufferedWriter bw=null;
-		this.logger =logger;
 		try
 		{
 			bw= new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(outputFile))));

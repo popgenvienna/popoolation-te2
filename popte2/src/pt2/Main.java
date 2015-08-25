@@ -69,4 +69,11 @@ public class Main {
 		return sb.toString();
 	}
 
+
+	public static String getVersionNumber()
+	{
+		return "v0.11";
+	}
+
+
 }

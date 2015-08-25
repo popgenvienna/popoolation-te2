@@ -96,6 +96,7 @@ public class SamRecord {
 	{
 		return this.start;
 	}
+	public String getComment(){return this.comment;}
 
 	/**
 	 * Does the read map to the forward strand

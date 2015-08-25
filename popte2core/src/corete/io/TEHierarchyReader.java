@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -14,12 +15,12 @@ import java.util.logging.Logger;
 /**
  * Created by robertkofler on 6/29/15.
  */
-public class HierarchyReader {
+public class TEHierarchyReader {
 	private  BufferedReader bf;
 	private final Logger logger;
 	private final String hierFile;
 
-	public HierarchyReader(String hierarchyFile, Logger logger)
+	public TEHierarchyReader(String hierarchyFile, Logger logger)
 	{
 		this.hierFile=hierarchyFile;
 		this.logger=logger;
@@ -35,7 +36,7 @@ public class HierarchyReader {
 
 	public TEHierarchy getHierarchy()
 	{
-		HashMap<String,HierarchyEntry> teh=new HashMap<String, HierarchyEntry>();
+		ArrayList<HierarchyEntry> teh=new ArrayList< HierarchyEntry>();
 		logger.info(String.format("Started reading TE hierarchy from file: %s", this.hierFile));
 
 		int entries=0;
@@ -50,7 +51,7 @@ public class HierarchyReader {
 				String id= ts[hi.id];
 				if(uniqueIDs.contains(id)) throw new IllegalArgumentException(String.format("Invalid TE hierarchy - id %s is present multiple times",id));
 				HierarchyEntry he=new HierarchyEntry(id,ts[hi.family],ts[hi.order]);
-				teh.put(id,he);
+				teh.add(he);
 				uniqueIDs.add(id);
 			}
 		}

@@ -14,6 +14,9 @@ import java.util.HashMap;
 public class PpileupBuilder {
 
 	//immutable
+
+	private  static final int maxChrPos= Integer.MAX_VALUE;
+
 	private final int minMapQual;
 	private final int averagePairDistance;
 	private final int maxDistancePair;
@@ -89,6 +92,7 @@ public class PpileupBuilder {
 	 */
 	public int doneUntil()
 	{
+		if(this.eof || this.requireChromosomeSwitch) return maxChrPos;
 		return constructionDoneUntil;
 	}
 
@@ -110,7 +114,7 @@ public class PpileupBuilder {
 			if(sp==null){this.eof=true; return false;}
 
 			// is a chromosome switch necessary
-			if(sp.getFirstRead().getRefchr()!=this.activeChr)
+			if(!sp.getFirstRead().getRefchr().equals(activeChr))
 			{
 				this.requireChromosomeSwitch=true;    // set the flag that a chromosome switch is necessary
 				this.bufferPair(sp);
@@ -119,7 +123,7 @@ public class PpileupBuilder {
 
 
 		// construction done until what?
-		int firstStart=sp.getFirstRead().getStart()-this.averagePairDistance+1;
+		this.constructionDoneUntil=sp.getFirstRead().getStart()-this.averagePairDistance+1;
 
 		// ADD THE READ
 		if(sp.getSamPairType()== SamPairType.Pair)
@@ -199,7 +203,7 @@ public class PpileupBuilder {
 
 	private void addFromTo(int start, int end, String symbol)
 	{
-
+		assert(symbol!=null);
 		// test if at least one base will be added    start== end is allowed
 		if(end-start<0) return;
 
@@ -255,12 +259,12 @@ public class PpileupBuilder {
 	 * return id of next chromosome
 	 * @return
 	 */
-	public String nextChromosome()
+	public String switchChromosome()
 	{
 		SamPair sp=this.nextPair();
 		String chr=sp.getFirstRead().getRefchr();
 
-		while(chr==this.activeChr)
+		while(chr.equals(this.activeChr))
 		{
 			sp=this.nextPair();
 			if(sp==null) throw new IllegalArgumentException("End of file reached while searching for next reference chromosome");
@@ -276,6 +280,10 @@ public class PpileupBuilder {
 
 
 	}
+
+	public String getActiveChr()
+	{return this.activeChr;}
+
 
 	/**
 	 * this ppileup builder is done
