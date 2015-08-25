@@ -23,6 +23,7 @@ public class PpileupHelpStatReader {
 	private RefChrSortingContainer rcsc=null;
 	private int srmd;
 	private final TEHierarchy hier;
+	private LastPositionContainer lpc=null;
 
 
 	public PpileupHelpStatReader(ArrayList<String> inputFiles, TEHierarchy hier, int mapQual, int srmd, Logger logger)
@@ -57,7 +58,7 @@ public class PpileupHelpStatReader {
 		this.abundance=new TEabundanceContainer(abundances);
 		this.distribution=new InsertSizeDistributionContainer(distributions);
 		this.rcsc=new RefChrSortingContainer(refchrsortings);
-
+		this.lpc=new LastPositionContainer(lastPositions);
 		this.logger.info("Finished estimating insert size distribution, TE abundance and sorting of reference chromosomes");
 	}
 
@@ -91,6 +92,18 @@ public class PpileupHelpStatReader {
 		if(rcsc==null) readStats();
 		return rcsc;
 	}
+
+
+	/**
+	 * Get the last position container
+	 * @return
+	 */
+	public LastPositionContainer getLastPositionContainer()
+	{
+		if(this.lpc==null) readStats();
+		return lpc;
+	}
+
 
 
 
