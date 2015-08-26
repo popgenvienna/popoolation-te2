@@ -72,16 +72,24 @@ public class SamPair {
 
 
 	/**
+	 * get the INNER DISTANCE
 	 * only compute this for proper pairs
 	 * does not make sense to compute for anything else
+	 * eg.:
+	 * 012345678901234567890
+	 * AAAA-----TTTTT
+	 *    3.....9
+	 * r1.end = 3; r2.start = 9
+	 * distance = r2.start - r1.end - 1
+	 *
 	 * @return
 	 */
-	public int getDistance()
+	public int getInnerDistance()
 	{
 		if(firstRead==null ||secondRead==null) throw new IllegalArgumentException("Can not compute distance for unpaired");
 		int  dist=this.firstRead.getEnd();
 
-		int distance=secondRead.getStart()-firstRead.getEnd();
+		int distance=secondRead.getStart() - firstRead.getEnd() - 1;
 		return distance;
 	}
 
