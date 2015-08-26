@@ -128,7 +128,7 @@ public class PpileupBuilder {
 		// ADD THE READ
 		if(sp.getSamPairType()== SamPairType.Pair)
 		   {
-			   if(sp.isProperPair(this.minMapQual) && sp.getDistance()<=this.maxDistancePair)
+			   if(sp.isProperPair(this.minMapQual) && sp.getInnerDistance()<=this.maxDistancePair)
 			   {
 				   // ok proper pair, and not exceeding max distance than => construct
 				   addFromTo(sp.getFirstRead().getEnd()+1,sp.getSecondRead().getStart()-1,PpileupSymbols.ABS);

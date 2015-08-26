@@ -151,7 +151,7 @@ public class PpileupHelpStatReader {
 			{
 				if(sp.isProperPair(this.mapQual))
 				{
-				   int distance= sp.getDistance();
+				   int distance= sp.getInnerDistance();
 					distcount.putIfAbsent(distance, 0);
 					distcount.put(distance, distcount.get(distance) + 1);
 

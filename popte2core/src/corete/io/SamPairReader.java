@@ -23,6 +23,8 @@ public class SamPairReader {
 	private final TEHierarchy tehier;
 	private SamPair next=null;
 
+	private final HashMap<String,SamRecord> paarship;
+
 	// debug variables
 	private int countPair=0;
 	private int countTEspan=0;
@@ -36,6 +38,7 @@ public class SamPairReader {
 		this.tehier=tehier;
 		this.inputFile=inputFile;
 		this.srmd=srmd;
+		this.paarship=new HashMap<String,SamRecord>();
 		this.sbr=new AutoDetectSamBamReader(inputFile,logger,new SamValidatorIsSorted());
 
 		this.next=getNext();
@@ -48,6 +51,7 @@ public class SamPairReader {
 	public SamPairReader(BufferedReader reader, TEHierarchy hier,int srmd)
 	{
 		this.logger=LogFactory.getNullLogger();
+		this.paarship=new HashMap<String,SamRecord>();
 		this.tehier=hier;
 		this.srmd=srmd;
 		this.inputFile="null file";
@@ -76,7 +80,7 @@ public class SamPairReader {
 	private SamPair getNext()
 	{
 
-		HashMap<String,SamRecord> paarship=new HashMap<String,SamRecord>();
+
 		// read from file
 		while(sbr.hasNext())
 		{
@@ -127,6 +131,9 @@ public class SamPairReader {
 		return null;
 
 	}
+
+
+
 
 
 

@@ -171,21 +171,17 @@ public class SamReader implements ISamBamReader {
 		int mapq=Integer.parseInt(a[4]);
 		String cigar=a[5];
 		String refChrMate=a[6];
-		if(refChrMate=="=") {refChrMate=refChr;}
+		if(refChrMate.equals("=")) {refChrMate=refChr;}
 		int posMate=Integer.parseInt(a[7]);
 		int distMate=Integer.parseInt(a[8]);
 		String sequence=a[9];
 		String quality=a[10];
 		String comment=a[11];
 		CigarParser cp=new CigarParser(cigar,start);
-		SamRecord rec=new SamRecord(name,flag,refChr,cp.getStart(),cp.getEnd(),cp.getStart_withs(),cp.getEnd_withs(),mapq,cigar,refChrMate,posMate,100,sequence,quality,comment);
+		SamRecord rec=new SamRecord(name,flag,refChr,cp.getStart(),cp.getEnd(),cp.getStart_withs(),cp.getEnd_withs(),mapq,cigar,refChrMate,posMate,distMate,sequence,quality,comment);
 		return rec;
 
 	}
-
-
-
-
 
 
 
