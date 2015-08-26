@@ -10,6 +10,8 @@ public class PpileupSymbols {
 	public final static String SvRev="<";
 	public final static String TEstart="{";
 	public final static String TEend="}";
-	public final static String PPSTART="$";
-	public final static String PPEND="^";
+	public final static String PPSTART="^";
+	public final static String PPEND="$";
+	public final static String EMPTYLINE="*";
+	public final static String EMPTYCOMMENT="-";
 }

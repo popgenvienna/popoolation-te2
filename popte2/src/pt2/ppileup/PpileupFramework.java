@@ -84,7 +84,7 @@ public class PpileupFramework {
 		HashMap<String,Integer> lastPositions = hsr.getLastPositionContainer().getLastPosition();
 
 		//Writer
-		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,this.logger);
+		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,this.logger);
 
 		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,isdsum,this.inputFiles
 		,rcs,lastPositions,hier,minmapqual,srmd,writer,logger);

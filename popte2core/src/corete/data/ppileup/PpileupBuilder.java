@@ -19,7 +19,6 @@ public class PpileupBuilder {
 
 	private final int minMapQual;
 	private final int averagePairDistance;
-	private final int maxDistancePair;
 	private final SamPairReader reader;
 	private final TEFamilyShortcutTranslator translator;
 
@@ -34,14 +33,14 @@ public class PpileupBuilder {
 	// general whole thing
 	private boolean eof;
 
-	public PpileupBuilder(int minMapQual, int averagePairDistance, int maxDistancePair, SamPairReader reader, TEFamilyShortcutTranslator translator)
+	public PpileupBuilder(int minMapQual, int averagePairDistance, SamPairReader reader, TEFamilyShortcutTranslator translator)
 	{
 		// immutable
 		this.minMapQual=minMapQual;
 		this.averagePairDistance=averagePairDistance;
-		this.maxDistancePair=maxDistancePair;
 		this.reader=reader;
 		this.translator=translator;
+		this.constructionDoneUntil=-1;
 
 		this.eof=false;
 	}
@@ -53,7 +52,7 @@ public class PpileupBuilder {
 	private SamPair bufferPair=null;
 	private void bufferPair(SamPair pair)
 	{
-		assert(this.bufferPair!=null);
+		assert(pair!=null);
 		this.bufferPair=pair;
 	}
 
@@ -128,11 +127,19 @@ public class PpileupBuilder {
 		// ADD THE READ
 		if(sp.getSamPairType()== SamPairType.Pair)
 		   {
-			   if(sp.isProperPair(this.minMapQual) && sp.getInnerDistance()<=this.maxDistancePair)
+			   if(sp.isProperPair(this.minMapQual))
 			   {
-				   // ok proper pair, and not exceeding max distance than => construct
-				   addFromTo(sp.getFirstRead().getEnd()+1,sp.getSecondRead().getStart()-1,PpileupSymbols.ABS);
-				   return true;
+				   if( sp.getInnerDistance()<=2*this.averagePairDistance) {
+					   // ok proper pair, and not exceeding max distance than => construct
+					   addFromTo(sp.getFirstRead().getEnd() + 1, sp.getSecondRead().getStart() - 1, PpileupSymbols.ABS);
+					   return true;
+				   }else
+				   {
+					   addFromTo(sp.getFirstRead().getEnd()+1, sp.getFirstRead().getEnd()+averagePairDistance, PpileupSymbols.ABS);
+					   addFromTo(sp.getSecondRead().getStart() - averagePairDistance,sp.getSecondRead().getStart() - 1, PpileupSymbols.ABS);
+
+					   return true;
+				   }
 
 			   }
 		   }
@@ -153,6 +160,8 @@ public class PpileupBuilder {
 		}
 		return false;
 	}
+
+
 
 	private void  addBrokenPair(SamPair brokenPair)
 	{
@@ -205,7 +214,9 @@ public class PpileupBuilder {
 	{
 		assert(symbol!=null);
 		// test if at least one base will be added    start== end is allowed
+		if(start<1) start=1;
 		if(end-start<0) return;
+
 
 		// initate the whole stretch
 		for(int i=start;i<=end; i++)

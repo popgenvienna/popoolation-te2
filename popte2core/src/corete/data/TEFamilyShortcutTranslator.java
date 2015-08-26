@@ -72,7 +72,11 @@ public class TEFamilyShortcutTranslator {
 	//endregion
 
 
-
+	/**
+	 * Get shortcut for forward insertions (UPPER-CASE)
+	 * @param fullName
+	 * @return
+	 */
 	public String getShortcutFwd(String fullName)
 	{
 		if(!full2short.containsKey(fullName)) throw new IllegalArgumentException("Can not find entry for full-name "+fullName);
@@ -80,6 +84,11 @@ public class TEFamilyShortcutTranslator {
 		return  sc.toUpperCase();
 	}
 
+	/**
+	 * Get shortcut for reverse insertions (LOWER-CASE)
+	 * @param fullName
+	 * @return
+	 */
 	public String getShortcutRev(String fullName)
 	{
 		if(!full2short.containsKey(fullName)) throw new IllegalArgumentException("Can not find entry for full-name "+fullName);
@@ -102,5 +111,11 @@ public class TEFamilyShortcutTranslator {
 		if(!short2full.containsKey(lcs)) throw new IllegalArgumentException("Can not find entry for shortcut "+lcs);
 		return short2full.get(lcs);
 	}
+
+	public HashMap<String,String> getFull2short()
+	{
+		return new HashMap<String,String>(this.full2short);
+	}
+
 
 }
