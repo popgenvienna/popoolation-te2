@@ -48,12 +48,10 @@ public class PpileupMultipopBuilder {
 		for(int i=0; i<this.inputFileNames.size(); i++)
 		{
 			String fileName=this.inputFileNames.get(i);
-			int workDist=this.isdSummary.getMean(i);
-			if(workDist>maxdist) maxdist=workDist;
-			int maxDist=this.isdSummary.getUpperQuantil(i);
+			int workDist=this.isdSummary.getMedian(i);
 			SamPairReader spr=new SamPairReader(fileName,hier,srmd,logger);
 
-			PpileupBuilder build=new PpileupBuilder(minMapQual,workDist,maxDist,spr,tetranslator);
+			PpileupBuilder build=new PpileupBuilder(minMapQual,workDist,spr,tetranslator);
 			tmpBuilders.add(build);
 		}
 		this.builders=tmpBuilders;
@@ -79,11 +77,19 @@ public class PpileupMultipopBuilder {
 
 					// write the position
 					ArrayList<String> pps=new ArrayList<String>();
+					boolean allNull=true;
 					for(PpileupBuilder b:this.builders)
 					{
-						pps.add(b.getSite(pos));
+						String site=b.getSite(pos);
+						if(site==null)
+						{
+							site=PpileupSymbols.EMPTYLINE;
+						}
+						else allNull=false;
+
+						pps.add(site);
 					}
-					this.writer.writeEntry(chr,pos,pps);
+					if(!allNull)this.writer.writeEntry(chr,pos,null,pps);
 				}
 			}
 			this.logger.info("Finished writing ppileup");
@@ -108,9 +114,10 @@ public class PpileupMultipopBuilder {
 			      for(PpileupBuilder builder:this.builders)
 				  {
 					  int doneuntil=builder.doneUntil();
-					  while(doneuntil>=pos)
+					  while(doneuntil<=pos)
 					  {
 						  builder.addRead();
+						  doneuntil=builder.doneUntil();
 					  }
 				  }
 		}
