@@ -122,7 +122,7 @@ public class PpileupBuilder {
 
 
 		// construction done until what?
-		this.constructionDoneUntil=sp.getFirstRead().getStart()-this.averagePairDistance+1;
+		this.constructionDoneUntil=sp.getFirstRead().getStart()-this.averagePairDistance;
 
 		// ADD THE READ
 		if(sp.getSamPairType()== SamPairType.Pair)

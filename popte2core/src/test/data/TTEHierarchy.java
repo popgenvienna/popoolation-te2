@@ -76,5 +76,14 @@ public class TTEHierarchy {
 		assertEquals(h.countOrders(),2);
 	}
 
+	@Test
+	public void Test_fam2ord()
+	{
+		TEHierarchy h=DataTestSupport.getTEHierarchy();
+		assertEquals(h.fam2ord("roo"),"RNA");
+		assertEquals(h.fam2ord("P-element"),"DNA");
+	}
+
+
 
 }

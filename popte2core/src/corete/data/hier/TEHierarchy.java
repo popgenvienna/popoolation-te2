@@ -9,13 +9,27 @@ import java.util.HashSet;
  */
 public class TEHierarchy{
 	private final HashMap<String,HierarchyEntry> h;
+	private final HashMap<String,String> fam2ord;
 
 	public TEHierarchy(ArrayList<HierarchyEntry> entries)
 	{
 		HashMap<String,HierarchyEntry> tmp=new HashMap<String, HierarchyEntry>();
+		fam2ord=new HashMap<String,String>();
 		for(HierarchyEntry e: entries)
 		{
+			String fam=e.getFamily();
+			String ord=e.getOrder();
 			tmp.put(e.getID(),e);
+			if(fam2ord.containsKey(fam))
+			{
+				if(!fam2ord.get(fam).equals(ord)) throw new IllegalArgumentException("Inconsistent TE hierarchy for family "+fam+" and order "+ord);
+			}
+			else
+			{
+				fam2ord.put(fam,ord);
+			}
+
+
 		}
 		this.h=tmp;
 	}
@@ -85,6 +99,12 @@ public class TEHierarchy{
 		}
 		return s.size();
 	}
+
+	public String fam2ord(String fam)
+	{
+		return fam2ord.get(fam);
+	}
+
 
 	public boolean containsRefid(String id)
 	{
