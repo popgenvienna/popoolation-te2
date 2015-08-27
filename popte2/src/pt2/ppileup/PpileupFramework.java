@@ -4,6 +4,7 @@ import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
 
 import corete.data.ppileup.PpileupMultipopBuilder;
+import corete.data.stat.EssentialPpileupStats;
 import corete.data.stat.ISDSummary;
 import corete.data.stat.RefChrSortingGeneratorSampleConsensus;
 import corete.io.*;
@@ -75,7 +76,7 @@ public class PpileupFramework {
 		PpileupHelpStatReader hsr=new PpileupHelpStatReader(inputFiles,hier,this.minmapqual,this.srmd, this.logger);
 		// Short cut translator
 		TEFamilyShortcutTranslator sctr=null;
-		if(new File(this.teshortcuts).exists()){/*TODO read from file */ }
+		if(new File(this.teshortcuts).exists()){sctr=new TEFamilyShortcutReader(this.teshortcuts,this.logger).getShortcutTranslator();}
 		else{sctr = hsr.getTEabundance().getSCTAbundantShort();}
 		// insert size distribution
 		ISDSummary isdsum=hsr.getInsertSizeDistribution().getISDSummary(this.idof);
@@ -83,11 +84,12 @@ public class PpileupFramework {
 		ArrayList<String> rcs = new RefChrSortingGeneratorSampleConsensus(hsr.getRefChrSorting(),this.logger).getRefChrConsensusSorting();
 		HashMap<String,Integer> lastPositions = hsr.getLastPositionContainer().getLastPosition();
 
-		//Writer
-		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,this.logger);
 
-		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,isdsum,this.inputFiles
-		,rcs,lastPositions,hier,minmapqual,srmd,writer,logger);
+		//Writer
+		EssentialPpileupStats estat=new EssentialPpileupStats(isdsum.getMedians(),this.minmapqual,this.srmd,Main.getVersionNumber());
+		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,estat,this.logger);
+
+		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,this.inputFiles,rcs,lastPositions,hier,writer,logger);
 		ppmpb.buildPpileup();
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");

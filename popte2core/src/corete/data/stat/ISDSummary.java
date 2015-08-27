@@ -43,6 +43,12 @@ public class ISDSummary {
 		return this.median.get(popindex);
 	}
 
+	public ArrayList<Integer> getMedians()
+	{
+		return new ArrayList<Integer>(this.median);
+	}
+
+
 	public int getMean(int popindex)
 	{
 		return this.mean.get(popindex);

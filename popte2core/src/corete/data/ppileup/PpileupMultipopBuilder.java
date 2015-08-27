@@ -2,6 +2,7 @@ package corete.data.ppileup;
 
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
+import corete.data.stat.EssentialPpileupStats;
 import corete.data.stat.ISDSummary;
 import corete.io.PpileupWriter;
 import corete.io.SamPairReader;
@@ -15,31 +16,28 @@ import java.util.logging.Logger;
  */
 public class PpileupMultipopBuilder {
 	private final TEFamilyShortcutTranslator tetranslator;
-	private final ISDSummary isdSummary;
 	private final ArrayList<String> inputFileNames;
 	private final ArrayList<String> refChrSorting;
 	private final HashMap<String,Integer> lastPositions;
 	private final TEHierarchy hier;
-	private final int minMapQual;
-	private final int srmd;
+	private final EssentialPpileupStats estats;
 	private final PpileupWriter writer;
 	private final Logger logger;
 	private final int maxWorkDist;
 
 	private ArrayList<PpileupBuilder> builders;
 
-	public PpileupMultipopBuilder(TEFamilyShortcutTranslator tetranslator, ISDSummary isdSummary, ArrayList<String> inputFileNames,
-								  ArrayList<String> refChrSorting, HashMap<String,Integer> lastPositions, TEHierarchy hier, int minMapQual,
-								  int srmd, PpileupWriter writer, Logger logger)
+	public PpileupMultipopBuilder(TEFamilyShortcutTranslator tetranslator, EssentialPpileupStats estats, ArrayList<String> inputFileNames,
+								  ArrayList<String> refChrSorting, HashMap<String,Integer> lastPositions, TEHierarchy hier,
+							 		PpileupWriter writer, Logger logger)
 	{
 		this.tetranslator=tetranslator;
-		this.isdSummary=isdSummary;
+		this.estats=estats;
 		this.inputFileNames=inputFileNames;
 		this.refChrSorting=refChrSorting;
 		this.lastPositions=lastPositions;
 		this.hier=hier;
-		this.minMapQual=minMapQual;
-		this.srmd=srmd;
+
 		this.writer=writer;
 		this.logger=logger;
 
@@ -48,10 +46,10 @@ public class PpileupMultipopBuilder {
 		for(int i=0; i<this.inputFileNames.size(); i++)
 		{
 			String fileName=this.inputFileNames.get(i);
-			int workDist=this.isdSummary.getMedian(i);
-			SamPairReader spr=new SamPairReader(fileName,hier,srmd,logger);
-
-			PpileupBuilder build=new PpileupBuilder(minMapQual,workDist,spr,tetranslator);
+			int workDist=this.estats.getDefaultInnerDistance(i);
+			if(workDist>maxdist)maxdist=workDist;
+			SamPairReader spr=new SamPairReader(fileName,hier,estats.getStructuralRearrangementMinimumDistance(),logger);
+			PpileupBuilder build=new PpileupBuilder(estats.getMinMapQual(),workDist,spr,tetranslator);
 			tmpBuilders.add(build);
 		}
 		this.builders=tmpBuilders;
