@@ -172,12 +172,12 @@ public class PpileupBuilder {
 		{
 			symbol=PpileupSymbols.SvFWD;
 			start=brokenPair.getFirstRead().getEnd()+1;
-			end=brokenPair.getFirstRead().getEnd()+this.averagePairDistance-1;
+			end=brokenPair.getFirstRead().getEnd()+this.averagePairDistance;
 		}
 		else
 		{
 			symbol=PpileupSymbols.SvRev;
-			start=brokenPair.getFirstRead().getStart()-this.averagePairDistance+1;
+			start=brokenPair.getFirstRead().getStart()-this.averagePairDistance;
 			end=brokenPair.getFirstRead().getStart()-1;
 		}
 		addFromTo(start,end,symbol);
@@ -195,12 +195,12 @@ public class PpileupBuilder {
 			symbol=this.translator.getShortcutFwd(fam);
 
 			start=tepair.getFirstRead().getEnd()+1;
-			end=tepair.getFirstRead().getEnd()+this.averagePairDistance-1;
+			end=tepair.getFirstRead().getEnd()+this.averagePairDistance;
 		}
 		else
 		{
 			symbol=this.translator.getShortcutRev(fam);
-			start=tepair.getFirstRead().getStart()-this.averagePairDistance+1;
+			start=tepair.getFirstRead().getStart()-this.averagePairDistance;
 			end=tepair.getFirstRead().getStart()-1;
 		}
 

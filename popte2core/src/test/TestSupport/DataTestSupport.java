@@ -24,7 +24,6 @@ public class DataTestSupport {
 	hes.add(new HierarchyEntry("r3","roo","RNA"));
 	TEHierarchy hier=new TEHierarchy(hes);
 	return hier;
-
 	}
 
 	public static TEFamilyShortcutTranslator getTETranslator_iniFull2Short()
