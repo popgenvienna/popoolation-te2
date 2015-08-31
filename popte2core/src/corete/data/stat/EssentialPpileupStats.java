@@ -28,6 +28,12 @@ public class EssentialPpileupStats {
 		return this.defaultInnerDistances.get(index);
 	}
 
+	public int countSamples()
+	{
+		return this.defaultInnerDistances.size();
+	}
+
+
 
 	public int getStructuralRearrangementMinimumDistance()
 	{

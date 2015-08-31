@@ -77,7 +77,7 @@ public class PpileupParser {
 
 				}
 			}
-			if(inputFiles.size()<1 || outputFile=="" || hierFile=="")
+			if(inputFiles.size()<1 || outputFile.equals("") || hierFile.equals(""))
 			{
 				printHelp();
 				System.exit(1);

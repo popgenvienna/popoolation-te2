@@ -3,8 +3,7 @@ package corete.data.ppileup;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
 import corete.data.stat.EssentialPpileupStats;
-import corete.data.stat.ISDSummary;
-import corete.io.PpileupWriter;
+import corete.io.ppileup.PpileupWriter;
 import corete.io.SamPairReader;
 
 import java.util.ArrayList;
@@ -79,15 +78,11 @@ public class PpileupMultipopBuilder {
 					for(PpileupBuilder b:this.builders)
 					{
 						String site=b.getSite(pos);
-						if(site==null)
-						{
-							site=PpileupSymbols.EMPTYLINE;
-						}
-						else allNull=false;
-
+						if(site!=null)allNull=false;
+						else site="";
 						pps.add(site);
 					}
-					if(!allNull)this.writer.writeEntry(chr,pos,null,pps);
+					if(!allNull)this.writer.writeEntry(chr,pos,"",pps);
 				}
 			}
 			this.logger.info("Finished writing ppileup");

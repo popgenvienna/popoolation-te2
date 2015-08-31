@@ -1,5 +1,6 @@
 package test.TestSupport;
 
+import corete.io.ppileup.PpileupLightwightReader;
 import corete.io.SamPairReader;
 import corete.io.SamReader;
 
@@ -52,6 +53,27 @@ public class IoTestSupport {
 		SamPairReader spr=new SamPairReader(new BufferedReader(new StringReader(sb.toString())),DataTestSupport.getTEHierarchy(),1000);
 	  return spr;
 	}
+
+	public static PpileupLightwightReader get_ppr_1()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(
+				"@SC\tp\tP-element\n" +
+				"@SC\tr\troo\n" +
+				"@ID\t1\t69\n" +
+				"@ID\t2\t128\n" +
+				"@ID\t3\t60\n" +
+				"@MQ\t15\n" +
+				"@SR\t10000\n" +
+				"@VN\tv0.11\n"+
+		"2L\t1\t-\t.\tp\tr\n"+
+		"2L\t2\tbla\t*\t><\t*\n"+
+		"2L\t3\t-\t{r}{R}\t^.$r\t^{heleene}${schmarn}\n");
+		return new PpileupLightwightReader(new BufferedReader(new StringReader(sb.toString())));
+
+
+	}
+
 
 
 
