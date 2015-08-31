@@ -1,4 +1,4 @@
-package corete.io;
+package corete.io.ppileup;
 
 
 
@@ -7,8 +7,10 @@ import corete.data.ppileup.PpileupSiteLightwight;
 import corete.data.ppileup.PpileupSymbols;
 import corete.data.stat.EssentialPpileupStats;
 import corete.io.Parser.PpileupHeaderParser;
+import corete.misc.LogFactory;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -16,7 +18,7 @@ import java.util.zip.GZIPInputStream;
 /**
  * Created by robertkofler on 8/27/15.
  */
-public class PpileupReader {
+public class PpileupLightwightReader implements IPpileupLightwightReader {
 	private final BufferedReader br;
 	private final Logger logger;
 	private final PpileupHeaderParser pphp;
@@ -24,7 +26,7 @@ public class PpileupReader {
 
 
 	//region initialization
-	public PpileupReader(String inputFile,Logger logger)
+	public PpileupLightwightReader(String inputFile, Logger logger)
 	{
 		this.logger=logger;
 		this.logger.info("Reading ppileup file "+inputFile);
@@ -42,6 +44,18 @@ public class PpileupReader {
 		this.pphp=this.readHeader();
 
 	}
+
+	/**
+	 * Only for debugging purposes
+	 * @param br
+	 */
+	public PpileupLightwightReader(BufferedReader br)
+	{
+		this.br=br;
+		this.logger= LogFactory.getNullLogger();
+		this.pphp=this.readHeader();
+	}
+
 
 	private PpileupHeaderParser readHeader()
 	{
@@ -131,11 +145,13 @@ public class PpileupReader {
 
 
 
+	@Override
 	public TEFamilyShortcutTranslator getTEFamilyShortcutTranslator()
 	{
 		return this.pphp.getTEFamilyShortcutTranslator();
 	}
 
+	@Override
 	public EssentialPpileupStats getEssentialPpileupStats()
 	{
 		EssentialPpileupStats toret= new EssentialPpileupStats(pphp.getInnerDistances(),pphp.getMappingQuality(),pphp.getStructuralRearangementMinDistance(),
@@ -143,7 +159,13 @@ public class PpileupReader {
 		return toret;
 	}
 
-	public PpileupSiteLightwight readLightwight()
+	/**
+	 * Get a lightwight representation of a ppileup sites;
+	 * without resolved TE names.
+	 * @return
+	 */
+	@Override
+	public PpileupSiteLightwight next()
 	{
 		String line=this.nextLine();
 		if(line==null) return null;
@@ -164,11 +186,11 @@ public class PpileupReader {
 			ArrayList<String> tmp= breakEntry(t[i]);
 			popentries.add(tmp);
 		}
-		return new PpileupSiteLightwight(chr,pos,popentries);
+		return new PpileupSiteLightwight(chr,pos,comment,popentries);
 
 	}
 
-	public ArrayList<String> breakEntry(String tobreak)
+	private ArrayList<String> breakEntry(String tobreak)
 	{
 		// handle empty line
 		if(tobreak.equals(PpileupSymbols.EMPTYLINE))return new ArrayList<String>();
@@ -176,11 +198,11 @@ public class PpileupReader {
 		String[] work=tobreak.split("");
 		ArrayList<String> toret=new ArrayList<String>();
 
+		StringBuilder sb=null;
+		boolean temode=false;
 		for(int i=0;i<work.length; i++)
 		{
 			String s=work[i];
-			StringBuilder sb=null;
-			boolean temode=false;
 			switch(s) {
 				// useless symbols $^ don't do anything
 				case PpileupSymbols.PPSTART:
@@ -197,11 +219,11 @@ public class PpileupReader {
 				default:
 					if(temode){sb.append(s);}
 					else toret.add(s);
+					break;
 			}
 
 		}
 		return toret;
-
 	}
 
 

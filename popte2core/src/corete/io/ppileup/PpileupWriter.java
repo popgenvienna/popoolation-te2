@@ -1,8 +1,9 @@
-package corete.io;
+package corete.io.ppileup;
 
 import com.sun.corba.se.impl.encoding.BufferManagerWriteStream;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.ppileup.PpileupBuilder;
+import corete.data.ppileup.PpileupSiteLightwight;
 import corete.data.ppileup.PpileupSymbols;
 import corete.data.ppileup.PpileupeHeaderSymbols;
 import corete.data.stat.EssentialPpileupStats;
@@ -117,18 +118,43 @@ public class PpileupWriter {
 
 	}
 
+	public void writeEntry(PpileupSiteLightwight lw)
+	{
+		ArrayList<String> tos=new ArrayList<String>();
+		for(int i=0; i<lw.size(); i++)
+		{
+			ArrayList<String> s=lw.getEntries(i);
+			StringBuilder sb=new StringBuilder();
+			for(String part:s)
+			{
+				if(s.size()>1)
+				{
+					sb.append(PpileupSymbols.TEstart);
+					sb.append(s);
+					sb.append(PpileupSymbols.TEend);
+				}
+				else sb.append(s);
+			}
+			tos.add(sb.toString());
+		}
+		this.writeEntry(lw.getChromosome(),lw.getPosition(),lw.getComment(),tos);
+	}
+
+
 
 	public void writeEntry(String chromosome, int position, String comment, ArrayList<String> entries)
 	{
-		//TODO move empty line here
+
 		StringBuilder sb=new StringBuilder();
 		sb.append(chromosome); sb.append(sep);
 		sb.append(position);  sb.append(sep);
-		if(comment==null) sb.append(PpileupSymbols.EMPTYCOMMENT);
+		if(comment.length()== 0) sb.append(PpileupSymbols.EMPTYCOMMENT); //use the empty comment symbol
 		else sb.append(comment);
 		for(String e : entries)
 		{
-			sb.append(sep); sb.append(e);
+			String topr=e;
+			if(topr.length()==0)topr=PpileupSymbols.EMPTYLINE; 			//if null than use the empty line symbol
+			sb.append(sep); sb.append(topr);
 		}
 		try {
 			bw.write(sb.toString()+"\n");

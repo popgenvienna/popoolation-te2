@@ -9,6 +9,7 @@ import corete.data.stat.ISDSummary;
 import corete.data.stat.RefChrSortingGeneratorSampleConsensus;
 import corete.io.*;
 import corete.io.misc.PpileupHelpStatReader;
+import corete.io.ppileup.PpileupWriter;
 import pt2.Main;
 
 
