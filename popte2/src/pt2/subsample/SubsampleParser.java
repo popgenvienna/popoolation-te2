@@ -75,7 +75,7 @@ public class SubsampleParser {
 		public static void printHelp()
 		{
 			StringBuilder sb=new StringBuilder();
-			sb.append("create a physical pileup file from one or multiple bam files\n\n");
+			sb.append("subsample a ppileup file to uniform coverage\n\n");
 			sb.append("== Main parameters ==\n");
 			sb.append(String.format("%-22s%s","--ppileup","input ppileup file\n"));
 			sb.append(String.format("%-22s%s","--output","output ppileup file\n"));

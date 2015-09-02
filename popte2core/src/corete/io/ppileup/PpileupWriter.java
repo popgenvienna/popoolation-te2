@@ -1,8 +1,6 @@
 package corete.io.ppileup;
 
-import com.sun.corba.se.impl.encoding.BufferManagerWriteStream;
 import corete.data.TEFamilyShortcutTranslator;
-import corete.data.ppileup.PpileupBuilder;
 import corete.data.ppileup.PpileupSiteLightwight;
 import corete.data.ppileup.PpileupSymbols;
 import corete.data.ppileup.PpileupeHeaderSymbols;
@@ -97,9 +95,9 @@ public class PpileupWriter {
 			}
 
 
-			for(int i=0; i<this.estats.getDefaultInnerDistances().size(); i++){
+			for(int i=0; i<this.estats.getInnerDistances().size(); i++){
 				int index=i+1;
-				int innerdist=this.estats.getDefaultInnerDistance(i);
+				int innerdist=this.estats.getInnerDistance(i);
 
 				this.bw.write(PpileupeHeaderSymbols.DEFAULTINNERDISTANCE+"\t" + index + "\t" +innerdist+"\n");
 			}
@@ -127,13 +125,13 @@ public class PpileupWriter {
 			StringBuilder sb=new StringBuilder();
 			for(String part:s)
 			{
-				if(s.size()>1)
+				if(part.length()>1)
 				{
 					sb.append(PpileupSymbols.TEstart);
-					sb.append(s);
+					sb.append(part);
 					sb.append(PpileupSymbols.TEend);
 				}
-				else sb.append(s);
+				else sb.append(part);
 			}
 			tos.add(sb.toString());
 		}

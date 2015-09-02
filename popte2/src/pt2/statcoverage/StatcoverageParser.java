@@ -16,8 +16,6 @@ public class StatcoverageParser {
 			String inputFile="";
 			boolean detailedLog=false;
 			String outputFile="";
-			int targetCoverage=0;
-			boolean zippedOutput=true;
 
 			while(args.size()>0)
 			{
@@ -31,17 +29,9 @@ public class StatcoverageParser {
 				{
 					outputFile=args.remove(0);
 				}
-				else if(cu.equals("--target-coverage"))
-				{
-					targetCoverage=Integer.parseInt(args.remove(0));
-				}
 				else if(cu.equals("--detailed-log"))
 				{
 					detailedLog=true;
-				}
-				else if(cu.equals("--disable-zipped"))
-				{
-					zippedOutput=false;
 				}
 				else if(cu.equals("--help"))
 				{
@@ -56,7 +46,7 @@ public class StatcoverageParser {
 
 				}
 			}
-			if(inputFile.equals("") || outputFile.equals("") || targetCoverage==0)
+			if(inputFile.equals("") || outputFile.equals(""))
 			{
 				printHelp();
 				System.exit(1);
@@ -65,22 +55,20 @@ public class StatcoverageParser {
 
 			// Create a logger
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			StatcoverageFramework sf =new StatcoverageFramework(inputFile,outputFile,targetCoverage,zippedOutput,logger);
+			StatcoverageFramework sf =new StatcoverageFramework(inputFile,outputFile,logger);
 			sf.run();
 		}
 
 		public static void printHelp()
 		{
 			StringBuilder sb=new StringBuilder();
-			sb.append("create a physical pileup file from one or multiple bam files\n\n");
+			sb.append("Create coverage statistics for a mpileup file; May help to set a target coverage for subsampling\n\n");
 			sb.append("== Main parameters ==\n");
 			sb.append(String.format("%-22s%s","--ppileup","input ppileup file\n"));
 			sb.append(String.format("%-22s%s","--output","output ppileup file\n"));
-			sb.append(String.format("%-22s%s","--target-coverage","the target coverage of the output file\n"));
 			sb.append(String.format("%-22s%s","--help","show help\n"));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--disable-zipped","flag; disable zipped output\n"));;
 			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
 			sb.append("See the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());

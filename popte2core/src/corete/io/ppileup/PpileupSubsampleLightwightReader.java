@@ -42,8 +42,8 @@ public class PpileupSubsampleLightwightReader implements IPpileupLightwightReade
 			else countInsufficientCoverage++;
 		}
 
-		this.logger.info("Finished subsampling ppileup; Read "+this.countRead+ " entries");
-		this.logger.info("Discarded "+this.countInsufficientCoverage + " entries due to insufficient coverage in any of the samples");
+		this.logger.info("Finished subsampling ppileup; Read "+this.countRead+ " sites");
+		this.logger.info("Discarded "+this.countInsufficientCoverage + " sites due to insufficient coverage in any of the samples/populations");
 		return null;
 	}
 
@@ -66,7 +66,8 @@ public class PpileupSubsampleLightwightReader implements IPpileupLightwightReade
 		    ArrayList<String> sample=new ArrayList<String>();
 			while(sample.size()<tocoverage)
 			{
-				String sampled=ts.remove((int) Math.random() * ts.size());
+				int index=(int)(Math.random() * (double)ts.size());
+				String sampled=ts.remove(index);
 				sample.add(sampled);
 			}
 			newEntries.add(sample);

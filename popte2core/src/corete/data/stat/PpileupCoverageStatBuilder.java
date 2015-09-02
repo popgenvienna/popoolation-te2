@@ -5,6 +5,7 @@ import corete.io.ppileup.IPpileupLightwightReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by robertkofler on 8/31/15.
@@ -15,10 +16,12 @@ public class PpileupCoverageStatBuilder {
 	private ArrayList<HashMap<Integer,Integer>> sepAnalysis;
 	private int totalSites;
 	private int maxcoverage=0;
+	private Logger logger;
 
-	public PpileupCoverageStatBuilder(IPpileupLightwightReader lwr)
+	public PpileupCoverageStatBuilder(IPpileupLightwightReader lwr, Logger logger)
 	{
 		    this.lwr=lwr;
+		this.logger=logger;
 			computeStat();
 	}
 
@@ -27,6 +30,7 @@ public class PpileupCoverageStatBuilder {
 
 	private void computeStat()
 	{
+		this.logger.info("Start building coverage statistics");
 		HashMap<Integer,Integer> joint=new HashMap<Integer,Integer>();
 		ArrayList<HashMap<Integer,Integer>> sep=new ArrayList<HashMap<Integer,Integer>>();
 
@@ -59,6 +63,7 @@ public class PpileupCoverageStatBuilder {
 		this.totalSites=counter;
 		this.jointAnalysis=joint;
 		this.sepAnalysis=sep;
+		this.logger.info("Done building coverage statistics");
 
 	}
 

@@ -60,7 +60,7 @@ public class PpileupCoverageStatWriter {
 			   int count= act.getOrDefault(k,0);
 			   if(count==0)continue;
 			   double pc=100.0*((double)lost/totalsites);
-			   String topr=formatCovStat(Integer.toString(i),k,count,lost,pc);
+			   String topr=formatCovStat(Integer.toString(i+1),k,count,lost,pc);
 
 			   //finally write and increent lost
 				writeLine(topr);
