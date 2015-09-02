@@ -39,9 +39,9 @@ public class TPpileupReader {
 		//"@VN\tv0.11"+
 		PpileupLightwightReader pp= IoTestSupport.get_ppr_1();
 		EssentialPpileupStats es=pp.getEssentialPpileupStats();
-		assertEquals(es.getDefaultInnerDistance(0),69);
-		assertEquals(es.getDefaultInnerDistance(1),128);
-		assertEquals(es.getDefaultInnerDistance(2),60);
+		assertEquals(es.getInnerDistance(0),69);
+		assertEquals(es.getInnerDistance(1),128);
+		assertEquals(es.getInnerDistance(2),60);
 		assertEquals(es.getMinMapQual(),15);
 		assertEquals(es.getStructuralRearrangementMinimumDistance(),10000);
 		assertEquals(es.getVersionNumber(),"v0.11");

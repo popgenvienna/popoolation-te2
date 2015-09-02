@@ -18,12 +18,12 @@ public class EssentialPpileupStats {
 		this.version=version;
 	}
 
-	public ArrayList<Integer>  getDefaultInnerDistances()
+	public ArrayList<Integer> getInnerDistances()
 	{
 		return new ArrayList<Integer>(this.defaultInnerDistances);
 	}
 
-	public int getDefaultInnerDistance(int index)
+	public int getInnerDistance(int index)
 	{
 		return this.defaultInnerDistances.get(index);
 	}
@@ -49,6 +49,22 @@ public class EssentialPpileupStats {
 	{
 		return this.minMapQual;
 	}
+
+	/**
+	 * Get the maximum inner distance across all samples/populations
+	 * @return
+	 */
+	public int getMaximumInnerDistance()
+	{
+		int max=0;
+		for(int i: this.defaultInnerDistances)
+		{
+			if(i>max)max=i;
+		}
+		return max;
+	}
+
+
 
 
 

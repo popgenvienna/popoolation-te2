@@ -38,9 +38,10 @@ public class StatcoverageFramework {
 
 	public void run()
 	{
-		this.logger.info("Start computing coverage statistics");
+		this.logger.info("Will computer coverage statistics for file  "+this.inputFile);
 
-		PpileupCoverageStatBuilder builder=new PpileupCoverageStatBuilder(new PpileupLightwightReader(this.inputFile,this.logger));
+		PpileupCoverageStatBuilder builder=new PpileupCoverageStatBuilder(new PpileupLightwightReader(this.inputFile,this.logger),this.logger);
+		this.logger.info("Writing coverage statistics to file "+this.outputFile);
 		PpileupCoverageStatWriter writer=new PpileupCoverageStatWriter(builder,outputFile);
 		writer.writeStats();
 

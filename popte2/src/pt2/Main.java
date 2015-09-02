@@ -1,6 +1,8 @@
 package pt2;
 
 import pt2.ppileup.PpileupParser;
+import pt2.statcoverage.StatcoverageFramework;
+import pt2.statcoverage.StatcoverageParser;
 import pt2.subsample.SubsampleParser;
 
 import java.util.Arrays;
@@ -36,7 +38,7 @@ public class Main {
 		}
 		else if(subtask.toLowerCase().equals("stat-coverage"))
 		{
-
+			StatcoverageParser.parseCommandline(rawarguments);
 		}
 		else if(subtask.toLowerCase().equals("filterInsertions"))
 		{

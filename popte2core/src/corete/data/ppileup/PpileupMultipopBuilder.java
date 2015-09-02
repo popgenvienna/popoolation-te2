@@ -45,7 +45,7 @@ public class PpileupMultipopBuilder {
 		for(int i=0; i<this.inputFileNames.size(); i++)
 		{
 			String fileName=this.inputFileNames.get(i);
-			int workDist=this.estats.getDefaultInnerDistance(i);
+			int workDist=this.estats.getInnerDistance(i);
 			if(workDist>maxdist)maxdist=workDist;
 			SamPairReader spr=new SamPairReader(fileName,hier,estats.getStructuralRearrangementMinimumDistance(),logger);
 			PpileupBuilder build=new PpileupBuilder(estats.getMinMapQual(),workDist,spr,tetranslator);
