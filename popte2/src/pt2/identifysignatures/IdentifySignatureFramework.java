@@ -1,8 +1,11 @@
 package pt2.identifysignatures;
 
+import corete.data.ppileup.PpileupChunk;
 import corete.io.ppileup.IPpileupLightwightReader;
 import corete.io.ppileup.PpileupChunkReader;
 import corete.io.ppileup.PpileupLightwightReader;
+import corete.io.ppileup.PpileupReader;
+import corete.data.tesignatures.TEInsertionSignature;
 import pt2.Main;
 
 import java.io.File;
@@ -56,16 +59,25 @@ public class IdentifySignatureFramework {
 	public void run()
 	{
 		this.logger.info("Starting identification of TE signatures");
-		IPpileupLightwightReader lwr=new PpileupLightwightReader(this.inputFile,this.logger);
-		int chunkdistance=lwr.getEssentialPpileupStats().getMaximumInnerDistance()*this.chunkmultiplicator;
-		if(this.fixedinsertsize!=null) chunkdistance=chunkmultiplicator*fixedinsertsize;
-		PpileupChunkReader chunkReader=new PpileupChunkReader(lwr,chunkdistance,logger);
+		PpileupReader pr=new PpileupReader(this.inputFile,this.logger);
+		int chunkdistance=pr.getEssentialPpileupStats().getMaximumInnerDistance()*this.chunkmultiplicator;
+		int mindistance=pr.getEssentialPpileupStats().getMinimumInnerDistance();
+		if(this.fixedinsertsize!=null) {
+			chunkdistance = chunkmultiplicator * fixedinsertsize;
+			mindistance=fixedinsertsize;
+		}
+		PpileupChunkReader chunkReader=new PpileupChunkReader(pr,this.mincount,mindistance,chunkdistance,logger);
+		PpileupChunk chunk=null;
+		while((chunk=chunkReader.next())!=null)
+		{
+
+		}
 
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
-
-
 	}
+
+	private ArrayList<> void run_joint()
 
 
 }

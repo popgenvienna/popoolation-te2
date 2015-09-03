@@ -64,6 +64,18 @@ public class EssentialPpileupStats {
 		return max;
 	}
 
+	public int getMinimumInnerDistance()
+	{
+		int min=-1;
+		for(int i:this.defaultInnerDistances)
+		{
+			if(min==-1)min=i;
+			if(i<min)min=i;
+		}
+		return min;
+	}
+
+
 
 
 
