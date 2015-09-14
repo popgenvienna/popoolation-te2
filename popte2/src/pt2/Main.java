@@ -1,6 +1,7 @@
 package pt2;
 
 import pt2.ppileup.PpileupParser;
+import pt2.se2pe.SingleEndToPairEnd;
 import pt2.statcoverage.StatcoverageFramework;
 import pt2.statcoverage.StatcoverageParser;
 import pt2.subsample.SubsampleParser;
@@ -18,7 +19,6 @@ public class Main {
 			System.out.print(getgeneralHelp());
 			System.exit(1);
 		}
-
 		String subtask=rawarguments.remove(0);
 		if(subtask.toLowerCase().equals("ppileup"))
 		{
@@ -44,6 +44,11 @@ public class Main {
 		{
 
 		}
+		else if(subtask.toLowerCase().equals("se2pe")) {
+			SingleEndToPairEnd task = new SingleEndToPairEnd();
+			task.parseCommandLine(rawarguments);
+			task.run();
+		}
 		else
 		{
 			System.out.println("Unknown sub-task %s".format(subtask));
@@ -67,6 +72,7 @@ public class Main {
 		sb.append("\n== Secondary tasks ==\n");
 		sb.append(String.format("%-22s%s","stat-coverage","get coverage statistics; helps to decide optimal target coverage for subsampling\n"));
 		sb.append(String.format("%-22s%s","filter","filter TE insertions\n"));
+		sb.append(String.format("%-22s%s","se2pe","get pair-end information from bwasw output\n"));
 		return sb.toString();
 	}
 

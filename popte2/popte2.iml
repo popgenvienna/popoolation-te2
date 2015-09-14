@@ -8,6 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="popte2core" />
+    <orderEntry type="module" module-name="popte2core" />
+    <orderEntry type="library" name="htsjdk-1.135" level="project" />
   </component>
 </module>
 
