@@ -20,8 +20,8 @@ public class TPpileupReader {
 		// "@SC\tr\troo\n" +
 		PpileupLightwightReader pp= IoTestSupport.get_ppr_1();
 		TEFamilyShortcutTranslator tr=pp.getTEFamilyShortcutTranslator();
-		assertEquals(tr.getFullname("p"),"P-element");
-		assertEquals(tr.getFullname("r"),"roo");
+		assertEquals(tr.getFamilyname("p"),"P-element");
+		assertEquals(tr.getFamilyname("r"),"roo");
 		assertEquals(tr.getShortcutFwd("P-element"),"P");
 		assertEquals(tr.getShortcutRev("P-element"),"p");
 

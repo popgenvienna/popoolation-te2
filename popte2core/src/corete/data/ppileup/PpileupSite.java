@@ -27,6 +27,10 @@ public class PpileupSite {
 
 	public String getComment(){return this.comment;}
 
+	/**
+	 * Return the number of samples/
+	 * @return
+	 */
 	public int size(){return this.samples.size();}
 
 	public PpileupSampleSummary getPpileupSampleSummary(int index){
@@ -37,7 +41,7 @@ public class PpileupSite {
 	 * Get the max TE support for a site; support per sample individually
 	 * @return
 	 */
-	public int getMaxTESupport_SampleSpecific()
+	public int getMaxTESupport()
 	{
 		int maxsupport=0;
 		for(PpileupSampleSummary ps:this.samples)

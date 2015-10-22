@@ -16,12 +16,10 @@ public class IdentifySignatureParser {
 			String inputFile="";
 			SignatureIdentificationMode mode=null;
 			String outputFile="";
-			int mincoverage=10;
 			int mincount=2;
-			int maxrearangements=2;
-			int maxothertes=2;
 			Integer fixedinsertsize=null;
-			int chunkdistance=2;
+			int chunkdistance=5;
+			//int refinedistance=2;
 			boolean detailedLog=false;
 
 
@@ -42,21 +40,9 @@ public class IdentifySignatureParser {
 				{
 					outputFile=args.remove(0);
 				}
-				else if(cu.equals("--min-coverage"))
-				{
-					mincoverage=Integer.parseInt(args.remove(0));
-				}
 				else if(cu.equals("--min-count"))
 				{
 					mincount=Integer.parseInt(args.remove(0));
-				}
-				else if(cu.equals("--max-rearrangement"))
-				{
-					maxrearangements = Integer.parseInt(args.remove(0));
-				}
-				else if(cu.equals("--max-othertes"))
-				{
-					maxothertes=Integer.parseInt(args.remove(0));
 				}
 				else if(cu.equals("--fixed-insertsize"))
 				{
@@ -66,10 +52,18 @@ public class IdentifySignatureParser {
 				{
 					chunkdistance = Integer.parseInt(args.remove(0));
 				}
+				//else if(cu.equals("--refine-distance"))
+				//{
+				//	refinedistance = Integer.parseInt(args.remove(0));
+				//}
 				else if(cu.equals("--help"))
 				{
 					printHelp();
 					System.exit(0);
+				}
+				else if(cu.equals("--detailed-log"))
+				{
+					detailedLog=true;
 				}
 				else
 				{
@@ -87,7 +81,7 @@ public class IdentifySignatureParser {
 
 
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			IdentifySignatureFramework isf =new IdentifySignatureFramework(inputFile,outputFile,mode,mincoverage,mincount,maxrearangements,maxothertes,
+			IdentifySignatureFramework isf =new IdentifySignatureFramework(inputFile,outputFile,mode,mincount,
 					fixedinsertsize,chunkdistance,detailedLog,logger);
 			isf.run();
 		}
@@ -102,6 +96,11 @@ public class IdentifySignatureParser {
 		{
 			return SignatureIdentificationMode.Separate;
 		}
+		//else if(input.toLowerCase().equals("separaterefined"))
+		//{
+		//	return SignatureIdentificationMode.SeparateRefined;
+		//
+		//}
 		else throw new IllegalArgumentException("Unknown mode "+input);
 	}
 
@@ -110,20 +109,17 @@ public class IdentifySignatureParser {
 		{
 			StringBuilder sb=new StringBuilder();
 			sb.append("identify signatures of TE insertions\n");
-			sb.append("populations may be analysed jointly or separately\n\n");
 			sb.append("== Main parameters ==\n");
 			sb.append(String.format("%-22s%s","--ppileup","input ppileup file; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--mode","joint or separate; Mandatory\n"));
+			sb.append(String.format("%-22s%s","--mode","joint|separate; Mandatory\n"));
 			sb.append(String.format("%-22s%s","--output","TE insertion signatures; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--min-coverage","the minimum coverage of the output file; default=10\n"));
 			sb.append(String.format("%-22s%s","--min-count","the minimum count of a TE insertion; default=2\n"));
 			sb.append(String.format("%-22s%s","--help","show help\n"));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--max-rearrangement","maximum counts of rearrangements; default=2\n"));
-			sb.append(String.format("%-22s%s","--max-othertes","maximum counts of overlapping TE families; default=2\n"));
 			sb.append(String.format("%-22s%s","--fixed-insertsize","proceed with a fixed insert size for all populations; default=None\n"));
-			sb.append(String.format("%-22s%s","--chunk-distance","minimum distance between chromosomal chunks; default=5\n"));
+			sb.append(String.format("%-22s%s","--chunk-distance","minimum distance between chromosomal chunks, in multiples of insert size; default=5\n"));
+			//sb.append(String.format("%-22s%s","--refine-distance","scan-distance for refined positions, in multiples of insert size; default=2\n"));
 			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
 			sb.append("See the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());

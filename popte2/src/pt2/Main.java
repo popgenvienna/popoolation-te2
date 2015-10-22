@@ -1,5 +1,6 @@
 package pt2;
 
+import pt2.identifysignatures.IdentifySignatureParser;
 import pt2.ppileup.PpileupParser;
 import pt2.se2pe.SingleEndToPairEnd;
 import pt2.statcoverage.StatcoverageFramework;
@@ -24,7 +25,15 @@ public class Main {
 		{
 			PpileupParser.parseCommandline(rawarguments);
 		}
+		else if(subtask.toLowerCase().equals("subsampleppileup"))
+		{
+			SubsampleParser.parseCommandline(rawarguments);
+		}
 		else if(subtask.toLowerCase().equals("identifysignatures"))
+		{
+			IdentifySignatureParser.parseCommandline(rawarguments);
+		}
+		else if(subtask.toLowerCase().equals("frequenciesforsignatures"))
 		{
 
 		}
@@ -32,14 +41,7 @@ public class Main {
 		{
 
 		}
-		else if(subtask.toLowerCase().equals("subsampleppileup"))
-		{
-			SubsampleParser.parseCommandline(rawarguments);
-		}
-		else if(subtask.toLowerCase().equals("stat-coverage"))
-		{
-			StatcoverageParser.parseCommandline(rawarguments);
-		}
+
 		else if(subtask.toLowerCase().equals("filterInsertions"))
 		{
 
@@ -48,6 +50,11 @@ public class Main {
 			SingleEndToPairEnd task = new SingleEndToPairEnd();
 			task.parseCommandLine(rawarguments);
 			task.run();
+		}
+
+		else if(subtask.toLowerCase().equals("stat-coverage"))
+		{
+			StatcoverageParser.parseCommandline(rawarguments);
 		}
 		else
 		{
@@ -64,15 +71,17 @@ public class Main {
 		sb.append("Usage: java -Xmx4g -jar popte2 [subtask] [parameters of subtask]\n\n");
 		sb.append("== Main tasks ==\n");
 		sb.append(String.format("%-22s%s","ppileup","generate a multi physical pileup file\n"));
-		sb.append(String.format("%-22s%s","subsamplePpileup","subsample the ppileup files to uniform coverage\n"));
+		sb.append(String.format("%-22s%s","subsamplePpileup","subsample ppileup files to an uniform coverage\n"));
 		sb.append(String.format("%-22s%s","identifySignatures", "identify signatures of TE insertions;\n"));
+		sb.append(String.format("%-22s%s","frequenciesForSignatures","estimate population frequencies for signatures of TE insertions\n"));
+		sb.append(String.format("%-22s%s","filterSignatures","filter signatures of TE insertions\n"));
 		sb.append(String.format("%-22s%s","pairupSignatures","pair up suitable signatures of TE insertions, resulting in TE insertions\n"));
-		sb.append(String.format("%-22s%s","estimateFrequency","estimate population frequencies of TE insertions\n"));
+
 
 		sb.append("\n== Secondary tasks ==\n");
-		sb.append(String.format("%-22s%s","stat-coverage","get coverage statistics; helps to decide optimal target coverage for subsampling\n"));
-		sb.append(String.format("%-22s%s","filter","filter TE insertions\n"));
 		sb.append(String.format("%-22s%s","se2pe","get pair-end information from bwasw output\n"));
+		sb.append(String.format("%-22s%s","stat-coverage","get coverage statistics; helps to decide optimal target coverage for subsampling\n"));
+		//sb.append(String.format("%-22s%s","filter","filter TE insertions\n"));
 		return sb.toString();
 	}
 

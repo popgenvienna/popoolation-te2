@@ -3,11 +3,16 @@ package test.TestSupport;
 import corete.data.hier.HierarchyEntry;
 import corete.data.hier.TEHierarchy;
 import corete.data.ppileup.PpileupBuilder;
+import corete.data.ppileup.PpileupSampleSummary;
+import corete.data.ppileup.PpileupSite;
+import corete.data.ppileup.PpileupSymbols;
 import corete.io.SamPairReader;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by robertkofler on 8/25/15.
@@ -128,6 +133,76 @@ public class PpileupTestSupport {
 		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
 		return pb;
 	}
+
+
+	/**
+	 * provides a quick way of obtaining a ppileup sample summary
+	 * by just providing a string of the form
+	 * "> 10 < 20 i 10 I 50 . 40"
+	 * @param ppsample
+	 * @return
+	 */
+	public static PpileupSampleSummary ppileupSampleSummaryFactory(String ppsample)
+	{
+		String[] spl= ppsample.split(" ");
+		LinkedList<String> tmp=new LinkedList<>();
+		for(String s:spl){tmp.add(s);}
+
+		int countabs=0;
+		int count_srfwd=0;
+		int count_srrev=0;
+		HashMap<String,Integer>  tecount =new HashMap<String,Integer>();
+		int coverage=0;
+		while(tmp.size()>0)
+		{
+			String symbol =tmp.remove(0);
+			int count=Integer.parseInt(tmp.remove(0));
+			coverage+=count;
+			switch(symbol)
+			{
+				case PpileupSymbols.ABS:
+					countabs=count; break;
+				case PpileupSymbols.SvFWD:
+					count_srfwd=count; break;
+				case PpileupSymbols.SvRev:
+					count_srrev=count; break;
+				default:
+					tecount.put(symbol,count);
+					break;
+			}
+		}
+		return new PpileupSampleSummary(countabs,count_srfwd,count_srrev,coverage,tecount);
+	}
+
+	/**
+	 * Return a Ppileup site from a simpel formating string
+	 * eg.: "2L\t10\tcom\t. 10 r 10\t. 15 i 10\t . 0 t 30"
+	 *
+	 * @param ppsample
+	 * @return
+	 */
+	public static PpileupSite ppileupSiteFactory(String ppsample) {
+		String[] spl= ppsample.split("\\t");
+		LinkedList<String> tmp=new LinkedList<>();
+		for(String s:spl){tmp.add(s);}
+
+		String chr=tmp.remove(0);
+		int pos=Integer.parseInt(tmp.remove(0));
+		String comment=tmp.remove(0);
+
+		ArrayList<PpileupSampleSummary> summaries = new ArrayList<PpileupSampleSummary>();
+		while(tmp.size()>0) {
+			summaries.add(ppileupSampleSummaryFactory(tmp.remove(0)));
+		}
+		return new PpileupSite(chr,pos,comment,summaries);
+
+	}
+
+
+
+
+
+
 
 
 }

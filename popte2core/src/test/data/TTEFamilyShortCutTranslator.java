@@ -3,7 +3,7 @@ package test.data;
 import corete.data.TEFamilyShortcutTranslator;
 import org.junit.Test;
 import test.TestSupport.DataTestSupport;
-import corete.data.hier.TEHierarchy;
+
 import static org.junit.Assert.*;
 
 
@@ -42,10 +42,10 @@ public class TTEFamilyShortCutTranslator {
 	public void Test_s2fs(){
 		TEFamilyShortcutTranslator tt = DataTestSupport.getTETranslator_iniFull2Short();
 
-		assertEquals(tt.getFullname("p"),"P-element");
-		assertEquals(tt.getFullname("r"),"roo");
-		assertEquals(tt.getFullname("in"),"Ine-1");
-		assertEquals(tt.getFullname("4a"),"412");
+		assertEquals(tt.getFamilyname("p"),"P-element");
+		assertEquals(tt.getFamilyname("r"),"roo");
+		assertEquals(tt.getFamilyname("in"),"Ine-1");
+		assertEquals(tt.getFamilyname("4a"),"412");
 
 	}
 
@@ -53,10 +53,10 @@ public class TTEFamilyShortCutTranslator {
 	public void Test_s2fu(){
 		TEFamilyShortcutTranslator tt = DataTestSupport.getTETranslator_iniFull2Short();
 
-		assertEquals(tt.getFullname("P"),"P-element");
-		assertEquals(tt.getFullname("R"),"roo");
-		assertEquals(tt.getFullname("IN"),"Ine-1");
-		assertEquals(tt.getFullname("4A"),"412");
+		assertEquals(tt.getFamilyname("P"),"P-element");
+		assertEquals(tt.getFamilyname("R"),"roo");
+		assertEquals(tt.getFamilyname("IN"),"Ine-1");
+		assertEquals(tt.getFamilyname("4A"),"412");
 
 	}
 

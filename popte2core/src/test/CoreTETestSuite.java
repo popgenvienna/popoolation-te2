@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({test.data.TTEHierarchy.class, test.data.TTEFamilyShortCutTranslator.class,
 		test.io.TSamReader.class,  test.io.TSamPairReader.class, test.io.TPpileupReader.class,
+		test.data.TPpileupSampleSummary.class,test.data.TPpileupSite.class,  test.data.TPpileupSlidingWindow.class,
 test.ppileup.TPpileupBuilder.class})
 public class CoreTETestSuite {
 }

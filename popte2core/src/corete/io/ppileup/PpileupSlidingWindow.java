@@ -30,12 +30,12 @@ public class PpileupSlidingWindow {
 		//		6-3+1=4
 		int targetStart=site.getPosition()-targetSize+1;
 		sites.add(site);
-		summaxtesupport+=site.getMaxTESupport_SampleSpecific();
+		summaxtesupport+=site.getMaxTESupport();
 		while(sites.size()>0 && sites.peekFirst().getPosition()<targetStart)
 		{
 			PpileupSite s=sites.remove(0);
 			toret.add(s);
-			summaxtesupport-=s.getMaxTESupport_SampleSpecific();
+			summaxtesupport-=s.getMaxTESupport();
 
 		}
 		return toret;

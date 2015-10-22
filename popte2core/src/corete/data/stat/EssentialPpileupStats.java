@@ -28,6 +28,12 @@ public class EssentialPpileupStats {
 		return this.defaultInnerDistances.get(index);
 	}
 
+	/**
+	 * Number of samples in the file;
+	 *
+	 * algorithmically estimated from the number of different insert sizes found in the header of the ppileup
+	 * @return
+	 */
 	public int countSamples()
 	{
 		return this.defaultInnerDistances.size();

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
+ * Container class
  * Created by robertkofler on 9/2/15.
  */
 public class PpileupSampleSummary {
@@ -17,15 +18,34 @@ public class PpileupSampleSummary {
 	private final HashMap<String, Integer> tecount;
 	private final int coverage;
 
-	public PpileupSampleSummary(int absence, int srfwd, int srrev, int coverage, HashMap<String, Integer> tecount)
+	public PpileupSampleSummary(int absence, int srfwd, int srrev, HashMap<String, Integer> tecount)
 	{
 		this.absence = absence;
 		this.srrev = srrev;
 		this.srfwd = srfwd;
 		this.tecount = new HashMap<String, Integer>(tecount);
+
+		// Compute coverage
+		// I decided to compute it inside the class ensure sanity of the container
+		int coverage=absence+srfwd+srrev;
+		for(Map.Entry<String,Integer> me:tecount.entrySet())
+		{
+			coverage+=me.getValue();
+		}
 		this.coverage=coverage;
 	}
 
+	public static PpileupSampleSummary getEmpty()
+	{
+		HashMap<String,Integer> hm=new HashMap<String,Integer>();
+		return new PpileupSampleSummary(0,0,0,hm);
+	}
+
+	/**
+	 * Coverage
+	 * sum of absence, structural-fwd, structural-rev, and all TEs
+	 * @return
+	 */
 	public int getCoverage()
 	{
 		 return this.coverage;
@@ -37,8 +57,21 @@ public class PpileupSampleSummary {
 
 	public int getCountSrRev(){return this.srrev;}
 
-	public HashMap<String,Integer> getTECount(){return new HashMap<String,Integer>(this.tecount);}
+	public HashMap<String,Integer> getAllTEcounts()
+	{
+		return new HashMap<String,Integer>(this.tecount);
+	}
 
+
+	/**
+	 * Get the counts for a specific TE family
+	 * @param teshortcut
+	 * @return
+	 */
+	public int getTEcount(String teshortcut)
+	{
+		return tecount.getOrDefault(teshortcut,0);
+	}
 
 	public int maxTESupport()
 	{
