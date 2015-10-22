@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Created by robertkofler on 9/2/15.
  */
-public class PpileupReader {
+public class PpileupReader implements IPpileupReader {
 	private final IPpileupLightwightReader lwr;
 	private Logger logger;
 	public PpileupReader(String inputFile, Logger logger)
@@ -23,25 +23,31 @@ public class PpileupReader {
 	}
 
 
+	@Override
 	public EssentialPpileupStats getEssentialPpileupStats()
 	{
 		return lwr.getEssentialPpileupStats();
 	}
 
+	@Override
 	public TEFamilyShortcutTranslator getTEFamilyShortcutTranslator()
 	{
 		return lwr.getTEFamilyShortcutTranslator();
 	}
 
+	@Override
 	public PpileupSite next()
 	{
 		PpileupSiteLightwight lw=lwr.next();
+		if(lw==null) return null;
 		ArrayList<PpileupSampleSummary> sum=new ArrayList<PpileupSampleSummary>();
 
 		for(int i=0; i<lw.size(); i++)
 		{
+			// special case; emtpy entry; lightwight reader returns empyt ArrayList
+			// treated properly; zero counts for all
 			ArrayList<String> sa=lw.getEntries(i);
-			int coverage=sa.size();
+
 			int properpair=0;
 			int srfwd=0;
 			int srrev=0;
@@ -64,7 +70,7 @@ public class PpileupReader {
 						tecount.put(s,1+tecount.get(s));
 				}  // swithc
 			}               //for
-			PpileupSampleSummary ss=new PpileupSampleSummary(properpair,srfwd,srrev,coverage,tecount);
+			PpileupSampleSummary ss=new PpileupSampleSummary(properpair,srfwd,srrev,tecount);
 			sum.add(ss);
 
 		}

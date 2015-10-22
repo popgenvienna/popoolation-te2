@@ -100,17 +100,37 @@ public class TEFamilyShortcutTranslator {
 
 
 	/**
-	 * Translates shortcut to fullname of TE insertion
+	 * Translates shortcut to the Family name of TE insertion
 	 * Case insensitive, as all shortcuts are converted to lowercase
 	 * @param shortcut
 	 * @return
 	 */
-	public String getFullname(String shortcut)
+	public String getFamilyname(String shortcut)
 	{
 		String lcs=shortcut.toLowerCase();
 		if(!short2full.containsKey(lcs)) throw new IllegalArgumentException("Can not find entry for shortcut "+lcs);
 		return short2full.get(lcs);
 	}
+
+
+	/**
+	 * Returns the direction of the TE insertions signature
+	 * @param shortcut
+	 * @return
+	 */
+	public SignatureDirection getSignatureDirection(String shortcut) {
+		String lcs = shortcut.toLowerCase();
+		if (!short2full.containsKey(lcs)) throw new IllegalArgumentException("Can not find entry for shortcut " + lcs);
+		SignatureDirection strand = SignatureDirection.Forward;
+		if (shortcut.toLowerCase().equals(shortcut)) {
+			strand = SignatureDirection.Reverse;
+		}
+		return strand;
+	}
+
+
+
+
 
 	public HashMap<String,String> getFull2short()
 	{
