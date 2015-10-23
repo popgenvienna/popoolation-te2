@@ -83,7 +83,7 @@ public class TESignatureWriter {
 
 	private String formatFrequencySampleSummary(FrequencySampleSummary fss)
 	{
-		    String toret=String.format("%.3f:%.3f:%.3f:%.3f",fss.getCoverage(),fss.getGivenTEInsertion(),fss.getOtherTEinsertions(),fss.getStructuralRearrangements());
+		    String toret=String.format("%d:%.3f:%.3f:%.3f:%.3f",fss.getPopulationid(),fss.getCoverage(),fss.getGivenTEInsertion(),fss.getOtherTEinsertions(),fss.getStructuralRearrangements());
 			return toret;
 	}
 

@@ -4,6 +4,7 @@ import corete.data.TEFamilyShortcutTranslator;
 import corete.data.ppileup.PpileupChunk;
 import corete.data.tesignature.Chunk2SignatureParser;
 import corete.data.tesignature.InsertionSignature;
+import corete.data.tesignature.SignatureFrequencyEstimationFramework;
 import corete.io.ppileup.PpileupChunkReader;
 import corete.io.ppileup.PpileupPoolsampleReader;
 import corete.io.ppileup.PpileupReader;
@@ -58,7 +59,7 @@ public class FrequencyForSignatureFramework {
 		ArrayList<InsertionSignature> signatures= TESignatureReader.readall(signatureFile,logger);
 
 
-		ArrayList<InsertionSignature> updatedSignatures=null;
+		ArrayList<InsertionSignature> updatedSignatures=new SignatureFrequencyEstimationFramework(pr,signatures,logger).getSignaturesWithFrequencies();
 
 
 
@@ -68,27 +69,7 @@ public class FrequencyForSignatureFramework {
 	}
 
 
-	/**
-	 * Joint sample analysis
-	 */
-	private ArrayList<InsertionSignature> run_joint(PpileupReader pr, int chunkdistance, int windowsize)
-	{
-		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
-		ArrayList<InsertionSignature> tmp=new ArrayList<InsertionSignature>();
-		PpileupChunkReader chunkReader=new PpileupChunkReader(new PpileupPoolsampleReader(pr),this.mincount,windowsize,chunkdistance,logger);
-		PpileupChunk chunk=null;
-		while((chunk=chunkReader.next())!=null)
-		{
-			tmp.addAll(new Chunk2SignatureParser(chunk, windowsize, this.mincount,translator).getSignatures()) ;
-		}
 
-		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
-		for(InsertionSignature is: tmp)
-		{
-			toret.add(is.updateSampleId(TESignatureSymbols.jointSample));
-		}
-		return toret;
-	}
 
 
 

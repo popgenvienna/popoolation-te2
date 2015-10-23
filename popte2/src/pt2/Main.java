@@ -1,6 +1,11 @@
 package pt2;
 
+import pt2.filtersignatures.FilterSignatureFramework;
+import pt2.filtersignatures.FilterSignatureParser;
+import pt2.freqforsig.FrequencyForSignatureParser;
 import pt2.identifysignatures.IdentifySignatureParser;
+import pt2.pairupsignatures.PairupSignatureFramework;
+import pt2.pairupsignatures.PairupSignatureParser;
 import pt2.ppileup.PpileupParser;
 import pt2.se2pe.SingleEndToPairEnd;
 import pt2.statcoverage.StatcoverageFramework;
@@ -33,18 +38,17 @@ public class Main {
 		{
 			IdentifySignatureParser.parseCommandline(rawarguments);
 		}
-		else if(subtask.toLowerCase().equals("frequenciesforsignatures"))
+		else if(subtask.toLowerCase().equals("frequency"))
 		{
-
+			FrequencyForSignatureParser.parseCommandline(rawarguments);
+		}
+		else if(subtask.toLowerCase().equals("filtersignatures"))
+		{
+			FilterSignatureParser.parseCommandline(rawarguments);
 		}
 		else if(subtask.toLowerCase().equals("pairupsignatures"))
 		{
-
-		}
-
-		else if(subtask.toLowerCase().equals("filterInsertions"))
-		{
-
+			PairupSignatureParser.parseCommandline(rawarguments);
 		}
 		else if(subtask.toLowerCase().equals("se2pe")) {
 			SingleEndToPairEnd task = new SingleEndToPairEnd();
@@ -73,7 +77,7 @@ public class Main {
 		sb.append(String.format("%-22s%s","ppileup","generate a multi physical pileup file\n"));
 		sb.append(String.format("%-22s%s","subsamplePpileup","subsample ppileup files to an uniform coverage\n"));
 		sb.append(String.format("%-22s%s","identifySignatures", "identify signatures of TE insertions;\n"));
-		sb.append(String.format("%-22s%s","frequenciesForSignatures","estimate population frequencies for signatures of TE insertions\n"));
+		sb.append(String.format("%-22s%s","frequency","estimate population frequencies for signatures of TE insertions\n"));
 		sb.append(String.format("%-22s%s","filterSignatures","filter signatures of TE insertions\n"));
 		sb.append(String.format("%-22s%s","pairupSignatures","pair up suitable signatures of TE insertions, resulting in TE insertions\n"));
 

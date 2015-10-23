@@ -16,10 +16,9 @@ public class FrequencyForSignatureParser {
 			String ppileupe="";
 			String signature="";
 			String outputFile="";
-			int mincount=2;
-			Integer fixedinsertsize=null;
-			int chunkdistance=5;
-			//int refinedistance=2;
+
+
+
 			boolean detailedLog=false;
 
 
@@ -65,8 +64,7 @@ public class FrequencyForSignatureParser {
 
 
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			FrequencyForSignatureFramework isf =new FrequencyForSignatureFramework(inputFile,outputFile,mode,mincount,
-					fixedinsertsize,chunkdistance,detailedLog,logger);
+			FrequencyForSignatureFramework isf =new FrequencyForSignatureFramework(ppileupe,signature ,outputFile,detailedLog,logger);
 			isf.run();
 		}
 

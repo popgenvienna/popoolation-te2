@@ -39,7 +39,7 @@ public class PpileupPoolsampleFactory {
 
 		}
 		ArrayList<PpileupSampleSummary> singlesample=new ArrayList<PpileupSampleSummary>();
-		singlesample.add(new PpileupSampleSummary(sumabsence,sumsrfwd,sumsrrev,sumcoverage,tecount));
+		singlesample.add(new PpileupSampleSummary(sumabsence,sumsrfwd,sumsrrev,tecount));
 		return new PpileupSite(site.getChromosome(),site.getPosition(),site.getComment(),singlesample);
 	}
 
