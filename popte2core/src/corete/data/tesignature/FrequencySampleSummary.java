@@ -21,10 +21,16 @@ public class FrequencySampleSummary {
 	}
 
 	public int getPopulationid(){return this.populationid;}
+
+	// counts
 	public double getCoverage(){return this.coverage;}
 	public double getGivenTEInsertion(){return this.givenTEInsertion;}
 	public double getOtherTEinsertions(){return this.otherTEinsertions;}
 	public double getStructuralRearrangements(){return this.structuralRearrangements;}
 
+	// frequencies
+	public double getPopulationFrequency(){return this.givenTEInsertion/this.coverage;}
+	public double getOtherteFrequency(){return this.otherTEinsertions/this.coverage;}
+	public double getStructvarFrequency(){return this.structuralRearrangements/this.coverage;}
 
 }

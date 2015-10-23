@@ -2,6 +2,7 @@ package corete.io.tesignature;
 
 import corete.data.SignatureDirection;
 import corete.data.TEStrand;
+import corete.data.tesignature.FrequencySampleSummary;
 import corete.data.tesignature.InsertionSignature;
 import corete.data.tesignature.PopulationID;
 
@@ -76,7 +77,29 @@ public class TESignatureReader {
 		SignatureDirection sigDir=getSignatureDirection(spl[4]);
 		String famsc=spl[5];
 		TEStrand testra= getTEStrand(spl[6]);
-		return new InsertionSignature(id,chr,sigDir,start,end,famsc,testra);
+		ArrayList<FrequencySampleSummary> fss=new ArrayList<FrequencySampleSummary>();
+		if(spl.length>7)
+		{
+			for(int i=7; i<spl.length; i++)
+			{
+				FrequencySampleSummary tfs=translatefss(spl[i]);
+				fss.add(tfs);
+			}
+		}
+		return new InsertionSignature(id,chr,sigDir,start,end,famsc,testra,fss);
+	}
+
+	private FrequencySampleSummary translatefss(String totr)
+	{
+		// String.format("%d:%.3f:%.3f:%.3f:%.3f",
+		// fss.getPopulationid(),fss.getCoverage(),fss.getGivenTEInsertion(),fss.getOtherTEinsertions(),fss.getStructuralRearrangements());
+		String[] s=totr.split(":");
+		int popid=Integer.parseInt(s[0]);
+		double cov=Double.parseDouble(s[1]);
+		double count=Double.parseDouble(s[2]);
+		double other=Double.parseDouble(s[3]);
+		double struc=Double.parseDouble(s[4]);
+		return new FrequencySampleSummary(popid,cov,count,other,struc);
 	}
 
 

@@ -7,17 +7,29 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
+ * Estimates the frequency for a given TE insertion signature
+ * Rather strict interpretation; only entries from the same family an dinsertion direction are considered as valid;
+ * all other entries are considered to stem from a different family, including insertions of the same family but different direction
+ * TODO; maybe it wil be necessary to ignore entries of the same family but from a different signature-direction
  * Created by robertkofler on 10/21/15.
  */
 public class SignatureFrequencyBuilder {
 	private final InsertionSignature signature;
 	private final String teshortcut;
+	private final String antishortcut; // of the same family
 	private ArrayList<PpileupSite> sites;
-	public SignatureFrequencyBuilder(InsertionSignature signature, String teshortcut)
+	public SignatureFrequencyBuilder(InsertionSignature signature, String teshortcut, String antishortcut)
 	{
 		this.signature=signature;
 		this.teshortcut=teshortcut;
+		this.antishortcut=antishortcut;
+		sites=new ArrayList<PpileupSite>();
 	}
+
+	public String getChromosome(){return this.signature.getChromosome();}
+	public int getStart(){return this.signature.getStart();}
+	public int getEnd(){return this.signature.getEnd();}
+
 
 
 
@@ -27,14 +39,21 @@ public class SignatureFrequencyBuilder {
 	}
 
 
+	/**
+	 * Get an updated signature with frequency information added
+	 * @return
+	 */
 	public InsertionSignature getUpdatedSignature()
 	{
 		ArrayList<FrequencySampleSummary> freqs=new ArrayList<FrequencySampleSummary>();
 		ArrayList<Integer> ids=signature.getPopid().getIds();
 		for(int id:ids)
 		{
-
+			        freqs.add(getFrequencySampleSummaryForID(id));
 		}
+		return new InsertionSignature(this.signature.getPopid(),this.signature.getChromosome(),this.signature.getSignatureDirection(),
+				this.signature.getStart(),this.signature.getEnd(),this.signature.getTefamily(),this.signature.getTEStrand(),freqs);
+
 	}
 
 
@@ -71,7 +90,7 @@ public class SignatureFrequencyBuilder {
 		givenTE/=size;
 		otherTE/=size;
 		structural/=size;
-		return new FrequencySampleSummary(coverage,givenTE,otherTE,structural);
+		return new FrequencySampleSummary(id,coverage,givenTE,otherTE,structural);
 	}
 
 

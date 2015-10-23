@@ -171,7 +171,7 @@ public class PpileupTestSupport {
 					break;
 			}
 		}
-		return new PpileupSampleSummary(countabs,count_srfwd,count_srrev,coverage,tecount);
+		return new PpileupSampleSummary(countabs,count_srfwd,count_srrev,tecount);
 	}
 
 	/**

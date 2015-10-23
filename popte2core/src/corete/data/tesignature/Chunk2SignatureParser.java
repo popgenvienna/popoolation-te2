@@ -7,6 +7,7 @@ import corete.data.ppileup.PpileupChunk;
 import corete.data.ppileup.PpileupSampleSummary;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -133,23 +134,20 @@ public class Chunk2SignatureParser {
 
 	private InsertionSignature signify(int start,int end,double support,String shortcut,int popindex)
 	{
-		  String sampleid=getSampleid(popindex);
+
+		PopulationID popid=new PopulationID(new ArrayList<Integer>(Arrays.asList(popindex)));
 		// forward = uppercase is end
 		// reverse = lowercase is start
 		SignatureDirection sigDir=translator.getSignatureDirection(shortcut);
 		String tefamily=translator.getFamilyname(shortcut);
 
 
-		return new InsertionSignature(sampleid,this.chromosome,sigDir,start,end,tefamily, TEStrand.Unknown);
+		return new InsertionSignature(popid,this.chromosome,sigDir,start,end,tefamily, TEStrand.Unknown);
 	}
 
 
 
 
-	private String getSampleid(int popindex)
-	{
-		return Integer.toString(popindex);
-	}
 
 
 
