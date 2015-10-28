@@ -1,5 +1,7 @@
 package pt2.ppileup;
 
+import pt2.CommandFormater;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -36,7 +38,7 @@ public class PpileupParser {
 				{
 					outputFile=args.remove(0);
 				}
-				else if(cu.equals("--hier-file"))
+				else if(cu.equals("--hier"))
 				{
 					hierFile=args.remove(0);
 				}
@@ -95,19 +97,19 @@ public class PpileupParser {
 			StringBuilder sb=new StringBuilder();
 			sb.append("create a physical pileup file from one or multiple bam files\n\n");
 			sb.append("== Main parameters ==\n");
-			sb.append(String.format("%-22s%s","--bam","bam files; multiple may be specified\n"));
-			sb.append(String.format("%-22s%s","--map-qual","minimum mapping quality; default=15\n"));
-			sb.append(String.format("%-22s%s","--hier","TE hierarchy file\n"));
-			sb.append(String.format("%-22s%s","--output","the output file\n"));
-			sb.append(String.format("%-22s%s","--help","show help\n"));
+			sb.append(CommandFormater.format("--bam", "a bam file; multiple files may be specified",true));
+			sb.append(CommandFormater.format("--map-qual","minimum mapping quality", "15"));
+			sb.append(CommandFormater.format("--hier","TE hierarchy file",true));
+			sb.append(CommandFormater.format("--output","the output file",true));
+			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--te-shortcuts","use a predefined list of TE family shortcuts; default=\"\"\n"));
-			sb.append(String.format("%-22s%s","--disable-zipped","flag; disable zipped output\n"));
-			sb.append(String.format("%-22s%s","--sr-mindist","structural rearrangement minimum distance; default=10000\n"));
-			sb.append(String.format("%-22s%s","--id-up-quant","upper quantile of inner distance will be ignored; [fraction] default=0.01\n"));
-			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
-			sb.append("See the online manual for detailed description of the parameters\n");
+			sb.append(CommandFormater.format("--te-shortcuts","use a predefined list of TE family shortcuts [file-path]",null));
+			sb.append(CommandFormater.format("--disable-zipped","disable zipped output",null));
+			sb.append(CommandFormater.format("--sr-mindist","minimum inner distance for structural rearrangements","10000"));
+			sb.append(CommandFormater.format("--id-up-quant","paired end fragments with an insert size in the upper quantile will be ignored [fraction]","0.01"));
+			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
+			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 
 		}

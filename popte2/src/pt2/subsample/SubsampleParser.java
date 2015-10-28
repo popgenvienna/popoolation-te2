@@ -1,5 +1,6 @@
 package pt2.subsample;
 
+import pt2.CommandFormater;
 import pt2.ppileup.PpileupFramework;
 
 import java.util.ArrayList;
@@ -77,14 +78,14 @@ public class SubsampleParser {
 			StringBuilder sb=new StringBuilder();
 			sb.append("subsample a ppileup file to uniform coverage\n\n");
 			sb.append("== Main parameters ==\n");
-			sb.append(String.format("%-22s%s","--ppileup","input ppileup file\n"));
-			sb.append(String.format("%-22s%s","--output","output ppileup file\n"));
-			sb.append(String.format("%-22s%s","--target-coverage","the target coverage of the output file\n"));
-			sb.append(String.format("%-22s%s","--help","show help\n"));
+			sb.append(CommandFormater.format("--ppileup","input ppileup file",true));
+			sb.append(CommandFormater.format("--output","output ppileup file",true));
+			sb.append(CommandFormater.format("--target-coverage","the target coverage of the output file [int]",true));
+			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--disable-zipped","flag; disable zipped output\n"));;
-			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
+			sb.append(CommandFormater.format("--disable-zipped","disable zipped output",null));;
+			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
 			sb.append("See the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 

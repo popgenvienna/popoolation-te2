@@ -74,17 +74,17 @@ public class Main {
 		StringBuilder sb=new StringBuilder();
 		sb.append("Usage: java -Xmx4g -jar popte2 [subtask] [parameters of subtask]\n\n");
 		sb.append("== Main tasks ==\n");
-		sb.append(String.format("%-22s%s","ppileup","generate a multi physical pileup file\n"));
-		sb.append(String.format("%-22s%s","subsamplePpileup","subsample ppileup files to an uniform coverage\n"));
-		sb.append(String.format("%-22s%s","identifySignatures", "identify signatures of TE insertions;\n"));
-		sb.append(String.format("%-22s%s","frequency","estimate population frequencies for signatures of TE insertions\n"));
-		sb.append(String.format("%-22s%s","filterSignatures","filter signatures of TE insertions\n"));
-		sb.append(String.format("%-22s%s","pairupSignatures","pair up suitable signatures of TE insertions, resulting in TE insertions\n"));
+		sb.append(CommandFormater.format("ppileup","generate a multi physical pileup file",null));
+		sb.append(CommandFormater.format("subsamplePpileup","subsample ppileup files to an uniform coverage",null));
+		sb.append(CommandFormater.format("identifySignatures", "identify signatures of TE insertions",null));
+		sb.append(CommandFormater.format("frequency","estimate population frequencies for signatures of TE insertions",null));
+		sb.append(CommandFormater.format("filterSignatures","filter signatures of TE insertions",null));
+		sb.append(CommandFormater.format("pairupSignatures","pair up signatures of TE insertions to obtain TE insertions",null));
 
 
 		sb.append("\n== Secondary tasks ==\n");
-		sb.append(String.format("%-22s%s","se2pe","get pair-end information from bwasw output\n"));
-		sb.append(String.format("%-22s%s","stat-coverage","get coverage statistics; helps to decide optimal target coverage for subsampling\n"));
+		sb.append(CommandFormater.format("se2pe","obtain a paired-end bam-file for individually mapped (e.g. bwasw) output files",null));
+		sb.append(CommandFormater.format("stat-coverage","calculate physical coverage statistics; helps to decide optimal target coverage for subsampling",null));
 		//sb.append(String.format("%-22s%s","filter","filter TE insertions\n"));
 		return sb.toString();
 	}
