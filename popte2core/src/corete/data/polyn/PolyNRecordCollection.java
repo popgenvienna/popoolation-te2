@@ -42,5 +42,16 @@ public class PolyNRecordCollection {
 		return contigs.size();
 	}
 
+	public ContigwisePolynRepresentation getContigwisePolynRepresentation(String contig)
+	{
+		ArrayList<PolyNRecord> poly=new ArrayList<PolyNRecord>();
+		for(PolyNRecord pr:this.getPolyNRecords())
+		{
+			if(pr.getChromosome().equals(contig)) poly.add(pr);
+		}
+		return new ContigwisePolynRepresentation(poly,contig);
+	}
+
+
 
 }
