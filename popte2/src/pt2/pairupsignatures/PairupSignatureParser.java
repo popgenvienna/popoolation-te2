@@ -1,5 +1,7 @@
 package pt2.pairupsignatures;
 
+import pt2.CommandFormater;
+
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -99,20 +101,20 @@ public class PairupSignatureParser {
 
 
 			StringBuilder sb=new StringBuilder();
-			sb.append("pairs up signatures of TE insertions and yields TE insertions\n");
+			sb.append("pairs up signatures of TE insertions and yields TE insertions\n\n");
 			sb.append("== Main parameters ==\n");
-			sb.append(String.format("%-22s%s","--signature","the signatures of TE insertions; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--ref-genome","the RepeatMasked reference genome; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--hier-file","the TE hierarchy; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--output","TE insertion signatures; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--min-distance","the minimum distance between signatures; default=-100\n"));
-			sb.append(String.format("%-22s%s","--max-distance","the maximum distance between signatures; default=500\n"));
-			sb.append(String.format("%-22s%s","--max-freq-diff","the maximum frequency difference between signatures; default=0.5\n"));
-			sb.append(String.format("%-22s%s","--help","show help\n"));
+			sb.append(CommandFormater.format("--signature", "signatures of TE insertions",true));
+			sb.append(CommandFormater.format("--ref-genome","the repeat-masked reference genome",true));
+			sb.append(CommandFormater.format("--hier-file","the TE hierarchy",true));
+			sb.append(CommandFormater.format("--output","TE insertions",true));
+			sb.append(CommandFormater.format("--min-distance","the minimum distance between signatures","-100"));
+			sb.append(CommandFormater.format("--max-distance","the maximum distance between signatures", "500"));
+			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
-			sb.append("See the online manual for detailed description of the parameters\n");
+			sb.append(CommandFormater.format("--max-freq-diff","the maximum frequency difference between signatures","0.5"));
+			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
+			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 
 		}

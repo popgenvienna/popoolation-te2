@@ -4,6 +4,7 @@ import corete.misc.LogFactory;
 import htsjdk.samtools.*;
 import htsjdk.samtools.fastq.FastqReader;
 import htsjdk.samtools.fastq.FastqRecord;
+import pt2.CommandFormater;
 import pt2.Main;
 
 import java.io.File;
@@ -301,31 +302,34 @@ public class SingleEndToPairEnd {
 
 	public static void printHelp()
 	{
-		System.out.println("Merges two SAM/BAM files and crosslinks the paired-end information");
-		System.out.println();
-		System.out.println("== Main parameters ==");
-		formatMainOption("fastq1", "FASTQ with first read pairs (gziped allowed)");
-		formatMainOption("fastq2", "FASTQ with second read pairs (gziped allowed)");
-		formatMainOption("bam1", "BAM/SAM file with first read pairs");
-		formatMainOption("bam2", "BAM/SAM file with second read pairs");
-		formatMainOption("output", "Output file");
-		System.out.println();
-		System.out.println("== Parameters for fine tuning ==");
+		StringBuilder sb=new StringBuilder();
+		sb.append("Merge two sam/bam files and crosslink the paired-end information\n\n");
+
+		sb.append("== Main parameters ==\n");
+		sb.append(CommandFormater.format("--fastq1", "fastq file with first read pairs (gziped allowed)",true));
+		sb.append(CommandFormater.format("--fastq2", "fastq file with second read pairs (gziped allowed)",true));
+		sb.append(CommandFormater.format("--bam1", "bam/sam file with first read pairs",true));
+		sb.append(CommandFormater.format("--bam2", "bam/sam file with second read pairs",true));
+		sb.append(CommandFormater.format("--output", "Output file",true));
+		sb.append("\n");
+		sb.append("== Parameters for fine tuning ==\n");
 		// this three following options comes from the bwa sampe program
-		formatOptionalOption("n", "Maximum number of alignments to output in the SA tag. If a read has more than this number of hits, the SA tag will not be written (although X0 will be different from 0)", maxAlignmentsSA);
-		formatOptionalOption("sort", "Sort the output BAM/SAM file on the fly", false);
-		formatOptionalOption("index", "Create the index for the output BAM/SAM file on the fly (sort will be set by default if you provide this option)", false);
-		formatOptionalOption("detailed-log", "Show a detailed event log", false);
-		System.out.println("See the online manual for detailed description of the parameters");
+		sb.append(CommandFormater.format("--n", "Maximum number of alignments to output in the SA tag. Tag will be ignored if numbers exceed this maximum", String.valueOf(maxAlignmentsSA)));
+		sb.append(CommandFormater.format("--sort", "Sort the output file", false));
+		sb.append(CommandFormater.format("--index", "Create an index for the output file (sort will be set by default)", null));
+		sb.append(CommandFormater.format("--detailed-log", "Show a detailed event log", false));
+		sb.append("\nSee the online manual for detailed description of the parameters\n");
+		System.out.println(sb.toString());
+
 
 	}
 
-	private static void formatMainOption(String name, String description) {
-		System.out.println(String.format("--%-22s%s", name, description));
-	}
+	//private static void formatMainOption(String name, String description) {
+	//	System.out.println(String.format("--%-22s%s", name, description));
+	//}
 
-	private static void formatOptionalOption(String name, String description, Object defaultValue) {
-		System.out.println(String.format("--%-22s%s [%s]", name, description, defaultValue));
-	}
+	//private static void formatOptionalOption(String name, String description, Object defaultValue) {
+	//	System.out.println(String.format("--%-22s%s [%s]", name, description, defaultValue));
+	//}
 
 }

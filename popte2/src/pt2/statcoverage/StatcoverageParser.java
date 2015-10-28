@@ -1,5 +1,7 @@
 package pt2.statcoverage;
 
+import pt2.CommandFormater;
+
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -64,13 +66,13 @@ public class StatcoverageParser {
 			StringBuilder sb=new StringBuilder();
 			sb.append("Create coverage statistics for a mpileup file; May help to set a target coverage for subsampling\n\n");
 			sb.append("== Main parameters ==\n");
-			sb.append(String.format("%-22s%s","--ppileup","input ppileup file\n"));
-			sb.append(String.format("%-22s%s","--output","output ppileup file\n"));
-			sb.append(String.format("%-22s%s","--help","show help\n"));
+			sb.append(CommandFormater.format("--ppileup", "input ppileup file",true));
+			sb.append(CommandFormater.format("--output","output ppileup file",true));
+			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
-			sb.append("See the online manual for detailed description of the parameters\n");
+			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",true));
+			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 
 		}

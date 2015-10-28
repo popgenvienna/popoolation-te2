@@ -3,6 +3,7 @@ package pt2.pairupsignatures;
 import corete.data.polyn.PolyNRecord;
 import corete.data.hier.TEHierarchy;
 import corete.data.polyn.PolyNRecordCollection;
+import corete.data.teinsertion.Signature2InsertionFactory;
 import corete.data.tesignature.InsertionSignature;
 import corete.io.FastaReader;
 import corete.io.TEHierarchyReader;
@@ -61,7 +62,7 @@ public class PairupSignatureFramework {
 	{
 		this.logger.info("Start pairing up signatures of TE insertions");
 
-		TEHierarchy tehier=new TEHierarchyReader(this.hierFile,this.logger).getHierarchy();
+		Signature2InsertionFactory s2i =new Signature2InsertionFactory(new TEHierarchyReader(this.hierFile,this.logger).getHierarchy());
 		ArrayList<InsertionSignature> signatures= TESignatureReader.readall(signatureFile,logger);
 		PolyNRecordCollection polys=new PolyNReader(new FastaReader(this.refgenomeFile,this.logger),this.logger).getPolyNRecords();
 

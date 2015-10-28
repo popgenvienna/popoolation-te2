@@ -1,5 +1,7 @@
 package pt2.freqforsig;
 
+import pt2.CommandFormater;
+
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -75,16 +77,16 @@ public class FrequencyForSignatureParser {
 		private static void printHelp()
 		{
 			StringBuilder sb=new StringBuilder();
-			sb.append("identify signatures of TE insertions\n");
+			sb.append("estimate frequencies for signatures of TE insertions\n\n");
 			sb.append("== Main parameters ==\n");
-			sb.append(String.format("%-22s%s","--ppileup","input ppileup file; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--signature","the signatures of TE insertions; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--output","TE insertion signatures; Mandatory\n"));
-			sb.append(String.format("%-22s%s","--help","show help\n"));
+			sb.append(CommandFormater.format("--ppileup", "input ppileup file",true));
+			sb.append(CommandFormater.format("--signature","the signatures of TE insertions",true));
+			sb.append(CommandFormater.format("--output","TE insertion signatures",true));
+			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(String.format("%-22s%s","--detailed-log","show a detailed event log\n"));
-			sb.append("See the online manual for detailed description of the parameters\n");
+			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
+			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 
 		}
