@@ -4,9 +4,12 @@ import corete.data.polyn.PolyNRecord;
 import corete.data.hier.TEHierarchy;
 import corete.data.polyn.PolyNRecordCollection;
 import corete.data.teinsertion.Signature2InsertionFactory;
+import corete.data.teinsertion.SignaturePairupFramework;
+import corete.data.teinsertion.TEinsertion;
 import corete.data.tesignature.InsertionSignature;
 import corete.io.FastaReader;
 import corete.io.TEHierarchyReader;
+import corete.io.teinsertion.TEInsertionWriter;
 import corete.io.tesignature.PolyNReader;
 import corete.io.tesignature.TESignatureReader;
 import pt2.Main;
@@ -66,9 +69,9 @@ public class PairupSignatureFramework {
 		ArrayList<InsertionSignature> signatures= TESignatureReader.readall(signatureFile,logger);
 		PolyNRecordCollection polys=new PolyNReader(new FastaReader(this.refgenomeFile,this.logger),this.logger).getPolyNRecords();
 
+		ArrayList<TEinsertion> teinsertions=new SignaturePairupFramework(signatures,s2i,polys,this.maxfreqdiff,this.minDistance, this.maxDistance, logger).getTEinsertions();
 
-
-
+		TEInsertionWriter.writeall(this.outputFile,teinsertions,logger);
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
 	}
 
