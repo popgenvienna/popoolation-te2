@@ -25,14 +25,16 @@ public class CigarParser {
 		int alignmentLeng=0;
 
 		ArrayList<CigarEntry> parseCigar = this.parseCigar(cigar);
-		if(parseCigar.get(0).key.equals("S"))
-		{
-			preStart=parseCigar.get(0).count;
+		if(parseCigar.size()>0) {
+			if (parseCigar.get(0).key.equals("S"))
+			{
+				preStart = parseCigar.get(0).count;
+			}
+			if (parseCigar.size()>1 && parseCigar.get(parseCigar.size() - 1).key.equals("S")) {
+				postEnd = parseCigar.get(parseCigar.size() - 1).count;
+			}
 		}
-		if(parseCigar.get(parseCigar.size()-1).key.equals("S"))
-		{
-			postEnd=parseCigar.get(parseCigar.size()-1).count;
-		}
+		else alignmentLeng=1; // unmapped ones, so that start==end
 		for(CigarEntry ci: parseCigar)
 		{
 			if(ci.key.equals("M") || ci.key.equals("D") || ci.key.equals("N"))
@@ -79,6 +81,8 @@ public class CigarParser {
 	private  ArrayList<CigarEntry> parseCigar(String cigar)
 	{
 		//60S41M
+		// Unmapped may have a star
+		if(cigar.equals("*")) return new ArrayList<CigarEntry>();
 		Matcher m= cigarparser.matcher(cigar);
 		ArrayList<CigarEntry> ci=new ArrayList<CigarEntry>();
 		while(m.find())
@@ -87,6 +91,7 @@ public class CigarParser {
 			String key = m.group(2);
 			ci.add(new CigarEntry(count,key));
 		}
+		if(ci.size()==0) throw new IllegalArgumentException("Could not parse cigar "+cigar);
 		return ci;
 
 	}

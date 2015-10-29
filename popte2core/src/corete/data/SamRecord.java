@@ -33,8 +33,10 @@ public class SamRecord {
 	{
 		if(start_withs > start) throw new InvalidParameterException("soft clipped start position has to be smaller or equal to start position");
 		if(end_withs < end) throw new InvalidParameterException("soft clipped end position has to be larger or equal to end position");
-		if(end<start) throw new InvalidParameterException("start position has to be larger than end position");
-		if(end_withs<start_withs) throw new InvalidParameterException("Soft clipped start position has to be larger than soft clipped end position");
+		if(end < start) {
+			throw new InvalidParameterException("start position has to be larger than end position");
+		}
+		if(end_withs < start_withs) throw new InvalidParameterException("Soft clipped start position has to be larger than soft clipped end position");
 		this.readname=readname;
 		this.flag=flag;
 		this.refChr=refChr;

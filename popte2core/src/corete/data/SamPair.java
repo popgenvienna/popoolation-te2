@@ -25,7 +25,7 @@ public class SamPair {
 	{
 		if(secondRead!=null)
 		{
-			if(firstRead.getStart()>secondRead.getStart()) throw new IllegalArgumentException("First read of pair must have a lower starting position than second read");
+			if(firstRead.getStart()>secondRead.getStart()) throw new IllegalArgumentException("First read of pair must have a lower starting position than second read "+firstRead.getReadname()+" "+secondRead.getReadname());
 		}
 		this.firstRead=firstRead;
 		this.secondRead=secondRead;
