@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class Se2PeParser {
 	private static final String taskName = "se2pe";
 
-	public void parseCommandLine(LinkedList<String> args) {
+	public static void parseCommandLine(LinkedList<String> args) {
 		// Parsing the commands
 		String fastq1 = null;
 		String fastq2 = null;
@@ -23,7 +23,6 @@ public class Se2PeParser {
 		boolean detailedLog = false;
 		boolean sort = false;
 		boolean index = false;
-		int maxAlignmentsSA=3;
 		boolean debug=false;
 
 		for (int i = 0; i < args.size(); i++) {
@@ -52,9 +51,6 @@ public class Se2PeParser {
 				case "--index":
 					index = true;
 					break;
-				case "--n":
-					maxAlignmentsSA = Integer.parseInt(args.get(++i));
-					break;
 				case "--debug":
 					debug = true;
 					break;
@@ -76,7 +72,7 @@ public class Se2PeParser {
 
 		}
 
-		Se2PeFramework s2p=new Se2PeFramework(fastq1,fastq2,bam1,bam2,output,sort,index,maxAlignmentsSA,logger);
+		Se2PeFramework s2p=new Se2PeFramework(fastq1,fastq2,bam1,bam2,output,sort,index,logger);
 		s2p.run();
 
 
@@ -100,7 +96,6 @@ public class Se2PeParser {
 		sb.append("\n");
 		sb.append("== Parameters for fine tuning ==\n");
 		// this three following options comes from the bwa sampe program
-		sb.append(CommandFormater.format("--n", "Maximum number of alignments to output in the SA tag. Tag will be ignored if numbers exceed this maximum", "3"));
 		sb.append(CommandFormater.format("--sort", "Sort the output file", false));
 		sb.append(CommandFormater.format("--index", "Create an index for the output file (sort will be set by default)", null));
 		sb.append(CommandFormater.format("--detailed-log", "Show a detailed event log", false));

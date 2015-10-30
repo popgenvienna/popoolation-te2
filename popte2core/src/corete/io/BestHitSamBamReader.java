@@ -50,7 +50,7 @@ public class BestHitSamBamReader implements ISamBamReader {
 
 
 	public boolean hasNext() {
-		if(this.buffer==null) return false;
+		if(this.buffer==null && (!sbr.hasNext())) return false;
 		else return true;
 	}
 
@@ -58,12 +58,12 @@ public class BestHitSamBamReader implements ISamBamReader {
 	public SamRecord next() {
 		if(!this.hasNext()) throw new IllegalArgumentException();
 		ArrayList<SamRecord> equalRecords=new ArrayList<SamRecord>();
-		equalRecords.add(this.next());
+		equalRecords.add(this.getNext());
 		String readname=equalRecords.get(0).getReadname();
 
 		while(this.hasNext())
 		{
-			SamRecord test=this.next();
+			SamRecord test=this.getNext();
 			if(test.getReadname().equals(readname)) equalRecords.add(test);
 			else
 			{
