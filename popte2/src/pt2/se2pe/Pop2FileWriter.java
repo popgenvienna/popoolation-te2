@@ -16,6 +16,9 @@ public class Pop2FileWriter {
 	private SAMFileHeader header;
 	private SAMFileWriter writer;
 	private Logger logger;
+	private int countBothMapped=0;
+	private int countOneMapped=0;
+	private int countBothUnmapped=0;
 	public Pop2FileWriter(SAMFileHeader header, SAMFileWriter writer, Logger logger)
 	{
 		this.header=header;
@@ -32,6 +35,7 @@ public class Pop2FileWriter {
 		if(sam2==null) sr2=recordFromFastq(fastq2,readname,header);
 		else sr2=recordFromSam(sam2,readname,header);
 
+		// all have this in common
 		sr1.setReadPairedFlag(true);
 		sr2.setReadPairedFlag(true);
 		sr1.setFirstOfPairFlag(true);
@@ -41,19 +45,23 @@ public class Pop2FileWriter {
 
 		if(sr1.getReadUnmappedFlag() && sr2.getReadUnmappedFlag())
 		{
+			this.countBothUnmapped++;
 			   	sr1.setMateUnmappedFlag(true);
 				sr2.setMateUnmappedFlag(true);
 		}
 		else if(sr1.getReadUnmappedFlag())
 		{
+			this.countOneMapped++;
 			sr2.setMateUnmappedFlag(true);
 		}
 		else if(sr2.getReadUnmappedFlag())
 		{
+			this.countOneMapped++;
 			  sr1.setMateUnmappedFlag(true);
 		}
 		else
 		{
+			this.countBothMapped++;
 			sr1.setMateNegativeStrandFlag(sr2.getReadNegativeStrandFlag()); // negative strand mapping
 			sr2.setMateNegativeStrandFlag(sr1.getReadNegativeStrandFlag());
 			sr1.setMateReferenceName(sr2.getReferenceName());  // reference contig
@@ -116,6 +124,14 @@ public class Pop2FileWriter {
 		toReturn.setBaseQualityString(record.getQual());
 		return toReturn;
 	}
+
+	public void logstatus()
+	{
+		int sum=countBothMapped+countOneMapped+countBothUnmapped;
+		this.logger.info("Wrote "+sum +" paired end fragments to output");
+		this.logger.info("both reads mapped "+countBothMapped+"; one read mapped the other unmapped "+countOneMapped+"; both reads unmapped "+countBothUnmapped);
+	}
+
 
 
 

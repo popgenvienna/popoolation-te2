@@ -33,7 +33,12 @@ public class BufferSamBamReader {
 
 	public SamRecord next() {
 
-		if(buffer!=null) return buffer;
+		if(buffer!=null)
+		{
+			SamRecord toret=buffer;
+			buffer=null;
+			return buffer;
+		}
 		if(sbr.hasNext()) return sbr.next();
 		else return null;
 

@@ -7,6 +7,7 @@ import pt2.identifysignatures.IdentifySignatureParser;
 import pt2.pairupsignatures.PairupSignatureFramework;
 import pt2.pairupsignatures.PairupSignatureParser;
 import pt2.ppileup.PpileupParser;
+import pt2.se2pe.Se2PeParser;
 import pt2.se2pe.SingleEndToPairEnd;
 import pt2.statcoverage.StatcoverageFramework;
 import pt2.statcoverage.StatcoverageParser;
@@ -51,9 +52,10 @@ public class Main {
 			PairupSignatureParser.parseCommandline(rawarguments);
 		}
 		else if(subtask.toLowerCase().equals("se2pe")) {
-			SingleEndToPairEnd task = new SingleEndToPairEnd();
-			task.parseCommandLine(rawarguments);
-			task.run();
+			Se2PeParser.parseCommandLine(rawarguments);
+			//SingleEndToPairEnd task = new SingleEndToPairEnd();
+			//task.parseCommandLine(rawarguments);
+			//task.run();
 		}
 
 		else if(subtask.toLowerCase().equals("stat-coverage"))
@@ -94,7 +96,7 @@ public class Main {
 
 	public static String getVersionNumber()
 	{
-		return "v0.11";
+		return "v0.91";
 	}
 
 

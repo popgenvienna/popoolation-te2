@@ -7,6 +7,7 @@ import corete.io.BufferSamBamReader;
 import htsjdk.samtools.*;
 import htsjdk.samtools.fastq.FastqReader;
 import htsjdk.samtools.fastq.FastqRecord;
+import jdk.nashorn.internal.runtime.regexp.joni.Warnings;
 import pt2.Main;
 
 import java.io.File;
@@ -25,11 +26,11 @@ public class Se2PeFramework {
 	private final String output;
 	private final boolean sort;
 	private final boolean index;
-	private final int maxAlignmentsSA;
+
 	private final Logger logger;
 
 	public Se2PeFramework(String fastq1, String fastq2, String bam1, String bam2, String output,
-						  boolean sort, boolean index, int maxAlignmentsSA, Logger logger) {
+						  boolean sort, boolean index, Logger logger) {
 		this.fastq1 = fastq1;
 		this.fastq2 = fastq2;
 		this.bam1 = bam1;
@@ -37,7 +38,6 @@ public class Se2PeFramework {
 		this.output = output;
 		this.sort = sort;
 		this.index = index;
-		this.maxAlignmentsSA = maxAlignmentsSA;
 		this.logger = logger;
 
 		if (!new File(fastq1).exists()) throw new IllegalArgumentException("Input file does not exist: " + fastq1);
@@ -57,6 +57,7 @@ public class Se2PeFramework {
 
 
 	public void run() {
+		this.logger.info("Start pairing up sam-entries");
 		FastqReader fr1 = new FastqReader(new File(fastq1));
 		FastqReader fr2 = new FastqReader(new File(fastq2));
 		BufferSamBamReader b1 = new BufferSamBamReader(new BestHitSamBamReader(new AutoDetectSamBamReader(this.bam1, this.logger)));
@@ -76,21 +77,28 @@ public class Se2PeFramework {
 				throw new IllegalArgumentException("Invalid readnames for fastq reads " + readname1 + "  " + readname2);
 			SamRecord s1 = b1.next();
 			SamRecord s2 = b2.next();
+
+
+
+
 			if(s1!=null)
 			{
-				String name = s1.getReadname().replaceAll("/[12]$", "");
-				if(!name.equals(readname1)){b1.buffer(s1); s1=null;}      // if readname does not match, buffer the thing
+				String bamname1=s1.getReadname().replaceAll("/[12]$", "");
+				if((!bamname1.equals(readname1)) && readname1.startsWith(bamname1)) this.logger.warning("There may be a problem with the readnames "+readname1 + " "+ bamname1);
+				if(!bamname1.equals(readname1)){b1.buffer(s1); s1=null;}      // if readname does not match, buffer the thing
 			}
 			if(s2!=null)
 			{
-				String name = s2.getReadname().replaceAll("/[12]$", "");
-				if(!name.equals(readname1)){b2.buffer(s2); s2=null;}     // if readname does not match buffer the thing
+				String bamname2=s1.getReadname().replaceAll("/[12]$", "");
+				if(!bamname2.equals(readname1)){b2.buffer(s2); s2=null;}     // if readname does not match buffer the thing
 			}
 			writer.write(record1,record2,s1,s2,readname1);
 		}
 
 
 		writer.close();
+		writer.logstatus();
+		logger.info("Finished pairing-up sam entries");
 
 
 	}
