@@ -82,6 +82,7 @@ public class SignaturePairupFramework {
 			for(InsertionSignature sig:chrspecsignatures) if(sig.getTefamily().equals(tefamily)) famspec.add(sig);
 
 			// so now get the for a given family;
+			this.logger.fine("Processing family "+tefamily+"; with insertion numbers "+famspec.size());
 			toret.addAll(getInsertionsForChrFamSpec(famspec,chrpolyn));
 
 		}
@@ -121,12 +122,16 @@ public class SignaturePairupFramework {
 				// equal popid, chr, strand, family, maxfreqdif < maxallowed
 
 				// distance from forward start
-				int distance =chrpolyn.getDistance(cand_fwd.getEnd(),cand_rev.getStart());
-				if(distance>=minDistance && distance<=maxDistance)
+				if(!chrpolyn.distanceIsOutsideBoundary(cand_fwd.getEnd(),cand_rev.getStart(),minDistance,maxDistance))
 				{
 					success=true;
 					break;
 				}
+
+				//int distance =chrpolyn.getDistance(cand_fwd.getEnd(),cand_rev.getStart());
+				//if(distance>=minDistance && distance<=maxDistance)
+				//{
+				//}
 			}
 
 			// If a partner was found than pair both up
