@@ -60,8 +60,37 @@ public class ContigwisePolynRepresentation {
 			}
 		}
 		return distance;
+	}
 
 
+
+
+
+
+	public boolean distanceIsOutsideBoundary(int start,int end,int minDistance, int maxDistance)
+	{
+
+		int absmaxdistance= Math.max(Math.abs(maxDistance),Math.abs(minDistance));
+		int distance=0;
+
+		if(end>=start) {
+
+			for (int i = start; i < end; i++) {
+				if (!this.pnr.contains(i)) distance++;
+			}
+			if(distance>absmaxdistance) return false;
+		}
+		else
+		{
+			for(int i=end; i<start; i++)
+			{
+				if(!this.pnr.contains(i)) distance--;
+			}
+			if(Math.abs(distance)>absmaxdistance) return false;
+		}
+
+		if(distance < minDistance || distance >maxDistance) return true;
+		else return false;
 	}
 
 
