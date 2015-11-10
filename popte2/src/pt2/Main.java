@@ -11,7 +11,9 @@ import pt2.se2pe.Se2PeParser;
 import pt2.se2pe.SingleEndToPairEnd;
 import pt2.statcoverage.StatcoverageFramework;
 import pt2.statcoverage.StatcoverageParser;
+import pt2.statreads.StatReadsParser;
 import pt2.subsample.SubsampleParser;
+import pt2.updateTEstrand.UpdateStrandParser;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -53,14 +55,22 @@ public class Main {
 		}
 		else if(subtask.toLowerCase().equals("se2pe")) {
 			Se2PeParser.parseCommandLine(rawarguments);
-			//SingleEndToPairEnd task = new SingleEndToPairEnd();
-			//task.parseCommandLine(rawarguments);
-			//task.run();
-		}
 
+		}
+		else if(subtask.toLowerCase().equals("updatestrand")) {
+			UpdateStrandParser.parseCommandline(rawarguments);
+		}
 		else if(subtask.toLowerCase().equals("stat-coverage"))
 		{
 			StatcoverageParser.parseCommandline(rawarguments);
+		}
+		else if(subtask.toLowerCase().equals("stat-reads"))
+		{
+			StatReadsParser.parseCommandline(rawarguments);
+		}
+		else if(subtask.toLowerCase().equals("version"))
+		{
+			System.out.println(getVersionNumber());
 		}
 		else
 		{
@@ -88,7 +98,13 @@ public class Main {
 
 		sb.append("\n== Secondary tasks ==\n");
 		sb.append(CommandFormater.format("se2pe","obtain a paired-end bam-file for individually mapped (e.g. bwasw) output files",null));
+		sb.append(CommandFormater.format("updatestrand","estimate strand of signatures of TE insertions",null));
 		sb.append(CommandFormater.format("stat-coverage","calculate physical coverage statistics; helps to decide optimal target coverage for subsampling",null));
+		sb.append(CommandFormater.format("stat-reads","compute the mapping statistics; reads mapping to different reference chromosomes and TEs",null));
+		sb.append(CommandFormater.format("stat-pairs","compute the paired-end statistics; reads supporting a TE insertion",null));
+		sb.append(CommandFormater.format("version","print the version number",null));
+
+
 		//sb.append(String.format("%-22s%s","filter","filter TE insertions\n"));
 		return sb.toString();
 	}
@@ -96,7 +112,7 @@ public class Main {
 
 	public static String getVersionNumber()
 	{
-		return "v0.91";
+		return "v0.911";
 	}
 
 

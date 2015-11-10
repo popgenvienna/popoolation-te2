@@ -55,6 +55,11 @@ public class InsertionSignature {
 		return new InsertionSignature(newId,this.chromosome,this.signature,this.start,this.end,this.tefamily,this.testrand);
 	}
 
+	public InsertionSignature updateSampleStrand(TEStrand newStrand)
+	{
+		return new InsertionSignature(this.popid,this.chromosome,this.signature,this.start,this.end,this.tefamily,newStrand);
+	}
+
 
 
 
