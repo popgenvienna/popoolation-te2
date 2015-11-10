@@ -1,5 +1,7 @@
 package corete.data.stat;
 
+import corete.data.hier.TEHierarchy;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,15 +9,19 @@ import java.util.logging.Logger;
 
 /**
  * Created by robertkofler on 8/24/15.
+ * Provides sorting of the reference chromosomes;
+ * TE sequences are ignored
  */
 public class RefChrSortingGeneratorSampleConsensus {
 	private final RefChrSortingContainer rcscontainer;
+	private final TEHierarchy hier;
 	private final Logger logger;
 
-	public RefChrSortingGeneratorSampleConsensus(RefChrSortingContainer rcscontainer,Logger logger)
+	public RefChrSortingGeneratorSampleConsensus(RefChrSortingContainer rcscontainer,TEHierarchy hier, Logger logger)
 	{
 		this.rcscontainer=rcscontainer;
 		this.logger=logger;
+		this.hier=hier;
 	}
 
 
@@ -36,7 +42,7 @@ public class RefChrSortingGeneratorSampleConsensus {
 		int filecount=this.rcscontainer.getFilecount();
 		for(String s: this.rcscontainer.getRefChrSortingOfFile(0))
 		{
-			if(rccount.get(s)==filecount) toret.add(s);
+			if(rccount.get(s)==filecount && (!this.hier.containsRefid(s))) toret.add(s);
 		}
 
 		// Validate and log
@@ -52,7 +58,6 @@ public class RefChrSortingGeneratorSampleConsensus {
 
 		return toret;
 	}
-
 
 
 

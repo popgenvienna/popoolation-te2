@@ -84,6 +84,19 @@ public class TTEHierarchy {
 		assertEquals(h.fam2ord("P-element"),"DNA");
 	}
 
+	@Test
+	public void Test_containsID()
+	{
+		TEHierarchy h=DataTestSupport.getTEHierarchy();
+		assertTrue(h.containsRefid("p1"));
+		assertTrue(h.containsRefid("p2"));
+		assertTrue(h.containsRefid("p3"));
+		assertTrue(h.containsRefid("r1"));
+		assertTrue(h.containsRefid("r2"));
+		assertTrue(h.containsRefid("r3"));
+
+	}
+
 
 
 }

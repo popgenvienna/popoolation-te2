@@ -81,8 +81,8 @@ public class PpileupFramework {
 		else{sctr = hsr.getTEabundance().getSCTAbundantShort();}
 		// insert size distribution
 		ISDSummary isdsum=hsr.getInsertSizeDistribution().getISDSummary(this.idof);
-		// Get the Sorting of the reference chromosomes
-		ArrayList<String> rcs = new RefChrSortingGeneratorSampleConsensus(hsr.getRefChrSorting(),this.logger).getRefChrConsensusSorting();
+		// Get the Sorting of the reference chromosomes  ignoring TE sequences
+		ArrayList<String> rcs = new RefChrSortingGeneratorSampleConsensus(hsr.getRefChrSorting(),hier, this.logger).getRefChrConsensusSorting();
 		HashMap<String,Integer> lastPositions = hsr.getLastPositionContainer().getLastPosition();
 
 
