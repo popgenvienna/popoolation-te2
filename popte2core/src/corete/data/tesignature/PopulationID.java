@@ -29,6 +29,18 @@ public class PopulationID implements Comparable<PopulationID> {
 	}
 
 
+	/***
+	 * Test if the PopulationID contains the population with the given number
+	 * @param popSample
+	 * @return
+	 */
+	public boolean containsPopulationSample(int popSample)
+	{
+		return this.ids.contains(popSample);
+	}
+
+
+
 
 	public ArrayList<Integer> getIds()
 	{

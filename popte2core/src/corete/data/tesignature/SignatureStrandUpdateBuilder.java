@@ -1,5 +1,6 @@
 package corete.data.tesignature;
 
+import corete.data.SignatureDirection;
 import corete.data.TEStrand;
 
 /**
@@ -40,9 +41,42 @@ public class SignatureStrandUpdateBuilder {
 		else return this.sig.updateSampleStrand(TEStrand.Unknown);
 
 
-
-
 	}
+
+
+	public boolean containsPopulationSample(int popid)
+	{
+		return this.sig.getPopid().containsPopulationSample(popid);
+	}
+
+
+	public String getRefChr()
+	{
+		return this.sig.getChromosome();
+	}
+
+	public int getPosition()
+	{
+		if(this.sig.getSignatureDirection() == SignatureDirection.Reverse)
+		{
+			// reverse is end
+			return this.sig.getEnd();
+
+		}
+		else if(this.sig.getSignatureDirection()==SignatureDirection.Forward)
+		{
+
+			// Forward is start
+			return this.sig.getStart();
+		}
+		else throw new IllegalArgumentException("invalid signature direction");
+	}
+
+	public SignatureDirection getDirection()
+	{return this.sig.getSignatureDirection();}
+	public String getFamily(){return this.sig.getTefamily();}
+
+
 
 
 
