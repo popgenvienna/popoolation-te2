@@ -109,6 +109,16 @@ public class SamRecord {
 		return SamFlagParser.isForwardStrand(this.flag);
 	}
 
+
+	/**
+	 * Is the mate on the forward strand
+	 * @return
+	 */
+	public boolean isMateForwardStrand()
+	{
+		return SamFlagParser.isMateForwardStrand(this.flag);
+	}
+
 	public boolean isUnmapped()
 	{
 		return SamFlagParser.isUnmapped(this.flag);

@@ -11,6 +11,8 @@ import pt2.se2pe.Se2PeParser;
 import pt2.se2pe.SingleEndToPairEnd;
 import pt2.statcoverage.StatcoverageFramework;
 import pt2.statcoverage.StatcoverageParser;
+import pt2.statpairs.StatPairsFramework;
+import pt2.statpairs.StatPairsParser;
 import pt2.statreads.StatReadsParser;
 import pt2.subsample.SubsampleParser;
 import pt2.updateTEstrand.UpdateStrandParser;
@@ -67,6 +69,10 @@ public class Main {
 		else if(subtask.toLowerCase().equals("stat-reads"))
 		{
 			StatReadsParser.parseCommandline(rawarguments);
+		}
+		else if(subtask.toLowerCase().equals("stat-pairs"))
+		{
+			StatPairsParser.parseCommandline(rawarguments);
 		}
 		else if(subtask.toLowerCase().equals("version"))
 		{

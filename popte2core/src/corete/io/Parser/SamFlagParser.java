@@ -6,6 +6,7 @@ package corete.io.Parser;
 public class SamFlagParser {
 
 	private static final int revcomplement=0x10;
+	private static final int materevcomplement=0x20;
 	private static final int unmapped=0x4;
 	private static final int mateunmapped=0x8;
 	private static final int pairedinsequencing=0x1;
@@ -23,6 +24,25 @@ public class SamFlagParser {
 		}
 
 	}
+
+
+
+	public static boolean isMateForwardStrand(int samflag)
+	{
+
+		if((samflag & materevcomplement)>0 )
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+
+	}
+
+
+
 
 	public static boolean isUnmapped(int samflag)
 	{

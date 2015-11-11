@@ -7,6 +7,8 @@ import corete.data.stat.InsertSizeDistributionContainer;
 import corete.data.tesignature.InsertionSignature;
 import corete.data.tesignature.SignatureFrequencyEstimationFramework;
 import corete.data.tesignature.SignatureStrandUpdateBuilder;
+import corete.data.tesignature.SignatureStrandUpdateReader;
+import corete.io.SamPairReader;
 import corete.io.TEHierarchyReader;
 import corete.io.misc.PpileupHelpStatReader;
 import corete.io.ppileup.PpileupReader;
@@ -80,6 +82,16 @@ public class UpdateStrandFramework {
 		ISDSummary is =hsr.getInsertSizeDistribution().getISDSummary(idof);
 
 
+		for(int i=0; i<this.inputFiles.size(); i++)
+		{
+			ArrayList<SignatureStrandUpdateBuilder> toupdate=getBuildersForPopulationNumber(builders,i);
+			SamPairReader spr=new SamPairReader(this.inputFiles.get(i),hier,srmd,logger);
+
+			SignatureStrandUpdateReader ssur=new SignatureStrandUpdateReader(spr,hier,is.getMedian(i),toupdate);
+			ssur.updateSignatures();
+		}
+
+
 
 
 		 ArrayList<InsertionSignature> newSignatures=updateSignatures(builders);
@@ -91,7 +103,12 @@ public class UpdateStrandFramework {
 
 	private ArrayList<SignatureStrandUpdateBuilder> getBuildersForPopulationNumber(ArrayList<SignatureStrandUpdateBuilder> builders, int populationID)
 	{
-
+		ArrayList<SignatureStrandUpdateBuilder> toret=new ArrayList<SignatureStrandUpdateBuilder>();
+		for(SignatureStrandUpdateBuilder ssb: builders)
+		{
+			if(ssb.containsPopulationSample(populationID))toret.add(ssb);
+		}
+		return toret;
 	}
 
 
@@ -122,7 +139,7 @@ public class UpdateStrandFramework {
 	private ArrayList<SignatureStrandUpdateBuilder> getBuilder(ArrayList<InsertionSignature> sig)
 	{
 		ArrayList<SignatureStrandUpdateBuilder> builders=new ArrayList<SignatureStrandUpdateBuilder>();
-		for(InsertionSignature s:sig) builders.add(s);
+		for(InsertionSignature s:sig) builders.add(new SignatureStrandUpdateBuilder(s));
 		return builders;
 	}
 

@@ -45,31 +45,31 @@ public class MapStatReadsWriter {
 			@Override
 			public int reduce(MapStatReads msr){return msr.getReadsInFile(); }}));
 
-		writeLine(format("reads_mapped"+separator,msrs,new IStatReducer(){
+		writeLine(format("reads_mapped",msrs,new IStatReducer(){
 			@Override
 			public int reduce(MapStatReads msr){return msr.getReadsMapped(); }}));
 
-		writeLine(format("reads_mapped_with_mq"+separator,msrs,new IStatReducer(){
+		writeLine(format("reads_mapped_with_mq",msrs,new IStatReducer(){
 			@Override
 			public int reduce(MapStatReads msr){return msr.getReadsWithMq(); }}));
 
-		writeLine(format("reads_mapped_to_te"+separator,msrs,new IStatReducer(){
+		writeLine(format("reads_mapped_to_te",msrs,new IStatReducer(){
 			@Override
 			public int reduce(MapStatReads msr){return msr.getReadsTe(); }}));
 
-		writeLine(format("reads_mapped_to_te_with_mq"+separator,msrs,new IStatReducer(){
+		writeLine(format("reads_mapped_to_te_with_mq",msrs,new IStatReducer(){
 			@Override
 			public int reduce(MapStatReads msr){return msr.getReadsTeWithMq(); }}));
 
 		for(String rc:this.getRefChrs(msrs))
 		{
-			writeLine(format("refchr"+separator+rc+separator,msrs,new IStatReducer(){
+			writeLine(format("refchr"+separator+rc,msrs,new IStatReducer(){
 				@Override
 				public int reduce(MapStatReads msr){return msr.getMappedRefChr().getOrDefault(rc,0);}}));
 		}
 		for(String te:this.getTEs(msrs))
 		{
-			writeLine(format("te"+separator+te+separator,msrs,new IStatReducer(){
+			writeLine(format("te"+separator+te,msrs,new IStatReducer(){
 				@Override
 				public int reduce(MapStatReads msr){return msr.getMappedTE().getOrDefault(te,0);}}));
 		}
@@ -145,10 +145,11 @@ public class MapStatReadsWriter {
 
 }
 
+interface IStatReducer {
 
-
-interface IStatReducer
-{
 	public abstract int reduce(MapStatReads msr);
 }
+
+
+
 
