@@ -34,7 +34,7 @@ public class Signature2InsertionFactory {
 
 		String family=fwd.getTefamily();
 		String order=hier.fam2ord(family);
-		int position=(int)((fwd.getEnd()+rev.getStart())/2);
+		int position=(int)((fwd.getStart()+rev.getEnd())/2);
 		ArrayList<Double> frequencies=new ArrayList<Double>();
 
 		for(int i=0; i<fwd.getFrequencies().size(); i++)
@@ -53,8 +53,8 @@ public class Signature2InsertionFactory {
 	{
 	String family=one.getTefamily();
 	String order=hier.fam2ord(family);
-	int position=one.getEnd();   // FORWARD insertion is the END
-	if(one.getSignatureDirection()==SignatureDirection.Reverse) position=one.getStart();  // REVERSE insertion is the START
+	int position=one.getStart();   // FORWARD insertion is the START
+	if(one.getSignatureDirection()==SignatureDirection.Reverse) position=one.getEnd();  // REVERSE insertion is the END
 
 	ArrayList<Double> frequencies=new ArrayList<Double>();
 

@@ -11,6 +11,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({test.data.TTEHierarchy.class, test.data.TTEFamilyShortCutTranslator.class,
 		test.io.TSamReader.class,  test.io.TSamPairReader.class, test.io.TPpileupReader.class,
 		test.data.TPpileupSampleSummary.class,test.data.TPpileupSite.class,  test.data.TPpileupSlidingWindow.class,
-test.ppileup.TPpileupBuilder.class})
+test.ppileup.TPpileupBuilder.class,test.data.TPpileupChunkReader.class})
 public class CoreTETestSuite {
 }

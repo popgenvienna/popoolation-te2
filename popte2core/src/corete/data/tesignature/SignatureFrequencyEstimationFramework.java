@@ -3,6 +3,7 @@ package corete.data.tesignature;
 import corete.data.SignatureDirection;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.ppileup.PpileupSite;
+import corete.io.ppileup.IPpileupReader;
 import corete.io.ppileup.PpileupReader;
 
 import java.util.ArrayList;
@@ -14,11 +15,11 @@ import java.util.logging.Logger;
  * Created by robertkofler on 10/21/15.
  */
 public class SignatureFrequencyEstimationFramework {
-	private final PpileupReader pr;
+	private final IPpileupReader pr;
 	private final ArrayList<InsertionSignature> signatures;
 	private final TEFamilyShortcutTranslator translator;
 	private Logger logger;
-	public SignatureFrequencyEstimationFramework(PpileupReader pr,ArrayList<InsertionSignature> signatures,Logger logger)
+	public SignatureFrequencyEstimationFramework(IPpileupReader pr,ArrayList<InsertionSignature> signatures,Logger logger)
 	{
 
 		this.pr=pr;

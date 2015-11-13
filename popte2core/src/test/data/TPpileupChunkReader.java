@@ -1,6 +1,7 @@
 package test.data;
 
 import corete.data.ppileup.PpileupChunk;
+import corete.data.ppileup.PpileupSampleSummary;
 import corete.data.ppileup.PpileupSite;
 import corete.io.ppileup.PpileupChunkReader;
 import corete.misc.LogFactory;
@@ -8,6 +9,12 @@ import org.junit.Test;
 import sun.rmi.runtime.Log;
 import test.TestSupport.PpileupDebugReader;
 import test.TestSupport.PpileupTestSupport;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by robertkofler on 9/4/15.
@@ -19,15 +26,216 @@ public class TPpileupChunkReader {
 		StringBuilder sb=new StringBuilder();
 		sb.append("2L\t1\tcom\t. 10 te 2\n");
 		sb.append("2L\t2\tcom\t. 10 te 2\n");
-		sb.append("2L\t10\tcom\t. 10 te 2\n");
-		sb.append("2L\t11\tcom\t. 10 te 2\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
-		int bla=0;
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.size(),1);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2L");
+		assertEquals(c.getShortcutsOfTEsInChunk().size(),1);
+		assertTrue(c.getShortcutsOfTEsInChunk().contains("te"));
+	}
+
+
+	@Test
+	public void Test_chunk2() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 1\tte 2\n");
+		sb.append("2L\t2\tcom\tte 2\t. 1\n");
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.size(),2);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2L");
+		assertEquals(c.getShortcutsOfTEsInChunk().size(),1);
+		assertTrue(c.getShortcutsOfTEsInChunk().contains("te"));
+	}
+
+
+	@Test
+	public void Test_chunk3() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 te 2\n");
+		sb.append("2L\t2\tcom\t. 10 te 2\n");
+		sb.append("2L\t3\tcom\t. 10 te 2\n");
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),3);
 
 	}
+
+
+	@Test
+	public void Test_chunk4() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 te 2\n");
+		sb.append("2L\t2\tcom\t. 10 te 2\n");
+		sb.append("2L\t3\tcom\t. 10 te 2\n");
+		sb.append("2L\t4\tcom\t. 10 te 1\n");
+		sb.append("2L\t5\tcom\t. 10 te 1\n");
+		sb.append("2L\t6\tcom\t. 10\n");
+		sb.append("2L\t7\tcom\t. 10\n");
+
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),7);
+		c=cr.next();
+		assertEquals(c,null);
+
+
+	}
+
+
+
+
+
+
+	@Test
+	public void Test_chunk5() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 te 2\n");
+		sb.append("2L\t2\tcom\t. 10 te 2\n");
+		sb.append("2L\t12\tcom\t. 10 te 2\n");
+		sb.append("2L\t13\tcom\t. 10 te 2\n");
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),13);
+		assertEquals(c.siteCount(),4);
+		c= cr.next();
+		assertEquals(c, null);
+
+	}
+
+	@Test
+	public void Test_chunk6() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 te 2\n");
+		sb.append("2L\t2\tcom\t. 10 te 2\n");
+		sb.append("2L\t13\tcom\t. 10 te 2\n");
+		sb.append("2L\t14\tcom\t. 10 te 2\n");
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2L");
+		c= cr.next();
+		assertEquals(c.getStartPosition(),13);
+		assertEquals(c.getEndPosition(),14);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2L");
+
+		c= cr.next();
+		assertEquals(c,null);
+
+	}
+
+	@Test
+	public void Test_chunk7() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 te 2\n");
+		sb.append("2L\t2\tcom\t. 10 te 2\n");
+		sb.append("2R\t1\tcom\t. 10 te 2\n");
+		sb.append("2R\t2\tcom\t. 10 te 2\n");
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2L");
+		c= cr.next();
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2R");
+
+		c= cr.next();
+		assertEquals(c,null);
+
+	}
+
+
+	@Test
+	public void Test_chunk8() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 te 2\n");
+		sb.append("2L\t2\tcom\t. 10 te 2\n");
+		sb.append("2R\t1\tcom\t. 10 te 2\n");
+		sb.append("2R\t2\tcom\t. 10 te 2\n");
+		sb.append("2R\t13\tcom\t. 10 te 2\n");
+		sb.append("2R\t14\tcom\t. 10 te 2\n");
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+
+
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2L");
+		c= cr.next();
+		assertEquals(c.getStartPosition(),1);
+		assertEquals(c.getEndPosition(),2);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2R");
+
+		c= cr.next();
+		assertEquals(c.getStartPosition(),13);
+		assertEquals(c.getEndPosition(),14);
+		assertEquals(c.siteCount(),2);
+		assertEquals(c.getChromosome(),"2R");
+		c= cr.next();
+		assertEquals(c,null);
+
+	}
+
+
+	@Test
+	public void Test_chunkhash() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 1 te 2\n");
+		sb.append("2L\t2\tcom\t. 2 te 2\n");
+		sb.append("2L\t12\tcom\t. 3 te 2\n");
+		sb.append("2L\t13\tcom\t. 4 te 2\n");
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+		HashMap<Integer,PpileupSampleSummary> t = c.getPSSTrack(0);
+		assertEquals(t.get(1).getCoverage(),3);
+		assertEquals(t.get(2).getCoverage(),4);
+		assertEquals(t.get(3).getCoverage(),0);
+		assertEquals(t.get(11).getCoverage(),0);
+		assertEquals(t.get(12).getCoverage(),5);
+		assertEquals(t.get(13).getCoverage(),6);
+	}
+
 
 }

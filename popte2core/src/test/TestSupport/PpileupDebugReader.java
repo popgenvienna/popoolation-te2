@@ -3,8 +3,10 @@ package test.TestSupport;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.ppileup.PpileupSite;
 import corete.data.stat.EssentialPpileupStats;
+import corete.io.Parser.PpileupHeaderParser;
 import corete.io.ppileup.IPpileupReader;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -12,12 +14,26 @@ import java.util.LinkedList;
  */
 public class PpileupDebugReader implements IPpileupReader {
 	private final LinkedList<String> filecontent;
+	private final PpileupHeaderParser headerParser;
 
+	/**
+	 * Quick way to provide multiple pileup sites
+	 *
+	 * eg.: "2L\t10\tcom\t. 10 r 10\t. 15 i 10\t . 0 t 30"
+	 * eg.: "2L\t11\tcom\t. 10 r 10\t. 15 i 10\t . 0 t 30"
+	 *
+	 * @param toparse
+	 */
 	public PpileupDebugReader(String toparse)
 	{
 		String[] sp= toparse.split("\\n");
 		LinkedList<String> tmp=new LinkedList<String>();
-		for(String s:sp){tmp.add(s);}
+		ArrayList<String> header=new ArrayList<String>();
+		for(String s:sp){
+			if(s.startsWith("@")) header.add(s);
+			else tmp.add(s);
+		}
+		headerParser=new PpileupHeaderParser(header);
 		filecontent=tmp;
 	}
 
@@ -28,7 +44,7 @@ public class PpileupDebugReader implements IPpileupReader {
 
 	@Override
 	public TEFamilyShortcutTranslator getTEFamilyShortcutTranslator() {
-		return null;
+		return headerParser.getTEFamilyShortcutTranslator();
 	}
 
 	@Override

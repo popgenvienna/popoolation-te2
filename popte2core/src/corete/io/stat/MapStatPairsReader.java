@@ -36,7 +36,7 @@ public class MapStatPairsReader {
 
 	public MapStatPairs pairMapStat()
 	{
-		this.logger.info("Creating statistics of mapped pairs");
+		this.logger.info("Creating statistics for pair-end fragments");
 
 
 		int mapped=0;
