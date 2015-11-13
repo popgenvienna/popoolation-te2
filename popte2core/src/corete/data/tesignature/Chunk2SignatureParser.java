@@ -75,20 +75,22 @@ public class Chunk2SignatureParser {
 	{
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
 
-		LinkedList<Integer> window=new LinkedList<Integer>();
+		LinkedList<ScoreHelper> window=new LinkedList<ScoreHelper>();
 
+		int lastMaxStart=-1;
 		int lastMaxPosition=-1;
 		double lastMaxSupport=0.0;
 		double runningsum=0.0;
+		int minstretchcount=0;
 
 		for(int i=start; i<=end; i++)
 		{
 			int tecount=sample.get(i).getTEcount(teshortcut);
 			runningsum+=tecount;
-			window.add(tecount);
+			window.add(new ScoreHelper(i,tecount));
 			if(window.size()>this.windowsize){
-				int pop=window.remove(0);
-				runningsum-=pop;
+				ScoreHelper pop=window.remove(0);
+				runningsum-=pop.score;
 			}
 			if(window.size()!=this.windowsize)continue;
 
@@ -99,23 +101,29 @@ public class Chunk2SignatureParser {
 				   if(av>=lastMaxSupport)
 				   {
 					   // larger than the previous maximum count
+
+					   lastMaxStart=window.getFirst().position;
 					   lastMaxSupport=av;
 					   lastMaxPosition=i;
 				   }
+				minstretchcount=0;
 
 			}
 			else
 			{
 				// lower than the mincount
-				if(lastMaxPosition!=-1)
+				minstretchcount++;
+				if(lastMaxPosition!=-1 && minstretchcount>=this.windowsize)
 				{   // we had a previous highscore => signify (create signature)
 
-					int start=lastMaxPosition-this.windowsize+1;
-					InsertionSignature sig=signify(start,lastMaxPosition,lastMaxSupport,teshortcut,popindex);
+
+					InsertionSignature sig=signify(lastMaxStart,lastMaxPosition,lastMaxSupport,teshortcut,popindex);
 					toret.add(sig);
 					lastMaxSupport=0.0;
 					lastMaxPosition=-1;
+					lastMaxStart=-1;
 				}
+
 
 			}
 
@@ -124,8 +132,8 @@ public class Chunk2SignatureParser {
 		// also process the last  // if a last exists
 		if(lastMaxPosition!=-1) {
 
-			int start = lastMaxPosition - this.windowsize + 1;
-			InsertionSignature sig = signify(start, lastMaxPosition, lastMaxSupport,teshortcut,popindex);
+
+			InsertionSignature sig = signify(lastMaxStart, lastMaxPosition, lastMaxSupport,teshortcut,popindex);
 			toret.add(sig);
 		}
 		return toret;
@@ -147,6 +155,16 @@ public class Chunk2SignatureParser {
 
 
 
+	private class ScoreHelper{
+		public int position;
+		public double score;
+		ScoreHelper(int position, double score)
+		{
+			this.position=position;
+			this.score=score;
+		}
+
+	}
 
 
 

@@ -99,6 +99,40 @@ public class SamPair {
 	public String getOrder() {return this.order;}
 
 
+	/**
+	 * Get strand for TE insertions;
+	 * only for TEInsert types, error otherwise
+	 * @return
+	 */
+	public TEStrand getTEStrand() {
+		if (this.getSamPairType() != SamPairType.TEInsert)
+			throw new IllegalArgumentException("Can only provide strand of TE insertion for TE insertions");
+
+		if (this.firstRead.isForwardStrand()) {
+			if (this.firstRead.isMateForwardStrand()) {
+				// signature forward and mate is forward; TE => MINUS
+				return TEStrand.Minus;
+
+			} else {
+				// signature forward and mate is reverse => plus strand TE
+				return TEStrand.Plus;
+			}
+
+		} else {
+
+			if (this.firstRead.isMateForwardStrand()) {
+				// signature reverse and mate is forward; TE => plus
+				return TEStrand.Plus;
+
+			} else {
+				// signature revere and mate is reverse => minus strand TE
+				return TEStrand.Minus;
+			}
+
+		}
+	}
+
+
 
 
 

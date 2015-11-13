@@ -91,13 +91,18 @@ public class PpileupChunkReader {
 				if(startHarvest)
 				{
 					toChunk.addAll(sites);
-					if(slider.averageMaxTEsupport()>(double)this.mincount) endPositionLastValidWindow=slider.getEndPosition();
-					if((slider.getEndPosition()-endPositionLastValidWindow) > this.chunkdistance) return chunkify(toChunk,slider);
+					if(slider.averageMaxTEsupport()>=(double)this.mincount) endPositionLastValidWindow=slider.getEndPosition();
+					if((slider.getStartPosition()-endPositionLastValidWindow) > this.chunkdistance) {
+							this.bufferSite(site);
+							return chunkify(toChunk, null);
+					}
 				}
-				else
-				{
+				else {
 					// if harvest has not started just ignore the returned sites;
-					if(slider.averageMaxTEsupport()> (double)this.mincount) startHarvest=true;
+					if (slider.averageMaxTEsupport() >= (double) this.mincount) {
+						startHarvest = true;
+						endPositionLastValidWindow=slider.getEndPosition();
+						}
 				}
 			}
 
@@ -109,7 +114,7 @@ public class PpileupChunkReader {
 	private PpileupChunk chunkify(ArrayList<PpileupSite> sites, PpileupSlidingWindow window)
 	{
 		ArrayList<PpileupSite> tochunk=new ArrayList<PpileupSite>(sites);
-		tochunk.addAll(window.flushWindow());
+		if(window!=null)tochunk.addAll(window.flushWindow());
 		PpileupChunk chunk= new PpileupChunk(tochunk);
 		this.logger.fine("Read chunk on "+chunk.getChromosome()+"; start "+chunk.getStartPosition()+"; end "+chunk.getEndPosition());
 		return chunk;

@@ -3,6 +3,7 @@ package corete.data.tesignature;
 import corete.data.SamPair;
 import corete.data.SamPairType;
 import corete.data.SignatureDirection;
+import corete.data.TEStrand;
 import corete.data.hier.TEHierarchy;
 import corete.io.SamPairReader;
 
@@ -71,8 +72,13 @@ public class SignatureStrandUpdateReader {
 						if(!sb.getFamily().equals(fam)) continue;
 						if(sb.getDirection()!=sd)continue;
 
+						TEStrand str=sp.getTEStrand();
+						if(str==TEStrand.Minus) sb.incrementMinus();
+						else if(str==TEStrand.Plus) sb.incrementPlus();
+						else throw new IllegalArgumentException("invalid strand "+str);
+
 						// so now it should be on the same chromosome, same direction, same position and same family...
-						updateBuilder(sb, sd, sp.getFirstRead().isMateForwardStrand());
+						// updateBuilder(sb, sd, sp.getFirstRead().isMateForwardStrand());
 					}
 				}
 			}
@@ -110,7 +116,6 @@ public class SignatureStrandUpdateReader {
 			{
 				// signature reverse and mate is forward; TE => plus
 				builder.incrementPlus();
-
 			}
 			else
 			{

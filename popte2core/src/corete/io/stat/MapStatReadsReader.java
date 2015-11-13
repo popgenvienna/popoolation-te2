@@ -34,7 +34,7 @@ public class MapStatReadsReader {
 
 	public MapStatReads readMapStat()
 	{
-		this.logger.info("Creating statistics of mapped reads");
+		this.logger.info("Creating statistics for mapped reads");
 		int readsInFile=0;
 		int readsMapped=0;
 		int readsWithMq=0;

@@ -48,6 +48,12 @@ public class PpileupChunk {
 	public int size(){return this.sites.get(0).size();}
 
 	/**
+	 * Get the number of ppileup entries in the chunk
+	 * @return
+	 */
+	public int siteCount(){return this.sites.size();}
+
+	/**
 	 * get only PSS (PpileupSummaryStatistic) for the population with the given index
 	 * the track will created for every site in the chunk; if absent in a population a
 	 * default PSS with all values zero will be used
