@@ -4,6 +4,8 @@ import pt2.CommandFormater;
 
 import java.util.LinkedList;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -19,9 +21,8 @@ public class IdentifySignatureParser {
 			SignatureIdentificationMode mode=null;
 			String outputFile="";
 			int mincount=2;
-			Integer fixedinsertsize=null;
 			int chunkdistance=5;
-			//int refinedistance=2;
+			SignatureWindowMode windowMode;
 			boolean detailedLog=false;
 
 
@@ -46,9 +47,9 @@ public class IdentifySignatureParser {
 				{
 					mincount=Integer.parseInt(args.remove(0));
 				}
-				else if(cu.equals("--fixed-insertsize"))
+				else if(cu.equals("--signature-window"))
 				{
-					fixedinsertsize = Integer.parseInt(args.remove(0));
+					windowMode = getSignatureWindowMode(args.remove(0));
 				}
 				else if(cu.equals("--chunk-distance"))
 				{
@@ -84,7 +85,7 @@ public class IdentifySignatureParser {
 
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
 			IdentifySignatureFramework isf =new IdentifySignatureFramework(inputFile,outputFile,mode,mincount,
-					fixedinsertsize,chunkdistance,detailedLog,logger);
+					windowMode,chunkdistance,detailedLog,logger);
 			isf.run();
 		}
 
@@ -119,12 +120,44 @@ public class IdentifySignatureParser {
 			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(CommandFormater.format("--fixed-insertsize","proceed with a fixed insert size for all populations [int]",null));
-			sb.append(CommandFormater.format("--chunk-distance","minimum distance between chromosomal chunks, in multiples of insert size","5"));
+			sb.append(CommandFormater.format("--signature-window","the window size of the signatures of TE insertions; [fixNNNN|minimumSampleMedian|maximumSampleMedian|median] ","median"));
+			sb.append(CommandFormater.format("--chunk-distance","minimum distance between chromosomal chunks, in multiples of insert size [int]","5"));
 			//sb.append(String.format("%-22s%s","--refine-distance","scan-distance for refined positions, in multiples of insert size; default=2\n"));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
 			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 
 		}
+
+	public static SignatureWindowMode getSignatureWindowMode(String toParse)
+	{
+		if(toParse.toLowerCase().equals("minimumSampleMedian"))
+		{
+			    return SignatureWindowMode.MinimumSampleMedian;
+		}
+		else if (toParse.toLowerCase().equals("maximumSampleMedian"))
+		{
+			      return SignatureWindowMode.MaximumSampleMedian;
+		}
+		else if(toParse.toLowerCase().equals("median"))
+		{
+
+			return SignatureWindowMode.Median;
+		}
+		else if(toParse.toLowerCase().startsWith("fix"))
+		{
+			Pattern p=Pattern.compile("(?i)fix(\\d+)");
+			Matcher m=p.matcher(toParse);
+			if(m.find()) {
+
+				int distance = Integer.parseInt(m.group(1));
+				SignatureWindowMode toret= SignatureWindowMode.FixedWindow;
+				toret.setDistance(distance);
+				return toret;
+			}
+			else throw new IllegalArgumentException("invalid sample mode "+toParse);
+		}
+		else throw new IllegalArgumentException("Invalid sample mode "+toParse);
+	}
+
 }

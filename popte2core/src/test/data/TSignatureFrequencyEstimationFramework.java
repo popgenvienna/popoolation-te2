@@ -13,6 +13,7 @@ import test.TestSupport.DataTestSupport;
 import test.TestSupport.PpileupDebugReader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,6 +22,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class TSignatureFrequencyEstimationFramework {
 
+	private static ArrayList<Integer> ws=new ArrayList<Integer>(
+			Arrays.asList(2, 2, 2));
 	@Test
 	public void Test_chunk_simplefind() {
 		StringBuilder sb=new StringBuilder();
@@ -29,9 +32,9 @@ public class TSignatureFrequencyEstimationFramework {
 		sb.append("2L\t2\tcom\t. 10 r 2\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,2,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -53,9 +56,9 @@ public class TSignatureFrequencyEstimationFramework {
 		sb.append("2L\t2\tcom\t. 10 r 2\t. 12 r 2 > 3 in 5\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,2,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
