@@ -10,6 +10,8 @@ import sun.rmi.runtime.Log;
 import test.TestSupport.PpileupDebugReader;
 import test.TestSupport.PpileupTestSupport;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +22,8 @@ import static org.junit.Assert.assertTrue;
  * Created by robertkofler on 9/4/15.
  */
 public class TPpileupChunkReader {
+	private static ArrayList<Integer> ws=new ArrayList<Integer>(
+			Arrays.asList(2, 2, 2));
 
 	@Test
 	public void Test_chunk1() {
@@ -28,7 +32,7 @@ public class TPpileupChunkReader {
 		sb.append("2L\t2\tcom\t. 10 te 2\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 		assertEquals(c.getStartPosition(),1);
@@ -48,7 +52,7 @@ public class TPpileupChunkReader {
 		sb.append("2L\t2\tcom\tte 2\t. 1\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 		assertEquals(c.getStartPosition(),1);
@@ -69,7 +73,7 @@ public class TPpileupChunkReader {
 		sb.append("2L\t3\tcom\t. 10 te 2\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 		assertEquals(c.getStartPosition(),1);
@@ -91,7 +95,7 @@ public class TPpileupChunkReader {
 
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 		assertEquals(c.getStartPosition(),1);
@@ -115,7 +119,7 @@ public class TPpileupChunkReader {
 		sb.append("2L\t12\tcom\t. 10 te 2\n");
 		sb.append("2L\t13\tcom\t. 10 te 2\n");
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 
@@ -135,7 +139,7 @@ public class TPpileupChunkReader {
 		sb.append("2L\t13\tcom\t. 10 te 2\n");
 		sb.append("2L\t14\tcom\t. 10 te 2\n");
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 
@@ -162,7 +166,7 @@ public class TPpileupChunkReader {
 		sb.append("2R\t1\tcom\t. 10 te 2\n");
 		sb.append("2R\t2\tcom\t. 10 te 2\n");
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 
@@ -193,7 +197,7 @@ public class TPpileupChunkReader {
 		sb.append("2R\t14\tcom\t. 10 te 2\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 
 
@@ -226,7 +230,7 @@ public class TPpileupChunkReader {
 		sb.append("2L\t12\tcom\t. 3 te 2\n");
 		sb.append("2L\t13\tcom\t. 4 te 2\n");
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 		HashMap<Integer,PpileupSampleSummary> t = c.getPSSTrack(0);
 		assertEquals(t.get(1).getCoverage(),3);

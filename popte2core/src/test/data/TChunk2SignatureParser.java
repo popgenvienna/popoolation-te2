@@ -17,6 +17,7 @@ import test.TestSupport.PpileupDebugReader;
 import test.TestSupport.PpileupTestSupport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +28,10 @@ import static org.junit.Assert.assertTrue;
  * Created by robertkofler on 9/4/15.
  */
 public class TChunk2SignatureParser {
+	private static ArrayList<Integer> ws=new ArrayList<Integer>(
+			Arrays.asList(2, 2, 2));
+
+
 
 	@Test
 	public void Test_chunk_simplefind() {
@@ -35,9 +40,9 @@ public class TChunk2SignatureParser {
 		sb.append("2L\t2\tcom\t. 10 r 2\n");
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,2,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 
 		assertEquals(a.size(),1);
@@ -62,9 +67,9 @@ public class TChunk2SignatureParser {
 
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,2,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 
 
@@ -96,9 +101,9 @@ public class TChunk2SignatureParser {
 
 
 		PpileupDebugReader dr = new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, 2, 10, LogFactory.getNullLogger());
+		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, ws, 10, LogFactory.getNullLogger());
 		PpileupChunk c = cr.next();
-		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, 2, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, ws, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a = c2p.getSignatures();
 
 
@@ -123,9 +128,9 @@ public class TChunk2SignatureParser {
 
 
 		PpileupDebugReader dr = new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, 2, 10, LogFactory.getNullLogger());
+		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, ws, 10, LogFactory.getNullLogger());
 		PpileupChunk c = cr.next();
-		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, 2, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, ws, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a = c2p.getSignatures();
 
 
@@ -150,9 +155,9 @@ public class TChunk2SignatureParser {
 
 
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr=new PpileupChunkReader(dr,2,2,10, LogFactory.getNullLogger());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,2,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 
 		assertEquals(a.size(),3);
@@ -190,9 +195,9 @@ public class TChunk2SignatureParser {
 
 
 		PpileupDebugReader dr = new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, 2, 10, LogFactory.getNullLogger());
+		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, ws, 10, LogFactory.getNullLogger());
 		PpileupChunk c = cr.next();
-		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, 2, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, ws, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a = c2p.getSignatures();
 
 
@@ -215,9 +220,9 @@ public class TChunk2SignatureParser {
 
 
 		PpileupDebugReader dr = new PpileupDebugReader(sb.toString());
-		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, 2, 10, LogFactory.getNullLogger());
+		PpileupChunkReader cr = new PpileupChunkReader(dr, 2, ws, 10, LogFactory.getNullLogger());
 		PpileupChunk c = cr.next();
-		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, 2, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p = new Chunk2SignatureParser(c, ws, 2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a = c2p.getSignatures();
 
 

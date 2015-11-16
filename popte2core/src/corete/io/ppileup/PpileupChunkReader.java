@@ -13,20 +13,35 @@ import java.util.logging.Logger;
 public class PpileupChunkReader {
 	private final IPpileupReader pr;
 	private final int scanwindowsize;
+	private final ArrayList<Integer> windowsizes;
 	private final int chunkdistance;
 	private final int mincount;
 	private final HashSet<String> processedChromosomes;
 	private final Logger logger;
 
 
-	public PpileupChunkReader(IPpileupReader pr, int mincount, int scanwindowsize, int chunkdistance, Logger logger ){
+	public PpileupChunkReader(IPpileupReader pr, int mincount, ArrayList<Integer> windowsizes, int chunkdistance, Logger logger ){
 		this.pr=pr;
 		this.mincount=mincount;
-		this.scanwindowsize=scanwindowsize;
+
+		this.windowsizes=windowsizes;
 		this.chunkdistance=chunkdistance;
 		this.logger=logger;
+		this.scanwindowsize=  getScanwindowsize(windowsizes);
 		this.processedChromosomes = new HashSet<String>();
 	}
+
+	private int getScanwindowsize(ArrayList<Integer> windowsizes)
+	{
+		if(windowsizes.size()<1) throw new IllegalArgumentException("Invalid window size");
+		int toret=0;
+		for(int i:this.windowsizes)
+		{
+			if(i>toret)toret=i;
+		}
+		return toret;
+	}
+
 
 
 	private PpileupSite site;

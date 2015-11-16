@@ -17,16 +17,17 @@ import java.util.LinkedList;
 public class Chunk2SignatureParser {
 	private final PpileupChunk toparse;
 	private final double mincount;
-	private final int windowsize;
+	private final ArrayList<Integer> windowsizes;
+	//private final int windowsize;
 	private final int start;
 	private final int end;
 	private final String chromosome;
 	private final ArrayList<String> teshortcuts;
 	private final TEFamilyShortcutTranslator translator;
-	public Chunk2SignatureParser(PpileupChunk chunk,int windowsize, int mincount, TEFamilyShortcutTranslator translator)
+	public Chunk2SignatureParser(PpileupChunk chunk,ArrayList<Integer> windowsizes, int mincount, TEFamilyShortcutTranslator translator)
 	{
 		this.toparse=chunk;
-		this.windowsize=windowsize;
+		this.windowsizes=new ArrayList<Integer>(windowsizes);
 		this.mincount=(double)mincount;
 		this.start=chunk.getStartPosition();
 		this.end=chunk.getEndPosition();
@@ -43,10 +44,11 @@ public class Chunk2SignatureParser {
 	public ArrayList<InsertionSignature> getSignatures()
 	{
 		ArrayList<InsertionSignature> signatures=new ArrayList<InsertionSignature>();
+		// For all Samples
 		for(int i=0; i<this.toparse.size(); i++)
 		{
 			HashMap<Integer,PpileupSampleSummary> psst= toparse.getPSSTrack(i);
-			signatures.addAll(getSampleSignatures(psst,i));
+			signatures.addAll(getSampleSignatures(psst,i,this.windowsizes.get(i)));
 		}
 		return signatures;
 	}
@@ -54,13 +56,13 @@ public class Chunk2SignatureParser {
 	/*
 	For all TEs in a given samples
 	 */
-	private ArrayList<InsertionSignature> getSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample,int popindex)
+	private ArrayList<InsertionSignature> getSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample,int popindex,int windowsize)
 	{
 		ArrayList<InsertionSignature> signatures= new ArrayList<InsertionSignature>();
 
 		// for all te shortcuts
 		for(String s:this.teshortcuts) {
-			ArrayList<InsertionSignature> t=getTEspecificSampleSignatures(sample,s,popindex);
+			ArrayList<InsertionSignature> t=getTEspecificSampleSignatures(sample,s,popindex,windowsize);
 			signatures.addAll(t);
 		}
 		return signatures;
@@ -71,7 +73,7 @@ public class Chunk2SignatureParser {
 	 * @param sample
 	 * @return
 	 */
-	private ArrayList<InsertionSignature> getTEspecificSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample, String teshortcut,int popindex)
+	private ArrayList<InsertionSignature> getTEspecificSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample, String teshortcut,int popindex,int windowsize)
 	{
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
 
@@ -88,13 +90,13 @@ public class Chunk2SignatureParser {
 			int tecount=sample.get(i).getTEcount(teshortcut);
 			runningsum+=tecount;
 			window.add(new ScoreHelper(i,tecount));
-			if(window.size()>this.windowsize){
+			if(window.size()>windowsize){
 				ScoreHelper pop=window.remove(0);
 				runningsum-=pop.score;
 			}
-			if(window.size()!=this.windowsize)continue;
+			if(window.size()!=windowsize)continue;
 
-			double av=runningsum/(double)this.windowsize;
+			double av=runningsum/(double)windowsize;
 			if(av>=this.mincount)
 			{
 				// larger than the mincount
@@ -113,7 +115,7 @@ public class Chunk2SignatureParser {
 			{
 				// lower than the mincount
 				minstretchcount++;
-				if(lastMaxPosition!=-1 && minstretchcount>=this.windowsize)
+				if(lastMaxPosition!=-1 && minstretchcount>=windowsize)
 				{   // we had a previous highscore => signify (create signature)
 
 
