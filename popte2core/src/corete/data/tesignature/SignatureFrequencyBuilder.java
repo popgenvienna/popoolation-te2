@@ -1,5 +1,6 @@
 package corete.data.tesignature;
 
+import corete.data.SignatureDirection;
 import corete.data.ppileup.PpileupSampleSummary;
 import corete.data.ppileup.PpileupSite;
 
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 public class SignatureFrequencyBuilder {
 	private final InsertionSignature signature;
+	private final SignatureDirection direction;
 	private final String teshortcut;
 	private final String antishortcut; // of the same family
 	private ArrayList<PpileupSite> sites;
@@ -24,6 +26,7 @@ public class SignatureFrequencyBuilder {
 		this.teshortcut=teshortcut;
 		this.antishortcut=antishortcut;
 		sites=new ArrayList<PpileupSite>();
+		this.direction=signature.getSignatureDirection();
 	}
 
 	public String getChromosome(){return this.signature.getChromosome();}
@@ -61,31 +64,36 @@ public class SignatureFrequencyBuilder {
 	{
 		ArrayList<PpileupSampleSummary> ppss=new ArrayList<PpileupSampleSummary>();
 		for(PpileupSite s:this.sites){
-			ppss.add(s.getPpileupSampleSummary(id));
+			ppss.add(s.getPpileupSampleSummary(id).getStrandSpecificSampleSummary(this.direction));
 		}
 
-		double coverage=0.0;
+		double properPair=0.0;
 		double givenTE=0.0;
 		double otherTE=0.0;
 		double structural=0.0;
 		for(PpileupSampleSummary pss:ppss)
 		{
-			coverage+=(double)pss.getCoverage();
+			//coverage+=(double)pss.getCoverage();
 			for(Map.Entry<String,Integer> me:pss.getAllTEcounts().entrySet())
 			{
 				if(me.getKey().equals(this.teshortcut))
 				{
 					givenTE+=(double)me.getValue();
+
 				}
 				else{
+
 					otherTE+=(double)me.getValue();
 				}
 			}
+			properPair+=(double)pss.getCountAbsence();
 			structural+=(double)pss.getCountSrFwd();
 			structural+=(double)pss.getCountSrRev();
 		}
 		double size=(double)ppss.size();
 
+		double coverage=givenTE+otherTE+structural+properPair;
+		properPair/=size;
 		coverage/=size;
 		givenTE/=size;
 		otherTE/=size;
