@@ -122,7 +122,7 @@ public class SignaturePairupFramework {
 				// equal popid, chr, strand, family, maxfreqdif < maxallowed
 
 				// distance from forward start
-				if(!chrpolyn.distanceIsOutsideBoundary(cand_fwd.getEnd(),cand_rev.getStart(),minDistance,maxDistance))
+				if(!chrpolyn.distanceIsOutsideBoundary(cand_fwd.getStart(),cand_rev.getEnd(),minDistance,maxDistance))
 				{
 					success=true;
 					break;

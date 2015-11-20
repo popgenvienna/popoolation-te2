@@ -149,7 +149,7 @@ public class IdentifySignatureFramework {
 			}
 			else throw new IllegalArgumentException("illegal sample mode "+this.windowMode);
 		}
-		throw new IllegalArgumentException("Invalid sample size inferred from ppileup; Header missing?");
+		return toret;
 	}
 
 
@@ -174,7 +174,7 @@ public class IdentifySignatureFramework {
 	{
 		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
-		PpileupChunkReader chunkReader=new PpileupChunkReader(pr,this.mincount,windowsize,chunkdistance,logger);
+		PpileupChunkReader chunkReader=new PpileupChunkReader(pr,this.mincount,windowsizes,chunkdistance,logger);
 		PpileupChunk chunk=null;
 		while((chunk=chunkReader.next())!=null)
 		{

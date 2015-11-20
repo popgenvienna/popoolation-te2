@@ -1,5 +1,7 @@
 package corete.data.ppileup;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import corete.data.SignatureDirection;
 import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
 
 import java.util.ArrayList;
@@ -61,6 +63,33 @@ public class PpileupSampleSummary {
 	{
 		return new HashMap<String,Integer>(this.tecount);
 	}
+
+
+	public PpileupSampleSummary getStrandSpecificSampleSummary(SignatureDirection dir)
+	{
+		if(dir==SignatureDirection.Forward)
+		{
+			HashMap<String,Integer> tokeep=new HashMap<String,Integer>();
+			for(Map.Entry<String,Integer> me:this.tecount.entrySet())
+			{
+				if(me.getKey().toUpperCase().equals(me.getKey())) tokeep.put(me.getKey(),me.getValue());
+			}
+
+			 return new PpileupSampleSummary(this.absence,this.srfwd,0,tokeep);
+		}
+		else if(dir==SignatureDirection.Reverse)
+		{
+				HashMap<String,Integer> tokeep=new HashMap<String,Integer>();
+				for(Map.Entry<String,Integer> me:this.tecount.entrySet())
+				{
+					if(me.getKey().toLowerCase().equals(me.getKey())) tokeep.put(me.getKey(),me.getValue());
+				}
+			 return new PpileupSampleSummary(this.absence,0,this.srrev,tokeep);
+		}
+		else throw new IllegalArgumentException("Invalid strand "+dir);
+
+	}
+
 
 
 	/**

@@ -22,7 +22,7 @@ public class IdentifySignatureParser {
 			String outputFile="";
 			int mincount=2;
 			int chunkdistance=5;
-			SignatureWindowMode windowMode;
+			SignatureWindowMode windowMode= SignatureWindowMode.Median;
 			boolean detailedLog=false;
 
 
