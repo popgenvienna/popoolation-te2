@@ -87,6 +87,7 @@ public class Chunk2SignatureParser {
 
 		for(int i=start; i<=end; i++)
 		{
+
 			int tecount=sample.get(i).getTEcount(teshortcut);
 			runningsum+=tecount;
 			window.add(new ScoreHelper(i,tecount));

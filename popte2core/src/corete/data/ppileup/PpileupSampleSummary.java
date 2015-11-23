@@ -14,102 +14,50 @@ import java.util.Map;
  * Created by robertkofler on 9/2/15.
  */
 public class PpileupSampleSummary {
-	private final int absence;
-	private final int srfwd;
-	private final int srrev;
-	private final HashMap<String, Integer> tecount;
-	private final int coverage;
+	PpileupDirectionalSampleSummary forward;
+	PpileupDirectionalSampleSummary reverse;
 
-	public PpileupSampleSummary(int absence, int srfwd, int srrev, HashMap<String, Integer> tecount)
+	public PpileupSampleSummary(PpileupDirectionalSampleSummary forward, PpileupDirectionalSampleSummary reverse)
 	{
-		this.absence = absence;
-		this.srrev = srrev;
-		this.srfwd = srfwd;
-		this.tecount = new HashMap<String, Integer>(tecount);
+		this.forward=forward;
+		this.reverse=reverse;
 
-		// Compute coverage
-		// I decided to compute it inside the class ensure sanity of the container
-		int coverage=absence+srfwd+srrev;
-		for(Map.Entry<String,Integer> me:tecount.entrySet())
-		{
-			coverage+=me.getValue();
-		}
-		this.coverage=coverage;
 	}
 
 	public static PpileupSampleSummary getEmpty()
 	{
-		HashMap<String,Integer> hm=new HashMap<String,Integer>();
-		return new PpileupSampleSummary(0,0,0,hm);
+
+		return new PpileupSampleSummary(PpileupDirectionalSampleSummary.getEmpty(SignatureDirection.Forward),PpileupDirectionalSampleSummary.getEmpty(SignatureDirection.Reverse));
 	}
 
-	/**
-	 * Coverage
-	 * sum of absence, structural-fwd, structural-rev, and all TEs
-	 * @return
-	 */
-	public int getCoverage()
+	public PpileupDirectionalSampleSummary getForward(){return this.forward;}
+	public PpileupDirectionalSampleSummary getReverse(){return this.reverse;}
+
+
+	public PpileupDirectionalSampleSummary getStrandSpecificSampleSummary(SignatureDirection dir)
 	{
-		 return this.coverage;
-	}
-
-	public int getCountAbsence(){return this.absence;}
-
-	public int getCountSrFwd(){return this.srfwd;}
-
-	public int getCountSrRev(){return this.srrev;}
-
-	public HashMap<String,Integer> getAllTEcounts()
-	{
-		return new HashMap<String,Integer>(this.tecount);
-	}
-
-
-	public PpileupSampleSummary getStrandSpecificSampleSummary(SignatureDirection dir)
-	{
-		if(dir==SignatureDirection.Forward)
-		{
-			HashMap<String,Integer> tokeep=new HashMap<String,Integer>();
-			for(Map.Entry<String,Integer> me:this.tecount.entrySet())
-			{
-				if(me.getKey().toUpperCase().equals(me.getKey())) tokeep.put(me.getKey(),me.getValue());
-			}
-
-			 return new PpileupSampleSummary(this.absence,this.srfwd,0,tokeep);
-		}
-		else if(dir==SignatureDirection.Reverse)
-		{
-				HashMap<String,Integer> tokeep=new HashMap<String,Integer>();
-				for(Map.Entry<String,Integer> me:this.tecount.entrySet())
-				{
-					if(me.getKey().toLowerCase().equals(me.getKey())) tokeep.put(me.getKey(),me.getValue());
-				}
-			 return new PpileupSampleSummary(this.absence,0,this.srrev,tokeep);
-		}
-		else throw new IllegalArgumentException("Invalid strand "+dir);
+		if(dir==SignatureDirection.Forward) return forward;
+		else if(dir==SignatureDirection.Reverse) return reverse;
+		else throw new IllegalArgumentException("Invalid direction "+dir);
 
 	}
 
-
-
-	/**
-	 * Get the counts for a specific TE family
-	 * @param teshortcut
-	 * @return
-	 */
 	public int getTEcount(String teshortcut)
 	{
-		return tecount.getOrDefault(teshortcut,0);
+		int fwc=this.forward.getTEcount(teshortcut);
+		int rec=this.reverse.getTEcount(teshortcut);
+		if(fwc>rec)return fwc;
+		else return rec;
 	}
+
+
 
 	public int maxTESupport()
 	{
-		int maxsupport=0;
-		for(Map.Entry<String,Integer> e:this.tecount.entrySet())
-		{
-			if(e.getValue()>maxsupport)maxsupport=e.getValue();
-		}
-		return maxsupport;
+		int fmax=this.forward.maxTESupport();
+		int rmax=this.reverse.maxTESupport();
+		if(fmax>=rmax) return fmax;
+		else return rmax;
 	}
 
 
@@ -119,7 +67,10 @@ public class PpileupSampleSummary {
 	 */
 	public HashSet<String> getTEComplement()
 	{
-		  return new HashSet<String>(this.tecount.keySet());
+		HashSet<String> toret=new HashSet<String>();
+		toret.addAll(this.forward.getTEComplement());
+		toret.addAll(this.reverse.getTEComplement());
+		return toret;
 	}
 
 

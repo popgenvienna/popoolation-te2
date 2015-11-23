@@ -46,11 +46,12 @@ public class PpileupSiteLightwight {
 	 * Get the coverage for the popualtion with the given index
 	 * @param popindex
 	 * @return
-	 */
+
 	public int getCoverage(int popindex)
 	{
 		return this.popentries.get(popindex).size();
 	}
+	*/
 
 
 

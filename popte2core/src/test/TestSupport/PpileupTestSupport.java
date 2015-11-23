@@ -1,11 +1,9 @@
 package test.TestSupport;
 
+import corete.data.SignatureDirection;
 import corete.data.hier.HierarchyEntry;
 import corete.data.hier.TEHierarchy;
-import corete.data.ppileup.PpileupBuilder;
-import corete.data.ppileup.PpileupSampleSummary;
-import corete.data.ppileup.PpileupSite;
-import corete.data.ppileup.PpileupSymbols;
+import corete.data.ppileup.*;
 import corete.io.SamPairReader;
 
 import java.io.BufferedReader;
@@ -148,30 +146,45 @@ public class PpileupTestSupport {
 		LinkedList<String> tmp=new LinkedList<>();
 		for(String s:spl){tmp.add(s);}
 
-		int countabs=0;
+		int countabsfwd=0;
+		int countabsrev=0;
 		int count_srfwd=0;
 		int count_srrev=0;
-		HashMap<String,Integer>  tecount =new HashMap<String,Integer>();
-		int coverage=0;
+		HashMap<String,Integer>  tecountfwd =new HashMap<String,Integer>();
+		HashMap<String,Integer>  tecountrev =new HashMap<String,Integer>();
+
 		while(tmp.size()>0)
 		{
 			String symbol =tmp.remove(0);
 			int count=Integer.parseInt(tmp.remove(0));
-			coverage+=count;
+
 			switch(symbol)
 			{
 				case PpileupSymbols.ABS:
-					countabs=count; break;
+					countabsfwd+=count;
+					countabsrev+=count;
+					break;
+				case PpileupSymbols.ABSFWD:
+					countabsfwd+=count;
+					break;
+				case PpileupSymbols.ABSREV:
+					countabsrev+=count;
+					break;
 				case PpileupSymbols.SvFWD:
 					count_srfwd=count; break;
 				case PpileupSymbols.SvRev:
 					count_srrev=count; break;
 				default:
-					tecount.put(symbol,count);
+					if(symbol.toLowerCase().equals(symbol))  tecountrev.put(symbol,count);
+					else if(symbol.toUpperCase().equals(symbol)) tecountfwd.put(symbol,count);
+
+
 					break;
 			}
 		}
-		return new PpileupSampleSummary(countabs,count_srfwd,count_srrev,tecount);
+		PpileupDirectionalSampleSummary fw=new PpileupDirectionalSampleSummary(SignatureDirection.Forward,countabsfwd,count_srfwd,tecountfwd);
+		PpileupDirectionalSampleSummary re=new PpileupDirectionalSampleSummary(SignatureDirection.Reverse,countabsrev,count_srrev,tecountrev);
+		return new PpileupSampleSummary(fw,re);
 	}
 
 	/**

@@ -1,10 +1,8 @@
 package pt2.statcoverage;
 
-import corete.data.ppileup.PpileupSiteLightwight;
 import corete.data.stat.PpileupCoverageStatBuilder;
+import corete.io.ppileup.DirectionalPpileupLightwightReader;
 import corete.io.ppileup.PpileupLightwightReader;
-import corete.io.ppileup.PpileupSubsampleLightwightReader;
-import corete.io.ppileup.PpileupWriter;
 import corete.io.stat.PpileupCoverageStatWriter;
 import pt2.Main;
 
@@ -40,7 +38,7 @@ public class StatcoverageFramework {
 	{
 		this.logger.info("Will computer coverage statistics for file  "+this.inputFile);
 
-		PpileupCoverageStatBuilder builder=new PpileupCoverageStatBuilder(new PpileupLightwightReader(this.inputFile,this.logger),this.logger);
+		PpileupCoverageStatBuilder builder=new PpileupCoverageStatBuilder(new DirectionalPpileupLightwightReader(new PpileupLightwightReader(this.inputFile,this.logger) ,this.logger),this.logger);
 		this.logger.info("Writing coverage statistics to file "+this.outputFile);
 		PpileupCoverageStatWriter writer=new PpileupCoverageStatWriter(builder,outputFile);
 		writer.writeStats();

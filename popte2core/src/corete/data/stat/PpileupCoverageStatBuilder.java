@@ -1,6 +1,8 @@
 package corete.data.stat;
 
+import corete.data.ppileup.DirectionalPpileupSiteLightwight;
 import corete.data.ppileup.PpileupSiteLightwight;
+import corete.io.ppileup.DirectionalPpileupLightwightReader;
 import corete.io.ppileup.IPpileupLightwightReader;
 
 import java.util.ArrayList;
@@ -11,18 +13,18 @@ import java.util.logging.Logger;
  * Created by robertkofler on 8/31/15.
  */
 public class PpileupCoverageStatBuilder {
-	private final IPpileupLightwightReader lwr;
+	private final DirectionalPpileupLightwightReader lwr;
 	private HashMap<Integer,Integer> jointAnalysis;
 	private ArrayList<HashMap<Integer,Integer>> sepAnalysis;
 	private int totalSites;
-	private int maxcoverage=0;
 	private Logger logger;
+	private int maxcoverage=0;
 
-	public PpileupCoverageStatBuilder(IPpileupLightwightReader lwr, Logger logger)
+	public PpileupCoverageStatBuilder(DirectionalPpileupLightwightReader lwr, Logger logger)
 	{
-		    this.lwr=lwr;
+		this.lwr=lwr;
 		this.logger=logger;
-			computeStat();
+		computeStat();
 	}
 
 
@@ -35,7 +37,7 @@ public class PpileupCoverageStatBuilder {
 		ArrayList<HashMap<Integer,Integer>> sep=new ArrayList<HashMap<Integer,Integer>>();
 
 
-		PpileupSiteLightwight l=null;
+		DirectionalPpileupSiteLightwight l=null;
 		int counter=0;
 		while((l=lwr.next())!=null)
 		{
@@ -47,8 +49,14 @@ public class PpileupCoverageStatBuilder {
 			Integer min=null;
 			for(int i=0; i<l.size(); i++)
 			{
-				int cov=l.getCoverage(i);
-				if(cov>maxcoverage)maxcoverage=cov;  // overall maximum coverage over all samples and sites
+				int covfwd=l.getForwardCoverage(i);
+				int covrev=l.getReverseCoverage(i);
+				int cov=0;
+				if(covfwd>covrev) cov=covfwd;
+				else cov=covrev;
+
+				if(cov>maxcoverage) maxcoverage=cov;
+				  // overall maximum coverage over all samples and sites
 				if(min==null) min=cov;               // min coverage over all samples but per site
 				if(cov<min) min=cov;
 				sep.get(i).putIfAbsent(cov,0);                //set per default to zero than increment by one

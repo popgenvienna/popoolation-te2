@@ -6,6 +6,8 @@ package corete.data.ppileup;
 public class PpileupSymbols {
 
 	public final static String ABS=".";
+	public final static String ABSFWD=",";
+	public final static String ABSREV="'";
 	public final static String SvFWD=">";
 	public final static String SvRev="<";
 	public final static String TEstart="{";

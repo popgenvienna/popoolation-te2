@@ -1,10 +1,8 @@
 package corete.io.ppileup;
 
+import corete.data.SignatureDirection;
 import corete.data.TEFamilyShortcutTranslator;
-import corete.data.ppileup.PpileupSampleSummary;
-import corete.data.ppileup.PpileupSite;
-import corete.data.ppileup.PpileupSiteLightwight;
-import corete.data.ppileup.PpileupSymbols;
+import corete.data.ppileup.*;
 import corete.data.stat.EssentialPpileupStats;
 
 import java.util.ArrayList;
@@ -48,16 +46,25 @@ public class PpileupReader implements IPpileupReader {
 			// treated properly; zero counts for all
 			ArrayList<String> sa=lw.getEntries(i);
 
-			int properpair=0;
+			int absfwd=0;
+			int absrev=0;
 			int srfwd=0;
 			int srrev=0;
-			HashMap<String,Integer> tecount=new HashMap<String,Integer>();
+			HashMap<String,Integer> tecountfwd=new HashMap<String,Integer>();
+			HashMap<String,Integer> tecountrev=new HashMap<String,Integer>();
 			for(String s:sa)
 			{
 				switch(s)
 				{
 					case PpileupSymbols.ABS:
-						properpair++;
+						absfwd++;
+						absrev++;
+						break;
+					case PpileupSymbols.ABSFWD:
+						absfwd++;
+						break;
+					case PpileupSymbols.ABSREV:
+						absrev++;
 						break;
 					case PpileupSymbols.SvFWD:
 						srfwd++;
@@ -66,13 +73,23 @@ public class PpileupReader implements IPpileupReader {
 						srrev++;
 						break;
 					default:
-						tecount.putIfAbsent(s,0);
-						tecount.put(s,1+tecount.get(s));
+						if(s.toLowerCase().equals(s))
+						{
+							tecountrev.putIfAbsent(s,0);
+							tecountrev.put(s,1+tecountrev.get(s));
+						}
+						else if(s.toUpperCase().equals(s))
+						{
+							tecountfwd.putIfAbsent(s,0);
+							tecountfwd.put(s,1+tecountfwd.get(s));
+						}
+
 				}  // swithc
 			}               //for
-			PpileupSampleSummary ss=new PpileupSampleSummary(properpair,srfwd,srrev,tecount);
+			PpileupDirectionalSampleSummary fwd=new PpileupDirectionalSampleSummary(SignatureDirection.Forward,absfwd,srfwd,tecountfwd);
+			PpileupDirectionalSampleSummary rev=new PpileupDirectionalSampleSummary(SignatureDirection.Reverse,absrev,srrev,tecountrev);
+			PpileupSampleSummary ss=new PpileupSampleSummary(fwd,rev);
 			sum.add(ss);
-
 		}
 		return new PpileupSite(lw.getChromosome(),lw.getPosition(),lw.getComment(),sum);
 	}
