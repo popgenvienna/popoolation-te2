@@ -1,8 +1,9 @@
 package pt2.subsample;
 
-import corete.data.ppileup.PpileupSiteLightwight;
+import corete.data.ppileup.DirectionalPpileupSiteLightwight;
+import corete.data.ppileup.SubsampleDirectionalPpileupSiteLightwight;
+import corete.io.ppileup.DirectionalPpileupLightwightReader;
 import corete.io.ppileup.PpileupLightwightReader;
-import corete.io.ppileup.PpileupSubsampleLightwightReader;
 import corete.io.ppileup.PpileupWriter;
 import pt2.Main;
 
@@ -43,12 +44,21 @@ public class SubsampleFramework {
 	public void run()
 	{
 		this.logger.info("Start sub-sampling coverage in ppileup file to "+this.targetCoverage);
-		PpileupSubsampleLightwightReader plsr=new PpileupSubsampleLightwightReader(new PpileupLightwightReader(this.inputFile,this.logger),this.targetCoverage,this.logger);
-		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,plsr.getTEFamilyShortcutTranslator(),plsr.getEssentialPpileupStats(),this.logger);
-		PpileupSiteLightwight s=null;
-		while((s=plsr.next())!=null)
+		PpileupLightwightReader plr=new PpileupLightwightReader(this.inputFile,this.logger);
+		DirectionalPpileupLightwightReader dr=new DirectionalPpileupLightwightReader(plr,this.logger);
+		SubsampleDirectionalPpileupSiteLightwight subsframework=new SubsampleDirectionalPpileupSiteLightwight(this.targetCoverage);
+		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,plr.getTEFamilyShortcutTranslator(),plr.getEssentialPpileupStats(),this.logger);
+
+		DirectionalPpileupSiteLightwight s=null;
+		while((s=dr.next())!=null)
 		{
-			writer.writeEntry(s);
+			int minfwd=s.getMinimumForwardCoverage();
+			int minrev=s.getMinimumReverseCoverage();
+			// Ignore a site only if both the fwd and the rev coverage are below the threshold
+			if(minfwd<this.targetCoverage && minrev< this.targetCoverage) continue;
+			DirectionalPpileupSiteLightwight subsampled=subsframework.subsample(s);
+
+			writer.writeEntry(subsampled);
 		}
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");

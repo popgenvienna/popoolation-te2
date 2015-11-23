@@ -1,6 +1,7 @@
 package corete.data.tesignature;
 
 import corete.data.SignatureDirection;
+import corete.data.ppileup.PpileupDirectionalSampleSummary;
 import corete.data.ppileup.PpileupSampleSummary;
 import corete.data.ppileup.PpileupSite;
 
@@ -62,7 +63,7 @@ public class SignatureFrequencyBuilder {
 
 	private FrequencySampleSummary getFrequencySampleSummaryForID(int id)
 	{
-		ArrayList<PpileupSampleSummary> ppss=new ArrayList<PpileupSampleSummary>();
+		ArrayList<PpileupDirectionalSampleSummary> ppss=new ArrayList<PpileupDirectionalSampleSummary>();
 		for(PpileupSite s:this.sites){
 			ppss.add(s.getPpileupSampleSummary(id).getStrandSpecificSampleSummary(this.direction));
 		}
@@ -71,10 +72,10 @@ public class SignatureFrequencyBuilder {
 		double givenTE=0.0;
 		double otherTE=0.0;
 		double structural=0.0;
-		for(PpileupSampleSummary pss:ppss)
+		for(PpileupDirectionalSampleSummary pss:ppss)
 		{
 			//coverage+=(double)pss.getCoverage();
-			for(Map.Entry<String,Integer> me:pss.getAllTEcounts().entrySet())
+			for(Map.Entry<String,Integer> me:pss.getTecount().entrySet())
 			{
 				if(me.getKey().equals(this.teshortcut))
 				{
@@ -86,9 +87,8 @@ public class SignatureFrequencyBuilder {
 					otherTE+=(double)me.getValue();
 				}
 			}
-			properPair+=(double)pss.getCountAbsence();
-			structural+=(double)pss.getCountSrFwd();
-			structural+=(double)pss.getCountSrRev();
+			properPair+=(double)pss.getAbsence();
+			structural+=(double)pss.getStructuralRearrangement();
 		}
 		double size=(double)ppss.size();
 

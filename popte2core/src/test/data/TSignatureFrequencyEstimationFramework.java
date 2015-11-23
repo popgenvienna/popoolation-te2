@@ -95,8 +95,8 @@ public class TSignatureFrequencyEstimationFramework {
 		public void Test_chunk_ignoreOtherStrand() {
 			StringBuilder sb=new StringBuilder();
 			sb.append("@SC\tr\troo\n");
-			sb.append("2L\t1\tcom\t. 10 r 2 R 3\n");
-			sb.append("2L\t2\tcom\t. 10 r 2 R 3\n");
+			sb.append("2L\t1\tcom\t. 10 r 2 R 1 > 5\n");
+			sb.append("2L\t2\tcom\t. 10 r 2 R 1 > 5\n");
 
 			PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 			PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
@@ -205,5 +205,7 @@ public class TSignatureFrequencyEstimationFramework {
 		assertEquals(f.get(0).getFrequencies().get(0).getOtherTEinsertions() ,0,0.000001);
 		assertEquals(f.get(0).getFrequencies().get(0).getStructuralRearrangements() ,0,0.000001);
 	}
+
+
 
 }

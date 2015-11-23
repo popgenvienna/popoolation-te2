@@ -233,12 +233,12 @@ public class TPpileupChunkReader {
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c= cr.next();
 		HashMap<Integer,PpileupSampleSummary> t = c.getPSSTrack(0);
-		assertEquals(t.get(1).getCoverage(),3);
-		assertEquals(t.get(2).getCoverage(),4);
-		assertEquals(t.get(3).getCoverage(),0);
-		assertEquals(t.get(11).getCoverage(),0);
-		assertEquals(t.get(12).getCoverage(),5);
-		assertEquals(t.get(13).getCoverage(),6);
+		assertEquals(t.get(1).getReverse().getCoverage(),3);
+		assertEquals(t.get(2).getReverse().getCoverage(),4);
+		assertEquals(t.get(3).getReverse().getCoverage(),0);
+		assertEquals(t.get(11).getReverse().getCoverage(),0);
+		assertEquals(t.get(12).getReverse().getCoverage(),5);
+		assertEquals(t.get(13).getReverse().getCoverage(),6);
 	}
 
 

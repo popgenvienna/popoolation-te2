@@ -1,6 +1,7 @@
 package corete.io.ppileup;
 
 import corete.data.TEFamilyShortcutTranslator;
+import corete.data.ppileup.DirectionalPpileupSiteLightwight;
 import corete.data.ppileup.PpileupSiteLightwight;
 import corete.data.ppileup.PpileupSymbols;
 import corete.data.ppileup.PpileupeHeaderSymbols;
@@ -9,6 +10,7 @@ import corete.data.stat.EssentialPpileupStats;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -136,6 +138,39 @@ public class PpileupWriter {
 			tos.add(sb.toString());
 		}
 		this.writeEntry(lw.getChromosome(),lw.getPosition(),lw.getComment(),tos);
+	}
+
+
+
+
+	public void writeEntry(DirectionalPpileupSiteLightwight ds)
+	{
+		ArrayList<ArrayList<String>> merged =new ArrayList<ArrayList<String>>();
+
+		for(int i=0; i<ds.size(); i++)
+		{
+			ArrayList<String> m=new ArrayList<String>();
+			LinkedList<String> fwdabs=new LinkedList<String>();
+			LinkedList<String> revabs=new LinkedList<String>();
+			for(String s:ds.getForwardEntries(i)) {
+				if (!s.equals(PpileupSymbols.ABSFWD)) m.add(s);
+				else fwdabs.add(s);
+			}
+			for(String s:ds.getReverseEntries(i))
+			{
+				if(!s.equals(PpileupSymbols.ABSREV)) m.add(s);
+				else revabs.add(s);
+			}
+			while(fwdabs.size()> 0 && revabs.size()>0)
+			{
+				fwdabs.remove(0); revabs.remove(0);
+				m.add(PpileupSymbols.ABS);
+			}
+			while(fwdabs.size()>0) m.add(fwdabs.remove(0));
+			while(revabs.size()>0) m.add(revabs.remove(0));
+			merged.add(m);
+		}
+		this.writeEntry(new PpileupSiteLightwight(ds.getChromosome(),ds.getPosition(),ds.getComment(),merged));
 	}
 
 
