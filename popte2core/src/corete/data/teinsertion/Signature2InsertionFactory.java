@@ -53,16 +53,7 @@ public class Signature2InsertionFactory {
 	{
 	String family=one.getTefamily();
 	String order=hier.fam2ord(family);
-	int position=0;
-	int winhalf=(int)(one.getWindowsize()/2);
-	if(one.getSignatureDirection()==SignatureDirection.Forward)
-	{
-		position=one.getStart()+winhalf; // FORWARD insertion is the START     + winhalf
-	}
-	else if(one.getSignatureDirection()==SignatureDirection.Reverse) {
-		position = one.getEnd()-winhalf;  // REVERSE insertion is the END      + winhalf
-	}
-	else throw new IllegalArgumentException("Invalid signature direction "+one.getSignatureDirection());
+	int position=one.getDirectionAwarePosition();
 
 	ArrayList<Double> frequencies=new ArrayList<Double>();
 

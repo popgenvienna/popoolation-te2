@@ -1,4 +1,4 @@
-package test.data;
+package test.tesignature;
 
 
 import corete.data.polyn.ContigwisePolynRepresentation;
@@ -102,6 +102,53 @@ public class TContigwisePolynRepresentation {
 		assertEquals(pn.distanceIsOutsideBoundary(1,10,9,9),true);
 		assertEquals(pn.distanceIsOutsideBoundary(1,10,-10,9),true);
 		assertEquals(pn.distanceIsOutsideBoundary(1,10,11,12),true);
+
+	}
+
+
+	@Test
+	public void Test_outofboundaryreverse() {
+		ArrayList<PolyNRecord> polyns=new ArrayList<PolyNRecord>();
+		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
+
+		assertEquals(pn.getDistance(10,1),-10);
+		assertEquals(pn.distanceIsOutsideBoundary(10,1,-19,9),false);
+		assertEquals(pn.distanceIsOutsideBoundary(10,1,-10,-10),false);
+		assertEquals(pn.distanceIsOutsideBoundary(10,1,-9,-9),true);
+		assertEquals(pn.distanceIsOutsideBoundary(10,1,-10,9),false);
+		assertEquals(pn.distanceIsOutsideBoundary(10,1,-11,-12),true);
+
+	}
+
+
+	@Test
+	public void Test_outofboundarypolyn() {
+		ArrayList<PolyNRecord> polyns=new ArrayList<PolyNRecord>();
+		polyns.add(new PolyNRecord("2L",10,20));
+		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
+
+		assertEquals(pn.getDistance(5,25),10);
+		assertEquals(pn.distanceIsOutsideBoundary(5,25,5,25),false);
+		assertEquals(pn.distanceIsOutsideBoundary(5,25,10,10),false);
+		assertEquals(pn.distanceIsOutsideBoundary(5,25,9,9),true);
+		assertEquals(pn.distanceIsOutsideBoundary(5,25,11,11),true);
+		assertEquals(pn.distanceIsOutsideBoundary(5,25,11,30),true);
+
+	}
+
+
+	@Test
+	public void Test_outofboundarypolynreverse() {
+		ArrayList<PolyNRecord> polyns=new ArrayList<PolyNRecord>();
+		polyns.add(new PolyNRecord("2L",10,20));
+		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
+
+		assertEquals(pn.getDistance(25,5),-10);
+		assertEquals(pn.distanceIsOutsideBoundary(25,5,-25,-5),false);
+		assertEquals(pn.distanceIsOutsideBoundary(25,5,-10,-10),false);
+		assertEquals(pn.distanceIsOutsideBoundary(25,5,-9,-9),true);
+		assertEquals(pn.distanceIsOutsideBoundary(25,5,-11,-11),true);
+		assertEquals(pn.distanceIsOutsideBoundary(25,5,-11,-30),true);
 
 	}
 

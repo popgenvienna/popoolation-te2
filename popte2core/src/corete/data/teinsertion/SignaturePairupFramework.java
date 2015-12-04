@@ -6,9 +6,7 @@ import corete.data.polyn.PolyNRecordCollection;
 import corete.data.tesignature.FrequencySampleSummary;
 import corete.data.tesignature.InsertionSignature;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -102,6 +100,20 @@ public class SignaturePairupFramework {
 		}
 
 
+		// Sort
+		Collections.sort(fwd,new Comparator<InsertionSignature>() {
+			@Override
+			public int compare(InsertionSignature i1, InsertionSignature i2) {
+				if(i1.getStart() < i2.getStart())return -1;
+				if(i1.getStart() > i2.getStart())return 1;
+				return 0;    }});
+		Collections.sort(rev,new Comparator<InsertionSignature>() {
+			@Override
+			public int compare(InsertionSignature i1, InsertionSignature i2) {
+				if(i1.getStart() < i2.getStart())return -1;
+				if(i1.getStart() > i2.getStart())return 1;
+				return 0;    }});
+
 		ArrayList<TEinsertion> toret=new ArrayList<>();
 
 		// First go over all the fwd insertions;
@@ -122,7 +134,7 @@ public class SignaturePairupFramework {
 				// equal popid, chr, strand, family, maxfreqdif < maxallowed
 
 				// distance from forward start
-				if(!chrpolyn.distanceIsOutsideBoundary(cand_fwd.getStart(),cand_rev.getEnd(),minDistance,maxDistance))
+				if(!chrpolyn.distanceIsOutsideBoundary(cand_fwd.getDirectionAwarePosition(),cand_rev.getDirectionAwarePosition(),minDistance,maxDistance))
 				{
 					success=true;
 					break;

@@ -22,7 +22,7 @@ public class DataTestSupport {
 		hes.add(new HierarchyEntry("r1","roo","RNA"));
 	hes.add(new HierarchyEntry("r2","roo","RNA"));
 	hes.add(new HierarchyEntry("r3","roo","RNA"));
-	TEHierarchy hier=new TEHierarchy(hes);
+		TEHierarchy hier=new TEHierarchy(hes);
 	return hier;
 	}
 

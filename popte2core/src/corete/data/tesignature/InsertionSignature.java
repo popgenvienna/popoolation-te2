@@ -49,6 +49,23 @@ public class InsertionSignature {
 	public String getTefamily(){return this.tefamily;}
 	public TEStrand getTEStrand(){return this.testrand;}
 
+
+	public int getDirectionAwarePosition()
+	{
+		int winhalf=(int)(this.getWindowsize()/2.0);
+
+		if(this.getSignatureDirection()==SignatureDirection.Forward)
+		{
+			return this.getStart()+winhalf;
+		}
+		else if (this.getSignatureDirection()==SignatureDirection.Reverse)
+		{
+			return this.end-winhalf;
+		}
+		else throw new IllegalArgumentException("Invalid strand");
+	}
+
+
 	public ArrayList<FrequencySampleSummary> getFrequencies(){return  new ArrayList<FrequencySampleSummary>(this.frequencies);}
 	//public double getSupport(){return this.support;}
 

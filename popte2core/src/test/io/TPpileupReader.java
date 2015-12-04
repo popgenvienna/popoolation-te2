@@ -43,6 +43,7 @@ public class TPpileupReader {
 		assertEquals(es.getInnerDistance(1),128);
 		assertEquals(es.getInnerDistance(2),60);
 		assertEquals(es.getMinMapQual(),15);
+		assertEquals(es.getInnerDistanceUpperQuantile(),0.01,0.0001);
 		assertEquals(es.getStructuralRearrangementMinimumDistance(),10000);
 		assertEquals(es.getVersionNumber(),"v0.11");
 	}
