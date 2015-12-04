@@ -14,7 +14,13 @@ public class PopolutionIDParser {
 
 	public static String translateToString(PopulationID id)
 	{
-		ArrayList<Integer> top=id.getIds();
+		// Increment by 1
+		ArrayList<Integer> tmp=id.getIds();
+		ArrayList<Integer> top=new ArrayList<Integer>();
+		for(int i: tmp) top.add(i+1);
+
+
+
 		if(top.size()==1) return top.get(0).toString();
 
 		boolean iscontinues=true;
@@ -72,7 +78,13 @@ public class PopolutionIDParser {
 			}
 		}
 		else toret.add(Integer.parseInt(id));
-		return new PopulationID(toret);
+
+
+		//decrement by one
+		ArrayList<Integer> toad=new ArrayList<Integer>();
+		for(int i: toret) toad.add(i-1);
+
+		return new PopulationID(toad);
 
 	}
 

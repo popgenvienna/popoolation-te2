@@ -65,6 +65,7 @@ public class IoTestSupport {
 				"@ID\t3\t60\n" +
 				"@MQ\t15\n" +
 				"@SR\t10000\n" +
+				"@UQ\t0.01\n"+
 				"@VN\tv0.11\n"+
 		"2L\t1\t-\t.\tp\tr\n"+
 		"2L\t2\tbla\t*\t><\t*\n"+

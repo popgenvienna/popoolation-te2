@@ -1,4 +1,4 @@
-package test.data;
+package test.tesignature;
 
 import corete.data.SignatureDirection;
 import corete.data.TEStrand;
