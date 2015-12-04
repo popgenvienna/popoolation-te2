@@ -155,7 +155,7 @@ public class PpileupLightwightReader implements IPpileupLightwightReader {
 	public EssentialPpileupStats getEssentialPpileupStats()
 	{
 		EssentialPpileupStats toret= new EssentialPpileupStats(pphp.getInnerDistances(),pphp.getMappingQuality(),pphp.getStructuralRearangementMinDistance(),
-				pphp.getVersionNumber());
+				pphp.getInnerDistanceUpperQuantile(),pphp.getVersionNumber());
 		return toret;
 	}
 

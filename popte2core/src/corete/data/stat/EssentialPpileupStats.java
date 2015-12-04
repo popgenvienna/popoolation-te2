@@ -10,12 +10,14 @@ public class EssentialPpileupStats {
 	private final int srmd;
 	private final String version;
 	private final int minMapQual;
-	public EssentialPpileupStats(ArrayList<Integer> defaultInnerDistances,int minMapQual, int srmd, String version)
+	private final float idof;
+	public EssentialPpileupStats(ArrayList<Integer> defaultInnerDistances,int minMapQual, int srmd, float idof, String version)
 	{
 		this.defaultInnerDistances=new ArrayList<Integer>(defaultInnerDistances);
 		this.minMapQual=minMapQual;
 		this.srmd=srmd;
 		this.version=version;
+		this.idof=idof;
 	}
 
 	public ArrayList<Integer> getInnerDistances()
@@ -40,6 +42,7 @@ public class EssentialPpileupStats {
 	}
 
 
+	public float getInnerDistanceUpperQuantile(){return this.idof;}
 
 	public int getStructuralRearrangementMinimumDistance()
 	{

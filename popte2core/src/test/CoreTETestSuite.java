@@ -12,6 +12,6 @@ import org.junit.runners.Suite;
 		test.io.TSamReader.class,  test.io.TSamPairReader.class, test.io.TPpileupReader.class,
 		test.data.TPpileupSampleSummary.class,test.data.TPpileupSite.class,  test.data.TPpileupSlidingWindow.class,
 test.ppileup.TPpileupBuilder.class,test.data.TPpileupChunkReader.class,test.data.TChunk2SignatureParser.class,
-test.data.TSignatureFrequencyEstimationFramework.class})
+test.data.TSignatureFrequencyEstimationFramework.class, test.data.TContigwisePolynRepresentation.class})
 public class CoreTETestSuite {
 }

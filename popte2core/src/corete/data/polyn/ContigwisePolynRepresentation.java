@@ -48,13 +48,13 @@ public class ContigwisePolynRepresentation {
 
 		if(end>=start) {
 
-			for (int i = start; i < end; i++) {
+			for (int i = start; i <= end; i++) {
 				if (!this.pnr.contains(i)) distance++;
 			}
 		}
 		else
 		{
-			for(int i=end; i<start; i++)
+			for(int i=end; i<=start; i++)
 			{
 				if(!this.pnr.contains(i)) distance--;
 			}
@@ -75,18 +75,18 @@ public class ContigwisePolynRepresentation {
 
 		if(end>=start) {
 
-			for (int i = start; i < end; i++) {
+			for (int i = start; i <= end; i++) {
 				if (!this.pnr.contains(i)) distance++;
 			}
-			if(distance>absmaxdistance) return false;
+			if(distance>absmaxdistance) return true;
 		}
 		else
 		{
-			for(int i=end; i<start; i++)
+			for(int i=end; i<=start; i++)
 			{
 				if(!this.pnr.contains(i)) distance--;
 			}
-			if(Math.abs(distance)>absmaxdistance) return false;
+			if(Math.abs(distance)>absmaxdistance) return true;
 		}
 
 		if(distance < minDistance || distance >maxDistance) return true;
