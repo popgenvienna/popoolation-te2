@@ -26,6 +26,7 @@ public class InsertionSignature {
 
 	public InsertionSignature(PopulationID popid, String chromosome, SignatureDirection signature, int start, int end, String tefamily, TEStrand testrand, ArrayList<FrequencySampleSummary> frequencies )
 	{
+		if(end<start) throw new IllegalArgumentException("Start position must be before the end position of the signature");
 		this.popid=popid;
 		this.chromosome=chromosome;
 		this.signature=signature;
@@ -44,6 +45,7 @@ public class InsertionSignature {
 	public SignatureDirection getSignatureDirection(){return this.signature;}
 	public int getStart(){return this.start;}
 	public int getEnd(){return this.end;}
+	public int getWindowsize(){return this.end-this.start;}
 	public String getTefamily(){return this.tefamily;}
 	public TEStrand getTEStrand(){return this.testrand;}
 

@@ -87,7 +87,7 @@ public class PpileupFramework {
 
 
 		//Writer
-		EssentialPpileupStats estat=new EssentialPpileupStats(isdsum.getMedians(),this.minmapqual,this.srmd,Main.getVersionNumber());
+		EssentialPpileupStats estat=new EssentialPpileupStats(isdsum.getMedians(),this.minmapqual,this.srmd, this.idof, Main.getVersionNumber());
 		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,estat,this.logger);
 
 		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,this.inputFiles,rcs,lastPositions,hier,writer,logger);

@@ -105,6 +105,7 @@ public class PpileupWriter {
 			}
 			this.bw.write(PpileupeHeaderSymbols.MAPPINGQUALITY+"\t"+this.estats.getMinMapQual()+"\n");
 			this.bw.write(PpileupeHeaderSymbols.STRUCTREARMINDIST+"\t"+this.estats.getStructuralRearrangementMinimumDistance()+"\n");
+			this.bw.write(PpileupeHeaderSymbols.INNERDISTUPQUANT+"\t"+this.estats.getInnerDistanceUpperQuantile()+"\n");
 			this.bw.write(PpileupeHeaderSymbols.VERSIONNUMBER+"\t"+estats.getVersionNumber()+"\n");
 		}
 		catch(IOException ex)

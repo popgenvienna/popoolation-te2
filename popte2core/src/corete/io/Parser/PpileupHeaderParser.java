@@ -107,6 +107,19 @@ public class PpileupHeaderParser {
 		return mq;
 	}
 
+
+	public float getInnerDistanceUpperQuantile()
+	{
+		if (!abbrv2entries.containsKey(PpileupeHeaderSymbols.INNERDISTUPQUANT))
+			throw new IllegalArgumentException("Header does not contain shortcut for inner distance upper quantile");
+		ArrayList<String> tw=this.abbrv2entries.get(PpileupeHeaderSymbols.INNERDISTUPQUANT);
+		if(tw.size()!=1) throw new IllegalArgumentException("Invalid header; only a single entry for inner distance upper quantile is allowed");
+		String[] s=tw.get(0).split("\\t");
+		// @SR     10000
+		float id=Float.parseFloat(s[1]);
+		return id;
+	}
+
 	public String getVersionNumber()
 	{
 		if (!abbrv2entries.containsKey(PpileupeHeaderSymbols.VERSIONNUMBER))

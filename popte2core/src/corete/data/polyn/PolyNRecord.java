@@ -10,6 +10,7 @@ public class PolyNRecord {
 	public PolyNRecord(String chromosome, int start, int end)
 	{
 		this.chromosome=chromosome;
+		if(end<start)throw new IllegalArgumentException("Start of polyN must be smaller than the end");
 		this.start=start;
 		this.end=end;
 	}

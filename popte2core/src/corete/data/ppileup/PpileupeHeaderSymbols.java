@@ -10,4 +10,5 @@ public class PpileupeHeaderSymbols {
 	public final static String MAPPINGQUALITY="@MQ";
 	public final static String STRUCTREARMINDIST="@SR";
 	public final static String VERSIONNUMBER="@VN";
+	public final static String INNERDISTUPQUANT="@UQ";
 }
