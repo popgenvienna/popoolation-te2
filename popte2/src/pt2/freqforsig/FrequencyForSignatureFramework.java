@@ -61,7 +61,7 @@ public class FrequencyForSignatureFramework {
 
 		ArrayList<InsertionSignature> updatedSignatures=new SignatureFrequencyEstimationFramework(pr,signatures,logger).getSignaturesWithFrequencies();
 
-
+	   assert(signatures.size()==updatedSignatures.size());
 
 		TESignatureWriter.writeall(this.outputFile,updatedSignatures,logger);
 

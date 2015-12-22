@@ -158,7 +158,7 @@ public class IdentifySignatureFramework {
 	private PopulationID getPopID(int samplesize)
 	{
 		 ArrayList<Integer> tot=new ArrayList<Integer>();
-		for(int i=1; i<=samplesize; i++)
+		for(int i=0; i<samplesize; i++)
 		{
 			tot.add(i);
 		}

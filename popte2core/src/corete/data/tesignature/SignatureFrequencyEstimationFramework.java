@@ -115,20 +115,19 @@ public class SignatureFrequencyEstimationFramework {
 		ArrayList<SignatureFrequencyBuilder> chrspec=new ArrayList<SignatureFrequencyBuilder>();
 		for(InsertionSignature sig: this.signatures)
 		{
-			String shortcut;
-			String antishortcut;
-			if(sig.getSignatureDirection() == SignatureDirection.Forward)
-			{
-				shortcut = translator.getShortcutFwd(sig.getTefamily());
-				antishortcut=translator.getShortcutRev(sig.getTefamily());
-			}
-			else
-			{
-				antishortcut = translator.getShortcutFwd(sig.getTefamily());
-				shortcut=translator.getShortcutRev(sig.getTefamily());
-			}
+			if(sig.getChromosome().equals(chromosome)) {
+				String shortcut;
+				String antishortcut;
+				if (sig.getSignatureDirection() == SignatureDirection.Forward) {
+					shortcut = translator.getShortcutFwd(sig.getTefamily());
+					antishortcut = translator.getShortcutRev(sig.getTefamily());
+				} else {
+					antishortcut = translator.getShortcutFwd(sig.getTefamily());
+					shortcut = translator.getShortcutRev(sig.getTefamily());
+				}
 
-			 chrspec.add(new SignatureFrequencyBuilder(sig,shortcut,antishortcut));
+				chrspec.add(new SignatureFrequencyBuilder(sig, shortcut, antishortcut));
+			}
 		}
 		return chrspec;
 	}
