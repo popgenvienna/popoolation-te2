@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by robertkofler on 9/3/15.
  */
-public class InsertionSignature {
+public class InsertionSignature implements Comparable<InsertionSignature> {
 	private final PopulationID popid;  // eg all, 1, 2, 3
 	private final String chromosome;      // hash: chromosome, strand, position, family
 	private final SignatureDirection signature;      // +,-,.
@@ -18,6 +18,8 @@ public class InsertionSignature {
 	private final String tefamily;
 	private final ArrayList<FrequencySampleSummary> frequencies;
 	//private final double support;
+
+
 
 	public InsertionSignature(PopulationID popid, String chromosome, SignatureDirection signature, int start, int end, String tefamily, TEStrand testrand )
 	{
@@ -88,13 +90,21 @@ public class InsertionSignature {
 	 * Sort the Insertion signatures by chromosome, position, family and strand
 	 * @param b the Snp to compare this SNP to
 	 * @return the sort order
-
+     */
 	@Override
 	public int compareTo(InsertionSignature b)
 	{
 		//sort by chromosome, position,fam, strand
+		//Hash  popid, chromosome, signaturedirection, TEStrand, start, end, tefamily
+
+		int popcomp=this.popid.compareTo(b.getPopid());
+		if(popcomp!=0) return popcomp;
+
 		int chrcomp=this.chromosome.compareTo(b.getChromosome());
 		if(chrcomp!=0) return chrcomp;
+
+		int sigcomp=this.getSignatureDirection().compareTo(b.getSignatureDirection());
+		if(sigcomp!=0) return sigcomp;
 
 		if(this.getStart() < b.getStart()) return -1;
 		if(this.getStart() > b.getStart()) return 1;
@@ -105,9 +115,6 @@ public class InsertionSignature {
 		int famcomp=this.getTefamily().compareTo(b.getTefamily());
 		if(famcomp!=0) return famcomp;
 
-		int sigcomp=this.getSignatureDirection().compareTo(b.getSignatureDirection());
-		if(sigcomp!=0) return sigcomp;
-
 		int testrandcomp=this.getTEStrand().compareTo(b.getTEStrand());
 		return testrandcomp; // last one, does not matter if zero or not, cause: if zero than equal
 	}
@@ -116,7 +123,9 @@ public class InsertionSignature {
 	public int hashCode()
 	{
 		// hash: chromosome, strand, position, family
+		//Hash  popid, chromosome, signaturedirection, TEStrand, start, end, tefamily
 		int hc=17;
+		hc=hc*37+this.popid.hashCode();
 		hc=hc*37+this.start;
 		hc=hc*37+this.end;
 		hc=hc*37+this.chromosome.hashCode();
@@ -132,6 +141,7 @@ public class InsertionSignature {
 		// hash: chromosome, strand, position, family
 		if(!(o instanceof InsertionSignature)){return false;}
 		InsertionSignature is=(InsertionSignature)o;
+		if(!this.popid.equals(o))return false;
 		if(is.start!=this.start)return false;
 		if(is.end!=this.end)return false;
 		if(is.signature !=this.signature )return false;
@@ -140,7 +150,7 @@ public class InsertionSignature {
 		if(!is.tefamily.equals(this.tefamily)) return false;
 		return true;
 	}
-	*/
+
 
 
 

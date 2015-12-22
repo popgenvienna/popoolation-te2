@@ -4,6 +4,7 @@ import com.sun.deploy.util.StringUtils;
 import corete.data.tesignature.PopulationID;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by robertkofler on 10/22/15.
@@ -24,12 +25,15 @@ public class PopolutionIDParser {
 		if(top.size()==1) return top.get(0).toString();
 
 		boolean iscontinues=true;
+
+		if(top.size()<=2) iscontinues=false;
 		for(int i=1; i<top.size(); i++)
-		{
-			   int prev=top.get(i-1);
-			int  cur=top.get(i);
-			if(prev+1!=cur) iscontinues=false;
-		}
+			{
+				   int prev=top.get(i-1);
+				int  cur=top.get(i);
+				if(prev+1!=cur) iscontinues=false;
+			}
+
 
 		if(iscontinues)
 		{
@@ -39,7 +43,9 @@ public class PopolutionIDParser {
 		}
 		else
 		{
-			return StringUtils.join(top,",");
+			ArrayList<String> strs= new ArrayList<String>();
+			for(int  i:top)strs.add(String.valueOf(i));
+			return StringUtils.join(strs,",");
 		}
 	}
 
@@ -61,23 +67,32 @@ public class PopolutionIDParser {
 		//    two subcases
 		//    single entry
 		//    range entry of the form from-to
-		ArrayList<Integer> toret=new ArrayList<Integer>();
+		ArrayList<String> pre=new ArrayList<String>();
 		if(id.contains(","))
 		{
-
 			String[] tmp=id.split(",");
-			for(String t:tmp)
-			{
-				if(id.contains("-"))
-				{
-					ArrayList<Integer> toad=parseFromToRange(t);
-					toret.addAll(toad);
-
-				}
-				else toret.add(Integer.parseInt(t));
-			}
+			pre=new ArrayList<String>(Arrays.asList(tmp));
 		}
-		else toret.add(Integer.parseInt(id));
+		else pre.add(id);
+
+		ArrayList<Integer> toret=new ArrayList<Integer>();
+		for(String s:pre){
+			if(s.contains("-"))
+			{
+				ArrayList<Integer> toad=parseFromToRange(s);
+				toret.addAll(toad);
+
+			}
+			else toret.add(Integer.parseInt(s));
+		}
+
+
+
+
+
+
+
+
 
 
 		//decrement by one
