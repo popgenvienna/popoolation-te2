@@ -163,6 +163,39 @@ public class TSignaturePairupFramework {
 	}
 
 
+	@Test
+	public void Test_complex_firstoftwoforward(){
+		StringBuilder sb=new StringBuilder();
+		sb.append("1\tX\t150\t250\tF\tpele\t.\t0.1\n");
+		sb.append("1\tX\t100\t200\tF\tpele\t.\t0.1\n");
+		sb.append("1\tX\t200\t300\tR\tpele\t.\t0.1\n");
+
+		SignaturePairupFramework spf=PairupSupport.getFramework(sb.toString(),PairupSupport.getEmpty(),0.5,-1,101);
+		ArrayList<TEinsertion> tes= spf.getTEinsertions();
+		assertEquals(tes.size(),2);
+		assertEquals(tes.get(0).getPosition(),225);
+		assertEquals(tes.get(1).getPosition(),150);
+	}
+
+
+
+	@Test
+	public void Test_complex_doubletrouble(){
+		StringBuilder sb=new StringBuilder();
+		sb.append("1\tX\t155\t157\tF\tpele\t.\t0.1\n");
+		sb.append("1\tX\t160\t162\tF\tpele\t.\t0.1\n");
+		sb.append("1\tX\t210\t212\tR\tpele\t.\t0.1\n");
+		sb.append("1\tX\t200\t202\tR\tpele\t.\t0.1\n");
+
+
+		SignaturePairupFramework spf=PairupSupport.getFramework(sb.toString(),PairupSupport.getEmpty(),0.5,-1,101);
+		ArrayList<TEinsertion> tes= spf.getTEinsertions();
+		assertEquals(tes.size(),2);
+		assertEquals(tes.get(0).getPosition(),181);  // best pair should be the one with the lowest distance
+		assertEquals(tes.get(1).getPosition(),183);  // than the second best pair
+	}
+
+
 
 	// chromosome, and signature direction, TEStrand
 	// take the first of two pele

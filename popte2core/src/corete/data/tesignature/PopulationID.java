@@ -70,7 +70,6 @@ public class PopulationID implements Comparable<PopulationID> {
 	@Override
 	public int hashCode()
 	{
-		// hash: chromosome, strand, position, family
 		return this.ids.hashCode();
 
 	}

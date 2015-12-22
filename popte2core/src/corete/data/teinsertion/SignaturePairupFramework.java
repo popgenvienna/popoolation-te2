@@ -90,8 +90,9 @@ public class SignaturePairupFramework {
 
 	private ArrayList<TEinsertion> getInsertionsForChrFamSpec(ArrayList<InsertionSignature> chrfamspec,ContigwisePolynRepresentation chrpolyn)
 	{
-		LinkedList<InsertionSignature> fwd=new LinkedList<InsertionSignature>();
-		LinkedList<InsertionSignature> rev=new LinkedList<InsertionSignature>();
+		// Oki that's a pretty algorithm...took me some time
+		ArrayList<InsertionSignature> fwd=new ArrayList<InsertionSignature>();
+		ArrayList<InsertionSignature> rev=new ArrayList<InsertionSignature>();
 		for(InsertionSignature s:chrfamspec)
 		{
 			if(s.getSignatureDirection()== SignatureDirection.Forward) fwd.add(s);
@@ -100,63 +101,60 @@ public class SignaturePairupFramework {
 		}
 
 
-		// Sort
-		Collections.sort(fwd,new Comparator<InsertionSignature>() {
-			@Override
-			public int compare(InsertionSignature i1, InsertionSignature i2) {
-				if(i1.getStart() < i2.getStart())return -1;
-				if(i1.getStart() > i2.getStart())return 1;
-				return 0;    }});
-		Collections.sort(rev,new Comparator<InsertionSignature>() {
-			@Override
-			public int compare(InsertionSignature i1, InsertionSignature i2) {
-				if(i1.getStart() < i2.getStart())return -1;
-				if(i1.getStart() > i2.getStart())return 1;
-				return 0;    }});
-
-		ArrayList<TEinsertion> toret=new ArrayList<>();
-
-		// First go over all the fwd insertions;
-		while(fwd.size()>0)
+		// Identify the possible pairs
+		ArrayList<PossiblePair> pps=new ArrayList<PossiblePair>();
+		for(InsertionSignature f: fwd)
 		{
-			InsertionSignature cand_fwd=fwd.remove(0);
-
-			// Check if a fitting reverse insertion can be found
-			int i=0;
-			boolean success =false;
-			for(; i<rev.size(); i++)
+			for(InsertionSignature r:rev)
 			{
-				InsertionSignature cand_rev=rev.get(i);
+				// Are already chr and fam specific
+				assert(f.getTefamily().equals(r.getTefamily()));
+				assert(f.getChromosome().equals(r.getChromosome()));
 
-				if(!cand_fwd.getPopid().equals(cand_rev.getPopid())) continue;
-				if(cand_fwd.getTEStrand() !=cand_rev.getTEStrand()) continue;
-				if(maxPopFreqDif(cand_fwd,cand_rev)>this.maxDif) continue;
+				if(!f.getPopid().equals(r.getPopid())) continue;
+				if(f.getTEStrand() !=r.getTEStrand()) continue;
+				if(maxPopFreqDif(f,r)>this.maxDif) continue;
 				// equal popid, chr, strand, family, maxfreqdif < maxallowed
 
 				// distance from forward start
-				if(!chrpolyn.distanceIsOutsideBoundary(cand_fwd.getDirectionAwarePosition(),cand_rev.getDirectionAwarePosition(),minDistance,maxDistance))
+				if(!chrpolyn.distanceIsOutsideBoundary(f.getDirectionAwarePosition(),r.getDirectionAwarePosition(),minDistance,maxDistance))
 				{
-					success=true;
-					break;
+					int dist= chrpolyn.getDistance(f.getDirectionAwarePosition(),r.getDirectionAwarePosition());
+					pps.add(new PossiblePair(f,r,dist));
 				}
-
-				//int distance =chrpolyn.getDistance(cand_fwd.getEnd(),cand_rev.getStart());
-				//if(distance>=minDistance && distance<=maxDistance)
-				//{
-				//}
 			}
-
-			// If a partner was found than pair both up
-			if(success)
-			{
-				toret.add(s2if.fromTwo(cand_fwd,rev.remove(i)));
-			}
-			else toret.add(s2if.fromOne(cand_fwd));      // if no partner was found, use as stand-alone fwd insertion
 		}
 
-		// also treat the remaining reverse insertions; as no fwd insertion is left treat them all as stand-alone rev insertions
-		while(rev.size()>0) toret.add(s2if.fromOne(rev.remove(0)));
+		// Sort the possible pairs most promising first, ie. shortest distance first
+		Collections.sort(pps,new Comparator<PossiblePair>() {
+			@Override
+			public int compare(PossiblePair o1, PossiblePair o2) {
+				if(o1.distance<o2.distance) return -1;
+				if(o1.distance>o2.distance) return 1;
+				return 0;
+			}
+		});
 
+		// Add the possible pairs, starting by the one with the smallest distance ending with the largest distance;
+		// Only use possible pairs where both Insertion signatures are not yet present in the used hash;
+		ArrayList<TEinsertion> toret=new ArrayList<>();
+		HashSet<InsertionSignature> used=new HashSet<InsertionSignature>();
+		for(PossiblePair pp:pps)
+		{
+			if((!used.contains(pp.forward)) && (!used.contains(pp.reverse)))
+			{
+				toret.add(s2if.fromTwo(pp.forward,pp.reverse));
+				used.add(pp.forward); used.add(pp.reverse);
+			}
+		}
+
+		// Process all remaining ones
+		for(InsertionSignature s: chrfamspec) {
+			if(!used.contains(s)) {
+				toret.add(s2if.fromOne(s));
+				used.add(s);
+			}
+		}
 		return toret;
 	}
 
@@ -179,3 +177,17 @@ public class SignaturePairupFramework {
 
 
 }
+
+class PossiblePair
+{
+	public final InsertionSignature forward;
+	public final InsertionSignature reverse;
+	public final int distance;
+	public PossiblePair(InsertionSignature forward, InsertionSignature reverse,int distance)
+	{
+		this.forward=forward;
+		this.reverse=reverse;
+		this.distance=distance;
+	}
+}
+
