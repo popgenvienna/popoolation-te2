@@ -131,11 +131,11 @@ public class IdentifySignatureParser {
 
 	public static SignatureWindowMode getSignatureWindowMode(String toParse)
 	{
-		if(toParse.toLowerCase().equals("minimumSampleMedian"))
+		if(toParse.toLowerCase().equals("minimumsamplemedian"))
 		{
 			    return SignatureWindowMode.MinimumSampleMedian;
 		}
-		else if (toParse.toLowerCase().equals("maximumSampleMedian"))
+		else if (toParse.toLowerCase().equals("maximumsamplemedian"))
 		{
 			      return SignatureWindowMode.MaximumSampleMedian;
 		}

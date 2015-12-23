@@ -94,7 +94,7 @@ public class TESignatureReader {
 		// String.format("%d:%.3f:%.3f:%.3f:%.3f",
 		// fss.getPopulationid(),fss.getCoverage(),fss.getGivenTEInsertion(),fss.getOtherTEinsertions(),fss.getStructuralRearrangements());
 		String[] s=totr.split(":");
-		int popid=Integer.parseInt(s[0]);
+		int popid=Integer.parseInt(s[0])-1;
 		double cov=Double.parseDouble(s[1]);
 		double count=Double.parseDouble(s[2]);
 		double other=Double.parseDouble(s[3]);
