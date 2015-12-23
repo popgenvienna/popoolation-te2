@@ -60,7 +60,7 @@ public class SubsampleFramework {
 
 			writer.writeEntry(subsampled);
 		}
-
+		writer.close();
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
 
 
