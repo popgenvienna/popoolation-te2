@@ -39,7 +39,7 @@ public class RefinementChunk2SignatureParser {
 	public ArrayList<InsertionSignature> getSignatures()
 	{
 		HashSet<InsertionSignature> uniqsig=new HashSet<InsertionSignature>();
-		this.logger.info("Starting to refine positions of "+this.ranges.size()+ " signatures of TE insertions");
+		this.logger.fine("Starting to refine positions of "+this.ranges.size()+ " signatures of TE insertions");
 
 		int countRefined=0;
 		int countNotrefined=0;
@@ -71,8 +71,8 @@ public class RefinementChunk2SignatureParser {
 
 		}
 
-		this.logger.info("Refined positions of "+countRefined+ " signatures of TE insertions");
-		this.logger.info("Final number of TE insertions "+uniqsig.size());
+		this.logger.fine("Refined positions of "+countRefined+ " signatures of TE insertions");
+		this.logger.fine("Final number of TE insertions "+uniqsig.size());
 
 
 		return new ArrayList<InsertionSignature>(uniqsig);
