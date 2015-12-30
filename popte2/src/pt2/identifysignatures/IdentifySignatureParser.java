@@ -2,6 +2,7 @@ package pt2.identifysignatures;
 
 import pt2.CommandFormater;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -23,6 +24,8 @@ public class IdentifySignatureParser {
 			int mincount=2;
 			int chunkdistance=5;
 			SignatureWindowMode windowMode= SignatureWindowMode.Median;
+			SignatureWindowMode minValley= null;
+
 			boolean detailedLog=false;
 
 
@@ -51,14 +54,14 @@ public class IdentifySignatureParser {
 				{
 					windowMode = getSignatureWindowMode(args.remove(0));
 				}
+				else if(cu.equals("--min-valley"))
+				{
+					minValley = getSignatureWindowMode(args.remove(0));
+				}
 				else if(cu.equals("--chunk-distance"))
 				{
 					chunkdistance = Integer.parseInt(args.remove(0));
 				}
-				//else if(cu.equals("--refine-distance"))
-				//{
-				//	refinedistance = Integer.parseInt(args.remove(0));
-				//}
 				else if(cu.equals("--help"))
 				{
 					printHelp();
@@ -81,11 +84,12 @@ public class IdentifySignatureParser {
 				printHelp();
 				System.exit(1);
 			}
+			if(minValley==null) minValley=windowMode;
 
 
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
 			IdentifySignatureFramework isf =new IdentifySignatureFramework(inputFile,outputFile,mode,mincount,
-					windowMode,chunkdistance,detailedLog,logger);
+					windowMode,minValley,chunkdistance,detailedLog,logger);
 			isf.run();
 		}
 
@@ -120,7 +124,8 @@ public class IdentifySignatureParser {
 			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(CommandFormater.format("--signature-window","the window size of the signatures of TE insertions; [fixNNNN|minimumSampleMedian|maximumSampleMedian|median] ","median"));
+			sb.append(CommandFormater.format("--signature-window","the window size of the signatures of TE insertions; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","median"));
+			sb.append(CommandFormater.format("--min-valley","the minimum size of the valley between two signatures of the same family ; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","the same as --signature-window "));
 			sb.append(CommandFormater.format("--chunk-distance","minimum distance between chromosomal chunks, in multiples of insert size [int]","5"));
 			//sb.append(String.format("%-22s%s","--refine-distance","scan-distance for refined positions, in multiples of insert size; default=2\n"));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
@@ -146,13 +151,24 @@ public class IdentifySignatureParser {
 		}
 		else if(toParse.toLowerCase().startsWith("fix"))
 		{
-			Pattern p=Pattern.compile("(?i)fix(\\d+)");
+			Pattern p=Pattern.compile("(?i)fix(.+)");
 			Matcher m=p.matcher(toParse);
 			if(m.find()) {
+				String found=m.group(1);
+				String[] ar;
 
-				int distance = Integer.parseInt(m.group(1));
+				// Check if composite array
+				if(found.contains(","))
+				{
+					        ar=found.split(",");
+				}
+				else ar=new String[]{found};
+				// Translate to array list
+				ArrayList<Integer> ints=new ArrayList<Integer>();
+				for(String s: ar) ints.add(Integer.parseInt(s));
+				// return fixed window mode
 				SignatureWindowMode toret= SignatureWindowMode.FixedWindow;
-				toret.setDistance(distance);
+				toret.setDistance(ints);
 				return toret;
 			}
 			else throw new IllegalArgumentException("invalid sample mode "+toParse);

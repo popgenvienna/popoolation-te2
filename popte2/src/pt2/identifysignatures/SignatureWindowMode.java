@@ -1,15 +1,17 @@
 package pt2.identifysignatures;
 
+import java.util.ArrayList;
+
 /**
  * Created by robertkofler on 11/16/15.
  */
 public enum SignatureWindowMode {
 	FixedWindow, MinimumSampleMedian,MaximumSampleMedian, Median;
 
-	private  int distance;
+	private ArrayList<Integer> distance;
 
 
-	public void setDistance(int distance) {this.distance=distance;}
-	public int getDistance(){return this.distance;}
+	public void setDistance(ArrayList<Integer> distance) {this.distance=distance;}
+	public ArrayList<Integer> getDistance(){return this.distance;}
 
 }
