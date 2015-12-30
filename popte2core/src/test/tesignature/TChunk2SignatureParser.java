@@ -8,6 +8,7 @@ import corete.data.ppileup.PpileupSampleSummary;
 import corete.data.ppileup.PpileupSite;
 import corete.data.tesignature.Chunk2SignatureParser;
 import corete.data.tesignature.InsertionSignature;
+import corete.data.tesignature.SignatureRangeInfo;
 import corete.io.ppileup.PpileupChunkReader;
 import corete.misc.LogFactory;
 import org.junit.Test;
@@ -85,6 +86,37 @@ public class TChunk2SignatureParser {
 		assertEquals(a.get(1).getStart() ,5);
 		assertEquals(a.get(1).getEnd() ,6);
 		assertEquals(a.get(1).getTefamily() ,"roo");
+	}
+
+
+	@Test
+	public void Test_chunk_findtwo_notanymore() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 2\n");
+		sb.append("2L\t3\tcom\t. 10 r 1\n");
+		sb.append("2L\t4\tcom\t. 10 r 1\n");
+		sb.append("2L\t5\tcom\t. 10 r 2\n");
+		sb.append("2L\t6\tcom\t. 10 r 2\n");
+
+
+		ArrayList<Integer> valleys=new ArrayList<Integer>(
+				Arrays.asList(3, 3, 3));
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,valleys,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<InsertionSignature> a= c2p.getSignatures();
+
+
+		assertEquals(a.size(),1);
+		assertEquals(a.get(0).getSignatureDirection(), SignatureDirection.Reverse);
+		assertEquals(a.get(0).getTEStrand(), TEStrand.Unknown);
+		assertEquals(a.get(0).getStart() ,5);
+		assertEquals(a.get(0).getEnd() ,6);
+		assertEquals(a.get(0).getTefamily() ,"roo");
+
+
 
 	}
 
@@ -202,11 +234,6 @@ public class TChunk2SignatureParser {
 
 
 		assertEquals(a.size(), 0);
-	//	assertEquals(a.get(0).getSignatureDirection(), SignatureDirection.Reverse);
-	//	assertEquals(a.get(0).getTEStrand(), TEStrand.Unknown);
-	//	assertEquals(a.get(0).getStart(), 1);
-	//	assertEquals(a.get(0).getEnd(), 1);
-	//	assertEquals(a.get(0).getTefamily(), "roo");
 	}
 
 	@Test
@@ -234,6 +261,127 @@ public class TChunk2SignatureParser {
 		assertEquals(a.get(0).getTefamily(), "roo");
 	}
 
+
+	@Test
+	public void Test_chunk_simplerange() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 2\n");
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<SignatureRangeInfo> a= c2p.getRangeSignatures();
+
+		assertEquals(a.size(),1);
+		assertEquals(a.get(0).getRangeStart (),1);
+		assertEquals(a.get(0).getRangeEnd (),2);
+		assertEquals(a.get(0).getWinStartScore (),2.0,0.0001);
+		assertEquals(a.get(0).getWinEndScore (),2.0,0.0001);
+
+	}
+
+
+	@Test
+	public void Test_chunk_pyramidrange_extended() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 3\n");
+		sb.append("2L\t3\tcom\t. 10 r 4\n");
+		sb.append("2L\t4\tcom\t. 10 r 4\n");
+		sb.append("2L\t5\tcom\t. 10 r 3\n");
+		sb.append("2L\t6\tcom\t. 10 r 2\n");
+		sb.append("2L\t7\tcom\t. 10 r 1\n");
+		sb.append("2L\t8\tcom\t. 10 r 1\n");
+
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<SignatureRangeInfo> a= c2p.getRangeSignatures();
+
+		assertEquals(a.size(),1);
+		assertEquals(a.get(0).getRangeStart (),1);
+		assertEquals(a.get(0).getRangeEnd (),6);
+		assertEquals(a.get(0).getWinStartScore (),4.0,0.0001);
+		assertEquals(a.get(0).getWinEndScore (),4.0,0.0001);
+
+	}
+
+
+	@Test
+	public void Test_chunk_pyramidrange_abrupt() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 3\n");
+		sb.append("2L\t3\tcom\t. 10 r 4\n");
+		sb.append("2L\t4\tcom\t. 10 r 4\n");
+		sb.append("2L\t5\tcom\t. 10 r 3\n");
+		sb.append("2L\t6\tcom\t. 10 r 2\n");
+
+
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<SignatureRangeInfo> a= c2p.getRangeSignatures();
+
+		assertEquals(a.size(),1);
+		assertEquals(a.get(0).getRangeStart (),1);
+		assertEquals(a.get(0).getRangeEnd (),6);
+		assertEquals(a.get(0).getWinStartScore (),4.0,0.0001);
+		assertEquals(a.get(0).getWinEndScore (),4.0,0.0001);
+
+	}
+
+
+
+	@Test
+	public void Test_chunk_pyramidrange_complex() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 3\n");
+		sb.append("2L\t3\tcom\t. 10 r 4\n");
+		sb.append("2L\t4\tcom\t. 10 r 4\n");
+		sb.append("2L\t5\tcom\t. 10 r 3\n");
+		sb.append("2L\t6\tcom\t. 10 r 2\n");
+		sb.append("2L\t7\tcom\t. 10 r 1\n");
+		sb.append("2L\t8\tcom\t. 10 r 1\n");
+		sb.append("2L\t9\tcom\t. 10 r 2\n");
+		sb.append("2L\t10\tcom\t. 10 r 3\n");
+		sb.append("2L\t11\tcom\t. 10 r 4\n");
+		sb.append("2L\t12\tcom\t. 10 r 4\n");
+		sb.append("2L\t13\tcom\t. 10 r 3\n");
+		sb.append("2L\t14\tcom\t. 10 r 2\n");
+
+
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<SignatureRangeInfo> a= c2p.getRangeSignatures();
+
+		assertEquals(a.size(),2);
+		assertEquals(a.get(0).getRangeStart (),1);
+		assertEquals(a.get(0).getRangeEnd (),6);
+		assertEquals(a.get(0).getWinStartScore (),4.0,0.0001);
+		assertEquals(a.get(0).getWinEndScore (),4.0,0.0001);
+		assertEquals(a.get(0).getSignature().getStart(),3);
+		assertEquals(a.get(0).getSignature().getEnd(),4);
+
+		assertEquals(a.get(1).getRangeStart (),9);
+		assertEquals(a.get(1).getRangeEnd (),14);
+		assertEquals(a.get(1).getWinStartScore (),4.0,0.0001);
+		assertEquals(a.get(1).getWinEndScore (),4.0,0.0001);
+		assertEquals(a.get(1).getSignature().getStart(),11);
+		assertEquals(a.get(1).getSignature().getEnd(),12);
+
+
+	}
 
 
 
