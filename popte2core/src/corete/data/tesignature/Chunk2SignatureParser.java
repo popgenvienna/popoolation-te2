@@ -122,6 +122,7 @@ public class Chunk2SignatureParser {
 		int minstretchcount=0;
 
 		int rangeStart=-1;
+		int rangeEnd=-1;
 		double winStartScore=0.0;
 		double winEndScore=0.0;
 
@@ -143,6 +144,7 @@ public class Chunk2SignatureParser {
 				if(rangeStart==-1){
 					rangeStart=window.getFirst().position;
 				}
+				rangeEnd=window.getLast().position;
 
 				// larger than the mincount
 				   if(av>=lastMaxSupport)
@@ -162,21 +164,21 @@ public class Chunk2SignatureParser {
 			{
 				// lower than the mincount
 				minstretchcount++;
-				if(minstretchcount>=valleysize){
-					rangeStart=-1;
-				}
 
 
-				if(lastMaxPosition!=-1 && minstretchcount>=valleysize)
+				if(lastMaxPosition!=-1 && minstretchcount>=(valleysize+windowsize-1))
 				{   // we had a previous highscore => signify (create signature)
 
 
-					SignatureRangeInfo sri=signify(lastMaxStart,lastMaxPosition,lastMaxSupport,teshortcut,popindex,rangeStart,window.getLast().position,winStartScore,winEndScore);
+					SignatureRangeInfo sri=signify(lastMaxStart,lastMaxPosition,lastMaxSupport,teshortcut,popindex,rangeStart,rangeEnd,winStartScore,winEndScore);
 					toret.add(sri);
 					lastMaxSupport=0.0;
 					lastMaxPosition=-1;
 					lastMaxStart=-1;
-
+				}
+				if(minstretchcount>=(valleysize+windowsize-1)){
+					rangeStart=-1;
+					rangeEnd=-1;
 				}
 
 
@@ -188,7 +190,7 @@ public class Chunk2SignatureParser {
 		if(lastMaxPosition!=-1) {
 
 
-			SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport,teshortcut,popindex,rangeStart,window.getLast().position,winStartScore,winEndScore);
+			SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport,teshortcut,popindex,rangeStart,rangeEnd,winStartScore,winEndScore);
 			toret.add(sri);
 		}
 		return toret;
