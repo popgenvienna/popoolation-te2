@@ -224,7 +224,7 @@ public class IdentifySignatureFramework {
 
 			// Refine
 			ArrayList<InsertionSignature> toad =new RefinementChunk2SignatureParser(refineparser,torefine,chunk.getChromosome(),chunk.getStartPosition(),chunk.getEndPosition(),
-					windowsizes.get(0),valleysizes.get(0),translator).getSignatures();
+					windowsizes.get(0),valleysizes.get(0),translator,this.logger).getSignatures();
 			tmp.addAll(toad);
 
 		}

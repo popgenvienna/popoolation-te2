@@ -91,6 +91,7 @@ public class SampleChunk2SignatureParser {
 					lastMaxPosition = i;
 					winStartScore = window.getFirst().score;
 					winEndScore = window.getLast().score;
+
 				}
 				minstretchcount = 0;
 
@@ -102,7 +103,7 @@ public class SampleChunk2SignatureParser {
 				if (lastMaxPosition != -1 && minstretchcount >= (valleysize + windowsize - 1)) {   // we had a previous highscore => signify (create signature)
 
 
-					SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport, teshortcut, popindex, rangeStart, rangeEnd, winStartScore, winEndScore);
+					SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport, teshortcut, popindex, rangeStart, rangeEnd, winStartScore, winEndScore,lastMaxSupport);
 					toret.add(sri);
 					lastMaxSupport = 0.0;
 					lastMaxPosition = -1;
@@ -122,14 +123,14 @@ public class SampleChunk2SignatureParser {
 		if (lastMaxPosition != -1) {
 
 
-			SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport, teshortcut, popindex, rangeStart, rangeEnd, winStartScore, winEndScore);
+			SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport, teshortcut, popindex, rangeStart, rangeEnd, winStartScore, winEndScore,lastMaxSupport);
 			toret.add(sri);
 		}
 		return toret;
 
 	}
 
-	private SignatureRangeInfo signify(int start, int end, double support, String shortcut, int popindex, int rangeStart, int rangeEnd, double winStartScore, double winEndScore) {
+	private SignatureRangeInfo signify(int start, int end, double support, String shortcut, int popindex, int rangeStart, int rangeEnd, double winStartScore, double winEndScore, double averageWinScore) {
 
 		PopulationID popid = new PopulationID(new ArrayList<Integer>(Arrays.asList(popindex)));
 		// forward = uppercase is end
@@ -139,7 +140,7 @@ public class SampleChunk2SignatureParser {
 
 
 		InsertionSignature sig = new InsertionSignature(popid, this.chromosome, sigDir, start, end, tefamily, TEStrand.Unknown);
-		SignatureRangeInfo sri = new SignatureRangeInfo(sig, rangeStart, rangeEnd, winStartScore, winEndScore);
+		SignatureRangeInfo sri = new SignatureRangeInfo(sig, rangeStart, rangeEnd, winStartScore, winEndScore,averageWinScore);
 		return sri;
 
 	}

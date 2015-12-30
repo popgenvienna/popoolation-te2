@@ -242,4 +242,26 @@ public class TPpileupChunkReader {
 	}
 
 
+	@Test
+	public void Test_pooledTrack() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 1 te 2\t. 10 r 3\n");
+		sb.append("2L\t2\tcom\t. 2 te 2\t. 10 r 5\n");
+		sb.append("2L\t3\tcom\t. 3 te 2\t. 8 te 6\n");
+		sb.append("2L\t4\tcom\t. 4 te 2\t. 9 te 4\n");
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c= cr.next();
+		HashMap<Integer,PpileupSampleSummary> t= c.getPooledTrack();
+		assertEquals(t.get(1).getReverse().getCoverage(),16);
+		assertEquals((int)t.get(1).getReverse().getTecount().get("r") ,3);
+
+		assertEquals(t.get(2).getReverse().getCoverage(),19);
+		assertEquals(t.get(3).getReverse().getCoverage(),19);
+		assertEquals(t.get(4).getReverse().getCoverage(),19);
+		assertEquals((int)t.get(4).getReverse().getTecount().get("te") ,6);
+
+	}
+
+
 }
