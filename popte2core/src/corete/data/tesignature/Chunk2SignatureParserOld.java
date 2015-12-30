@@ -14,7 +14,7 @@ import java.util.LinkedList;
 /**
  * Created by robertkofler on 9/3/15.
  */
-public class Chunk2SignatureParser {
+public class Chunk2SignatureParserOld {
 	private final PpileupChunk toparse;
 	private final double mincount;
 	private final ArrayList<Integer> windowsizes;
@@ -25,8 +25,7 @@ public class Chunk2SignatureParser {
 	private final String chromosome;
 	private final ArrayList<String> teshortcuts;
 	private final TEFamilyShortcutTranslator translator;
-	private final ArrayList<HashMap<Integer,PpileupSampleSummary>> hsms;
-	public Chunk2SignatureParser(PpileupChunk chunk,ArrayList<Integer> windowsizes, ArrayList<Integer> valleysizes, int mincount, TEFamilyShortcutTranslator translator)
+	public Chunk2SignatureParserOld(PpileupChunk chunk, ArrayList<Integer> windowsizes, ArrayList<Integer> valleysizes, int mincount, TEFamilyShortcutTranslator translator)
 	{
 		this.toparse=chunk;
 		this.windowsizes=new ArrayList<Integer>(windowsizes);
@@ -37,15 +36,6 @@ public class Chunk2SignatureParser {
 		this.chromosome = chunk.getChromosome();
 		this.teshortcuts=chunk.getShortcutsOfTEsInChunk();
 		this.translator=translator;
-
-
-		hsms=new ArrayList<HashMap<Integer,PpileupSampleSummary>>();
-		for(int i=0; i<this.toparse.size(); i++)
-		{
-			HashMap<Integer,PpileupSampleSummary> psst= toparse.getPSSTrack(i);
-			hsms.add(psst);
-		}
-
 	}
 
 
@@ -56,52 +46,28 @@ public class Chunk2SignatureParser {
 	public ArrayList<InsertionSignature> getSignatures()
 	{
 		ArrayList<InsertionSignature> signatures=new ArrayList<InsertionSignature>();
-		ArrayList<SignatureRangeInfo> ranges=this.getRangeSignatures();
-
-		for(SignatureRangeInfo sri:ranges)signatures.add(sri.getSignature());
-		return signatures;
-	}
-
-
-	public ArrayList<SignatureRangeInfo> getRangeSignatures()
-	{
-		ArrayList<SignatureRangeInfo> signatures=new ArrayList<SignatureRangeInfo>();
 		// For all Samples
 		for(int i=0; i<this.toparse.size(); i++)
 		{
-			signatures.addAll(getSampleSignatures(i));
+			HashMap<Integer,PpileupSampleSummary> psst= toparse.getPSSTrack(i);
+			signatures.addAll(getSampleSignatures(psst,i,this.windowsizes.get(i)));
 		}
 		return signatures;
 	}
-
-
-
 
 	/*
 	For all TEs in a given samples
 	 */
-	private ArrayList<SignatureRangeInfo> getSampleSignatures(int popindex)
+	private ArrayList<InsertionSignature> getSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample,int popindex,int windowsize)
 	{
-		ArrayList<SignatureRangeInfo> signatures= new ArrayList<SignatureRangeInfo>();
+		ArrayList<InsertionSignature> signatures= new ArrayList<InsertionSignature>();
 
 		// for all te shortcuts
 		for(String s:this.teshortcuts) {
-			ArrayList<SignatureRangeInfo> t=this.getRanges(s,popindex);
+			ArrayList<InsertionSignature> t=getTEspecificSampleSignatures(sample,s,popindex,windowsize);
 			signatures.addAll(t);
 		}
 		return signatures;
-	}
-
-
-	/**
-	 * Get the range signatures for one specific TE family and one specific sample id (popindex)
-	 * @param teshortcut
-	 * @param popindex
-	 * @return
-	 */
-	public ArrayList<SignatureRangeInfo> getRanges(String teshortcut,int popindex)
-	{
-		return getTEspecificSampleSignatures(hsms.get(popindex),teshortcut,popindex,this.windowsizes.get(popindex),this.valleysizes.get(popindex));
 	}
 
 	/**
@@ -109,9 +75,9 @@ public class Chunk2SignatureParser {
 	 * @param sample
 	 * @return
 	 */
-	private ArrayList<SignatureRangeInfo> getTEspecificSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample, String teshortcut,int popindex,int windowsize,int valleysize)
+	private ArrayList<InsertionSignature> getTEspecificSampleSignatures(HashMap<Integer,PpileupSampleSummary> sample, String teshortcut,int popindex,int windowsize)
 	{
-		ArrayList<SignatureRangeInfo> toret=new ArrayList<SignatureRangeInfo>();
+		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
 
 		LinkedList<ScoreHelper> window=new LinkedList<ScoreHelper>();
 
@@ -120,10 +86,6 @@ public class Chunk2SignatureParser {
 		double lastMaxSupport=0.0;
 		double runningsum=0.0;
 		int minstretchcount=0;
-
-		int rangeStart=-1;
-		double winStartScore=0.0;
-		double winEndScore=0.0;
 
 		for(int i=start; i<=end; i++)
 		{
@@ -140,10 +102,6 @@ public class Chunk2SignatureParser {
 			double av=runningsum/(double)windowsize;
 			if(av>=this.mincount)
 			{
-				if(rangeStart==-1){
-					rangeStart=window.getFirst().position;
-				}
-
 				// larger than the mincount
 				   if(av>=lastMaxSupport)
 				   {
@@ -152,8 +110,6 @@ public class Chunk2SignatureParser {
 					   lastMaxStart=window.getFirst().position;
 					   lastMaxSupport=av;
 					   lastMaxPosition=i;
-					   winStartScore=window.getFirst().score;
-					   winEndScore=window.getLast().score;
 				   }
 				minstretchcount=0;
 
@@ -162,21 +118,15 @@ public class Chunk2SignatureParser {
 			{
 				// lower than the mincount
 				minstretchcount++;
-				if(minstretchcount>=valleysize){
-					rangeStart=-1;
-				}
-
-
-				if(lastMaxPosition!=-1 && minstretchcount>=valleysize)
+				if(lastMaxPosition!=-1 && minstretchcount>=windowsize)
 				{   // we had a previous highscore => signify (create signature)
 
 
-					SignatureRangeInfo sri=signify(lastMaxStart,lastMaxPosition,lastMaxSupport,teshortcut,popindex,rangeStart,window.getLast().position,winStartScore,winEndScore);
-					toret.add(sri);
+					InsertionSignature sig=signify(lastMaxStart,lastMaxPosition,lastMaxSupport,teshortcut,popindex);
+					toret.add(sig);
 					lastMaxSupport=0.0;
 					lastMaxPosition=-1;
 					lastMaxStart=-1;
-
 				}
 
 
@@ -188,14 +138,14 @@ public class Chunk2SignatureParser {
 		if(lastMaxPosition!=-1) {
 
 
-			SignatureRangeInfo sri = signify(lastMaxStart, lastMaxPosition, lastMaxSupport,teshortcut,popindex,rangeStart,window.getLast().position,winStartScore,winEndScore);
-			toret.add(sri);
+			InsertionSignature sig = signify(lastMaxStart, lastMaxPosition, lastMaxSupport,teshortcut,popindex);
+			toret.add(sig);
 		}
 		return toret;
 
 	}
 
-	private SignatureRangeInfo signify(int start,int end,double support,String shortcut,int popindex,int rangeStart,int rangeEnd,double winStartScore,double winEndScore)
+	private InsertionSignature signify(int start,int end,double support,String shortcut,int popindex)
 	{
 
 		PopulationID popid=new PopulationID(new ArrayList<Integer>(Arrays.asList(popindex)));
@@ -205,11 +155,9 @@ public class Chunk2SignatureParser {
 		String tefamily=translator.getFamilyname(shortcut);
 
 
-		InsertionSignature sig= new InsertionSignature(popid,this.chromosome,sigDir,start,end,tefamily, TEStrand.Unknown);
-		SignatureRangeInfo sri=new SignatureRangeInfo(sig,rangeStart,rangeEnd,winStartScore,winEndScore);
-		return sri;
-
+		return new InsertionSignature(popid,this.chromosome,sigDir,start,end,tefamily, TEStrand.Unknown);
 	}
+
 
 
 	private class ScoreHelper{

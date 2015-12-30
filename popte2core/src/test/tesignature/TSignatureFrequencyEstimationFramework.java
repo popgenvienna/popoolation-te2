@@ -34,7 +34,7 @@ public class TSignatureFrequencyEstimationFramework {
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -58,7 +58,7 @@ public class TSignatureFrequencyEstimationFramework {
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -101,7 +101,7 @@ public class TSignatureFrequencyEstimationFramework {
 			PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 			PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 			PpileupChunk c =cr.next();
-			Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+			Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 			ArrayList<InsertionSignature> a= c2p.getSignatures();
 			SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -124,7 +124,7 @@ public class TSignatureFrequencyEstimationFramework {
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -149,7 +149,7 @@ public class TSignatureFrequencyEstimationFramework {
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -172,7 +172,7 @@ public class TSignatureFrequencyEstimationFramework {
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 
@@ -194,7 +194,7 @@ public class TSignatureFrequencyEstimationFramework {
 		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
 		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
 		PpileupChunk c =cr.next();
-		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<InsertionSignature> a= c2p.getSignatures();
 		SignatureFrequencyEstimationFramework sef=new SignatureFrequencyEstimationFramework(new PpileupDebugReader(sb.toString()),a,LogFactory.getNullLogger());
 

@@ -26,13 +26,14 @@ public class IdentifySignatureFramework {
 	private final SignatureIdentificationMode mode;
 	private final int mincount;
 	private final SignatureWindowMode windowMode;
+	private final SignatureWindowMode minValley;
 	private final int chunkmultiplicator;
 	private final boolean detailedLog;
 	private final Logger logger;
 	//private final int refinmentmultiplicator;
 
 	public IdentifySignatureFramework(String inputFile, String outputFile, SignatureIdentificationMode mode, int mincount
-									  ,SignatureWindowMode windowMode, int chunkmultiplicator,
+									  ,SignatureWindowMode windowMode, SignatureWindowMode minValley, int chunkmultiplicator,
 									  boolean detailedlog, Logger logger)
 	{
 		this.inputFile=inputFile;
@@ -49,6 +50,7 @@ public class IdentifySignatureFramework {
 		this.mincount=mincount;
 		if(mincount<1) throw new IllegalArgumentException("Minimum count must be larger than zero");
 		this.windowMode=windowMode;
+		this.minValley=minValley;
 		this.chunkmultiplicator=chunkmultiplicator;
 		//this.refinmentmultiplicator=refinmentmultiplicator;
 		this.detailedLog=detailedlog;
@@ -65,22 +67,24 @@ public class IdentifySignatureFramework {
 		int chunkdistance=pr.getEssentialPpileupStats().getMaximumInnerDistance() * this.chunkmultiplicator;
 		// int refinementdistance=pr.getEssentialPpileupStats().getMaximumInnerDistance() * this.refinmentmultiplicator;
 
-		ArrayList<Integer> windowsizes= getWindowSize(pr.getEssentialPpileupStats());
+		ArrayList<Integer> windowsizes= getWindowSize(this.windowMode,pr.getEssentialPpileupStats());
+		ArrayList<Integer> valleysizes= getWindowSize(this.minValley,pr.getEssentialPpileupStats());
 
 		this.logger.info("Will use a window-mode "+this.windowMode);
 		this.logger.info("Will use a minimum distance to next chromosomal chunk of "+chunkdistance);
-
+		for(int i:windowsizes) this.logger.fine("Window size for sample "+i+1+" = "+windowsizes.get(0));
+		for(int i:windowsizes) this.logger.fine("Minimum vallye size for sample "+i+1+" = "+valleysizes.get(0));
 
 		ArrayList<InsertionSignature> signatures=null;
 		if(this.mode==SignatureIdentificationMode.Joint)
 		{
 			this.logger.info("Will conduct a joint analysis, ie pooling all sites across all samples to identify TE signatures");
-			signatures=run_joint(pr,chunkdistance,windowsizes);
+			signatures=run_joint(pr,chunkdistance,windowsizes,valleysizes);
 		}
 		else if(this.mode==SignatureIdentificationMode.Separate)
 		{
 			this.logger.info("Will conduct a separate analysis, ie identifying TE signatures in each sample individually");
-			signatures=run_separate(pr,chunkdistance,windowsizes);
+			signatures=run_separate(pr,chunkdistance,windowsizes,valleysizes);
 		}
 		//else if(this.mode==SignatureIdentificationMode.SeparateRefined)
 		//{
@@ -100,7 +104,7 @@ public class IdentifySignatureFramework {
 	/**
 	 * Joint sample analysis
 	 */
-	private ArrayList<InsertionSignature> run_joint(PpileupReader pr, int chunkdistance, ArrayList<Integer> windowsizes)
+	private ArrayList<InsertionSignature> run_joint(PpileupReader pr, int chunkdistance, ArrayList<Integer> windowsizes, ArrayList<Integer> valleysizes)
 	{
 		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
 
@@ -121,33 +125,46 @@ public class IdentifySignatureFramework {
 		return toret;
 	}
 
-	private ArrayList<Integer> getWindowSize(EssentialPpileupStats estats)
+	/**
+	 * Get the window sizes for a given window mode and pileup statisitics
+	 * @param win
+	 * @param estats
+	 * @return
+	 */
+	private ArrayList<Integer> getWindowSize(SignatureWindowMode win, EssentialPpileupStats estats)
 	{
 		int sampleSize=estats.countSamples();
 		ArrayList<Integer> toret=new ArrayList<Integer>();
 		for(int i=0; i<sampleSize; i++)
 		{
-			if(this.windowMode==SignatureWindowMode.FixedWindow)
+			if(win==SignatureWindowMode.FixedWindow)
 			{
 
-				toret.add(windowMode.getDistance());
+				ArrayList<Integer> distances=windowMode.getDistance();
+
+
+				int mod=i%distances.size();
+				toret.add(distances.get(mod));
+				// size 1, 3 sample => 012=000
+				// size 2, 4 sample => 0123=0101
+				// size 3, 3 sample => 012=012
 			}
-			else if(this.windowMode==SignatureWindowMode.MaximumSampleMedian)
+			else if(win==SignatureWindowMode.MaximumSampleMedian)
 			{
 
 				toret.add(estats.getMaximumInnerDistance());
 			}
-			else if(this.windowMode==SignatureWindowMode.MinimumSampleMedian)
+			else if(win==SignatureWindowMode.MinimumSampleMedian)
 			{
 
 				toret.add(estats.getMinimumInnerDistance());
 			}
-			else if(this.windowMode==SignatureWindowMode.Median)
+			else if(win==SignatureWindowMode.Median)
 			{
 
 				toret.add(estats.getInnerDistances().get(i));
 			}
-			else throw new IllegalArgumentException("illegal sample mode "+this.windowMode);
+			else throw new IllegalArgumentException("illegal sample mode "+win);
 		}
 		return toret;
 	}
@@ -170,7 +187,7 @@ public class IdentifySignatureFramework {
 	/**
 	 * Separate analysis of the samples
 	 */
-	private ArrayList<InsertionSignature> run_separate(PpileupReader pr, int chunkdistance, ArrayList<Integer> windowsizes)
+	private ArrayList<InsertionSignature> run_separate(PpileupReader pr, int chunkdistance, ArrayList<Integer> windowsizes,ArrayList<Integer> valleysizes)
 	{
 		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
