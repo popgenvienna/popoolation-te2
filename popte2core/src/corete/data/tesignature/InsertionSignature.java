@@ -162,7 +162,7 @@ public class InsertionSignature implements Comparable<InsertionSignature> {
 	@Override
 	public String toString()
 	{
-		return this.getPopid()+ " "+ this.getChromosome()+ " " +this.getStart()+ " " + this.getEnd() + " " +this.getSignatureDirection() + " " + this.getTefamily();
+		return this.getPopid().toString()+ " "+ this.getChromosome()+ " " +this.getStart()+ " " + this.getEnd() + " " +this.getSignatureDirection() + " " + this.getTefamily();
 	}
 
 

@@ -400,7 +400,7 @@ public class TChunk2SignatureParser {
 		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
 		ArrayList<SignatureRangeInfo> sris= c2p.getRangeSignatures();
 		SampleChunk2SignatureParser sc2p=new SampleChunk2SignatureParser(c.getPooledTrack(),c.getChromosome(),c.getStartPosition(),c.getEndPosition(),DataTestSupport.getTETranslator_iniFull2Short());
-		RefinementChunk2SignatureParser rcp=new RefinementChunk2SignatureParser(sc2p,sris,c.getChromosome(),c.getStartPosition(),c.getEndPosition(),ws.get(0),ws.get(0),DataTestSupport.getTETranslator_iniFull2Short());
+		RefinementChunk2SignatureParser rcp=new RefinementChunk2SignatureParser(sc2p,sris,c.getChromosome(),c.getStartPosition(),c.getEndPosition(),ws.get(0),ws.get(0),DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		ArrayList<InsertionSignature> a=rcp.getSignatures();
 		Collections.sort(a);
 
@@ -457,7 +457,7 @@ public class TChunk2SignatureParser {
 
 
 		SampleChunk2SignatureParser sc2p=new SampleChunk2SignatureParser(pcr.getPooledTrack(),pcr.getChromosome(),pcr.getStartPosition(),pcr.getEndPosition(),DataTestSupport.getTETranslator_iniFull2Short());
-		RefinementChunk2SignatureParser rcp=new RefinementChunk2SignatureParser(sc2p,sris,pcr.getChromosome(),pcr.getStartPosition(),pcr.getEndPosition(),ws.get(0),ws.get(0),DataTestSupport.getTETranslator_iniFull2Short());
+		RefinementChunk2SignatureParser rcp=new RefinementChunk2SignatureParser(sc2p,sris,pcr.getChromosome(),pcr.getStartPosition(),pcr.getEndPosition(),ws.get(0),ws.get(0),DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		ArrayList<InsertionSignature> a=rcp.getSignatures();
 
 		assertEquals(sris.size(),2);
