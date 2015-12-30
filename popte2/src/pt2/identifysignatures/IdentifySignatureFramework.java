@@ -250,7 +250,7 @@ public class IdentifySignatureFramework {
 			for(Integer i: windowsizes)
 			{
 			 if(i!=comp) throw new
-					 IllegalArgumentException("Invalid window sizes; A constant window size must be provided for all samples during joint analysis: "+comp+" vs "+i);
+					 IllegalArgumentException("Invalid window sizes; A constant window size must be provided for all samples during joint or separateRefine analysis: "+comp+" vs "+i);
 
 			}
 
@@ -258,7 +258,7 @@ public class IdentifySignatureFramework {
 			for(Integer i: valleysizes)
 			{
 				if(i!=comp) throw new
-						IllegalArgumentException("Invalid valley size; A constant valley size must be provided for all samples during joint analysis: "+comp+" vs "+i);
+						IllegalArgumentException("Invalid valley size; A constant valley size must be provided for all samples during joint or separateRefine analysis: "+comp+" vs "+i);
 
 			}
 
