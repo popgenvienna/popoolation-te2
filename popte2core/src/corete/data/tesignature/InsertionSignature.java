@@ -1,6 +1,7 @@
 package corete.data.tesignature;
 
 import corete.data.SignatureDirection;
+import corete.data.TEFamilyShortcutTranslator;
 import corete.data.TEStrand;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class InsertionSignature implements Comparable<InsertionSignature> {
 	private final int end;
 	private final String tefamily;
 	private final ArrayList<FrequencySampleSummary> frequencies;
-	//private final double support;
+	//compare: popid, chromosome, signDirection, testrand, start, end, tefamily,
 
 
 
@@ -67,6 +68,13 @@ public class InsertionSignature implements Comparable<InsertionSignature> {
 		else throw new IllegalArgumentException("Invalid strand");
 	}
 
+	public String getShortcut(TEFamilyShortcutTranslator translator)
+	{
+		if(this.getSignatureDirection()==SignatureDirection.Forward) return  translator.getShortcutFwd(this.getTefamily());
+		else if(this.getSignatureDirection()==SignatureDirection.Reverse) return translator.getShortcutRev(this.getTefamily());
+		else throw new IllegalArgumentException("Unknown signature direction " +this.getSignatureDirection());
+	}
+
 
 	public ArrayList<FrequencySampleSummary> getFrequencies(){return  new ArrayList<FrequencySampleSummary>(this.frequencies);}
 	//public double getSupport(){return this.support;}
@@ -95,7 +103,7 @@ public class InsertionSignature implements Comparable<InsertionSignature> {
 	public int compareTo(InsertionSignature b)
 	{
 		//sort by chromosome, position,fam, strand
-		//Hash  popid, chromosome, signaturedirection, TEStrand, start, end, tefamily
+		//compare: popid, chromosome, signDirection, testrand, start, end, tefamily,
 
 		int popcomp=this.popid.compareTo(b.getPopid());
 		if(popcomp!=0) return popcomp;
@@ -141,7 +149,7 @@ public class InsertionSignature implements Comparable<InsertionSignature> {
 		// hash: chromosome, strand, position, family
 		if(!(o instanceof InsertionSignature)){return false;}
 		InsertionSignature is=(InsertionSignature)o;
-		if(!this.popid.equals(o))return false;
+		if(!this.popid.equals(is.getPopid()))return false;
 		if(is.start!=this.start)return false;
 		if(is.end!=this.end)return false;
 		if(is.signature !=this.signature )return false;
@@ -150,6 +158,13 @@ public class InsertionSignature implements Comparable<InsertionSignature> {
 		if(!is.tefamily.equals(this.tefamily)) return false;
 		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		return this.getPopid()+ " "+ this.getChromosome()+ " " +this.getStart()+ " " + this.getEnd() + " " +this.getSignatureDirection() + " " + this.getTefamily();
+	}
+
 
 
 

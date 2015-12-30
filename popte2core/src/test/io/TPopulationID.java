@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by robertkofler on 12/22/15.
  */
-public class TPopulationIDParser {
+public class TPopulationID {
 
 
 	@Test
@@ -137,6 +137,18 @@ public class TPopulationIDParser {
 
 		PopulationID p = PopolutionIDParser.getPopulationID("1-3,5,7-9");
 		assertTrue(p.equals(new PopulationID(new ArrayList<Integer>(Arrays.asList(0, 1, 2,4,6,7,8)))));
+
+	}
+
+
+	@Test
+	public void Test_equals() {
+
+
+		PopulationID p1 = PopolutionIDParser.getPopulationID("1-3,5,7-9");
+		PopulationID p2 = PopolutionIDParser.getPopulationID("1-3,5,7-9");
+		assertTrue(p1.equals(p2));
+		int bla=0;
 
 	}
 

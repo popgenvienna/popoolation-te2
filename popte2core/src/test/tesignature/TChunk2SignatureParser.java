@@ -6,9 +6,7 @@ import corete.data.TEStrand;
 import corete.data.ppileup.PpileupChunk;
 import corete.data.ppileup.PpileupSampleSummary;
 import corete.data.ppileup.PpileupSite;
-import corete.data.tesignature.Chunk2SignatureParser;
-import corete.data.tesignature.InsertionSignature;
-import corete.data.tesignature.SignatureRangeInfo;
+import corete.data.tesignature.*;
 import corete.io.ppileup.PpileupChunkReader;
 import corete.misc.LogFactory;
 import org.junit.Test;
@@ -19,6 +17,7 @@ import test.TestSupport.PpileupTestSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -275,10 +274,10 @@ public class TChunk2SignatureParser {
 		ArrayList<SignatureRangeInfo> a= c2p.getRangeSignatures();
 
 		assertEquals(a.size(),1);
-		assertEquals(a.get(0).getRangeStart (),1);
-		assertEquals(a.get(0).getRangeEnd (),2);
-		assertEquals(a.get(0).getWinStartScore (),2.0,0.0001);
-		assertEquals(a.get(0).getWinEndScore (),2.0,0.0001);
+		assertEquals(a.get(0).getRangeStart(),1);
+		assertEquals(a.get(0).getRangeEnd(),2);
+		assertEquals(a.get(0).getWinStartScore(),2.0,0.0001);
+		assertEquals(a.get(0).getWinEndScore(),2.0,0.0001);
 
 	}
 
@@ -381,6 +380,94 @@ public class TChunk2SignatureParser {
 		assertEquals(a.get(1).getSignature().getEnd(),12);
 
 
+	}
+
+
+	@Test
+		 public void Test_chunk_joint_unaltered() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 2\n");
+		sb.append("2L\t3\tcom\t. 10 r 1\n");
+		sb.append("2L\t4\tcom\t. 10 r 1\n");
+		sb.append("2L\t5\tcom\t. 10 r 2\n");
+		sb.append("2L\t6\tcom\t. 10 r 2\n");
+
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<SignatureRangeInfo> sris= c2p.getRangeSignatures();
+		SampleChunk2SignatureParser sc2p=new SampleChunk2SignatureParser(c.getPooledTrack(),c.getChromosome(),c.getStartPosition(),c.getEndPosition(),DataTestSupport.getTETranslator_iniFull2Short());
+		RefinementChunk2SignatureParser rcp=new RefinementChunk2SignatureParser(sc2p,sris,c.getChromosome(),c.getStartPosition(),c.getEndPosition(),ws.get(0),ws.get(0),DataTestSupport.getTETranslator_iniFull2Short());
+		ArrayList<InsertionSignature> a=rcp.getSignatures();
+		Collections.sort(a);
+
+		assertEquals(sris.size(), 2);
+		assertEquals(a.size(),2);
+		assertEquals(a.get(0).getSignatureDirection(), SignatureDirection.Reverse);
+		assertEquals(a.get(0).getTEStrand(), TEStrand.Unknown);
+		assertEquals(a.get(0).getStart() ,1);
+		assertEquals(a.get(0).getEnd() ,2);
+		assertEquals(a.get(0).getTefamily() ,"roo");
+
+		assertEquals(a.get(1).getSignatureDirection(), SignatureDirection.Reverse);
+		assertEquals(a.get(1).getTEStrand(), TEStrand.Unknown);
+		assertEquals(a.get(1).getStart() ,5);
+		assertEquals(a.get(1).getEnd() ,6);
+		assertEquals(a.get(1).getTefamily() ,"roo");
+	}
+
+
+
+	@Test
+	public void Test_chunk_joint_altered() {
+		StringBuilder sb=new StringBuilder();
+		sb.append("2L\t1\tcom\t. 10 r 2\n");
+		sb.append("2L\t2\tcom\t. 10 r 2\n");
+		sb.append("2L\t3\tcom\t. 10 r 1\n");
+		sb.append("2L\t4\tcom\t. 10 r 1\n");
+		sb.append("2L\t5\tcom\t. 10 r 2\n");
+		sb.append("2L\t6\tcom\t. 10 r 2\n");
+
+
+		PpileupDebugReader dr=new PpileupDebugReader(sb.toString());
+		PpileupChunkReader cr=new PpileupChunkReader(dr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk c =cr.next();
+		Chunk2SignatureParser c2p=new Chunk2SignatureParser(c,ws,ws,2, DataTestSupport.getTETranslator_iniFull2Short()); // p, r, in, 4a
+		ArrayList<SignatureRangeInfo> sris= c2p.getRangeSignatures();
+
+
+
+
+		StringBuilder sbr=new StringBuilder();
+		sbr.append("2L\t1\tcom\t. 10 r 2\n");
+		sbr.append("2L\t2\tcom\t. 10 r 3\n");
+		sbr.append("2L\t3\tcom\t. 10 r 4\n");
+		sbr.append("2L\t4\tcom\t. 10 r 4\n");
+		sbr.append("2L\t5\tcom\t. 10 r 3\n");
+		sbr.append("2L\t6\tcom\t. 10 r 2\n");
+
+
+		PpileupDebugReader drr=new PpileupDebugReader(sbr.toString());
+		PpileupChunkReader crr=new PpileupChunkReader(drr,2,ws,10, LogFactory.getNullLogger());
+		PpileupChunk pcr =crr.next();
+
+
+
+		SampleChunk2SignatureParser sc2p=new SampleChunk2SignatureParser(pcr.getPooledTrack(),pcr.getChromosome(),pcr.getStartPosition(),pcr.getEndPosition(),DataTestSupport.getTETranslator_iniFull2Short());
+		RefinementChunk2SignatureParser rcp=new RefinementChunk2SignatureParser(sc2p,sris,pcr.getChromosome(),pcr.getStartPosition(),pcr.getEndPosition(),ws.get(0),ws.get(0),DataTestSupport.getTETranslator_iniFull2Short());
+		ArrayList<InsertionSignature> a=rcp.getSignatures();
+
+		assertEquals(sris.size(),2);
+		assertEquals(a.size(),1);
+
+		assertEquals(a.get(0).getSignatureDirection(), SignatureDirection.Reverse);
+		assertEquals(a.get(0).getTEStrand(), TEStrand.Unknown);
+		assertEquals(a.get(0).getStart() ,3);
+		assertEquals(a.get(0).getEnd() ,4);
+		assertEquals(a.get(0).getTefamily() ,"roo");
 	}
 
 

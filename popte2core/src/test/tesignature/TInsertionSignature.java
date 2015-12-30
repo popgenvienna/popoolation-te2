@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 /**
  * Created by robertkofler on 12/4/15.
  */
@@ -47,4 +48,55 @@ public class TInsertionSignature {
 		assertEquals(sig.getSignatureDirection(), SignatureDirection.Reverse);
 		assertEquals(sig.getTEStrand(), TEStrand.Plus);
 	}
+
+	@Test
+		 public void Test_equals(){
+
+
+		InsertionSignature sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+		InsertionSignature sig2=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+
+
+		assertTrue(sig1.equals(sig2));
+
+		 sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.2\n");
+		 sig2=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+
+
+		assertTrue(sig1.equals(sig2));
+
+	}
+
+	@Test
+	public void Test_ne(){
+
+
+		InsertionSignature sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+		InsertionSignature sig2=PairupSupport.getSignaturue("2\tX\t200\t300\tR\tpele\t+\t0.1\n");
+		assertFalse (sig1.equals(sig2));
+
+		sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+		sig2=PairupSupport.getSignaturue("1\tX\t201\t300\tR\tpele\t+\t0.1\n");
+		assertFalse (sig1.equals(sig2));
+
+		sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+		sig2=PairupSupport.getSignaturue("1\tX\t200\t301\tR\tpele\t+\t0.1\n");
+		assertFalse (sig1.equals(sig2));
+
+		sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tF\tpele\t+\t0.1\n");
+		sig2=PairupSupport.getSignaturue("1\tX\t200\t300\tR\tpele\t+\t0.1\n");
+		assertFalse (sig1.equals(sig2));
+
+		sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tF\tpele\t+\t0.1\n");
+		sig2=PairupSupport.getSignaturue("1\tX\t200\t300\tF\troo\t+\t0.1\n");
+		assertFalse (sig1.equals(sig2));
+
+		sig1=PairupSupport.getSignaturue("1\tX\t200\t300\tF\tpele\t-\t0.1\n");
+		sig2=PairupSupport.getSignaturue("1\tX\t200\t300\tF\tpele\t+\t0.1\n");
+		assertFalse (sig1.equals(sig2));
+
+	}
+
+
+
 }
