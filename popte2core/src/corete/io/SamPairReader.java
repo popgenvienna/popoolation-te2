@@ -85,6 +85,9 @@ public class SamPairReader {
 		while(sbr.hasNext())
 		{
 			SamRecord sr=sbr.next();
+			// kick out secondary alignments
+			if(sr.isSecondaryAlignment()){continue;}
+
 			// kick out unmapped or unmapped mates
 			if(sr.isUnmapped() || sr.isUnmappedMate()){countUnmapped++; continue;}
 			// kick out TE reads

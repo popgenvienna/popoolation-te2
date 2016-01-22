@@ -76,16 +76,12 @@ public class TESignatureWriter {
 		for(FrequencySampleSummary fss:signature.getFrequencies())
 		{
 			sb.append(sep);
-			sb.append(formatFrequencySampleSummary(fss));
+			sb.append(FrequencySampleSummaryFormater.formatHighDetail(fss));
 		}
 		return sb.toString();
 	}
 
-	private String formatFrequencySampleSummary(FrequencySampleSummary fss)
-	{
-		    String toret=String.format("%d:%.3f:%.3f:%.3f:%.3f",fss.getPopulationid()+1,fss.getCoverage(),fss.getGivenTEInsertion(),fss.getOtherTEinsertions(),fss.getStructuralRearrangements());
-			return toret;
-	}
+
 
 
 	private String formatSignature(SignatureDirection signature)

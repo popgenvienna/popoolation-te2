@@ -15,12 +15,12 @@ public class PpileupChunkReader {
 	private final int scanwindowsize;
 	private final ArrayList<Integer> windowsizes;
 	private final int chunkdistance;
-	private final int mincount;
+	private final double mincount;
 	private final HashSet<String> processedChromosomes;
 	private final Logger logger;
 
 
-	public PpileupChunkReader(IPpileupReader pr, int mincount, ArrayList<Integer> windowsizes, int chunkdistance, Logger logger ){
+	public PpileupChunkReader(IPpileupReader pr, double mincount, ArrayList<Integer> windowsizes, int chunkdistance, Logger logger ){
 		this.pr=pr;
 		this.mincount=mincount;
 

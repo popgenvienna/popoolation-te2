@@ -42,6 +42,8 @@ public class StatcoverageFramework {
 		this.logger.info("Writing coverage statistics to file "+this.outputFile);
 		PpileupCoverageStatWriter writer=new PpileupCoverageStatWriter(builder,outputFile);
 		writer.writeStats();
+		writer.close();
+
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
 

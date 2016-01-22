@@ -21,7 +21,7 @@ public class IdentifySignatureParser {
 			String inputFile="";
 			SignatureIdentificationMode mode=null;
 			String outputFile="";
-			int mincount=2;
+			double mincount=2.0;
 			int chunkdistance=5;
 			SignatureWindowMode windowMode= SignatureWindowMode.Median;
 			SignatureWindowMode minValley= null;
@@ -48,7 +48,7 @@ public class IdentifySignatureParser {
 				}
 				else if(cu.equals("--min-count"))
 				{
-					mincount=Integer.parseInt(args.remove(0));
+					mincount=Double.parseDouble(args.remove(0));
 				}
 				else if(cu.equals("--signature-window"))
 				{
@@ -118,9 +118,9 @@ public class IdentifySignatureParser {
 			sb.append("identify signatures of TE insertions\n\n");
 			sb.append("== Main parameters ==\n");
 			sb.append(CommandFormater.format("--ppileup", "input ppileup file",true));
-			sb.append(CommandFormater.format("--mode","joint|separate|separateRefine",true));
+			sb.append(CommandFormater.format("--mode","joint|separate",true));
 			sb.append(CommandFormater.format("--output","TE insertion signatures",true));
-			sb.append(CommandFormater.format("--min-count","the minimum count of a TE insertion","2"));
+			sb.append(CommandFormater.format("--min-count","the minimum count of a TE insertion","2.0"));
 			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");

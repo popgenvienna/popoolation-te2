@@ -26,7 +26,7 @@ public class Chunk2SignatureParser {
 	private final ArrayList<String> teshortcuts;
 	private final TEFamilyShortcutTranslator translator;
 	private final ArrayList<SampleChunk2SignatureParser> sc2sps;
-	public Chunk2SignatureParser(PpileupChunk chunk,ArrayList<Integer> windowsizes, ArrayList<Integer> valleysizes, int mincount, TEFamilyShortcutTranslator translator)
+	public Chunk2SignatureParser(PpileupChunk chunk,ArrayList<Integer> windowsizes, ArrayList<Integer> valleysizes, double mincount, TEFamilyShortcutTranslator translator)
 	{
 		this.toparse=chunk;
 		this.windowsizes=new ArrayList<Integer>(windowsizes);

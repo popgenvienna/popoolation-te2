@@ -4,8 +4,7 @@ import corete.data.SignatureDirection;
 import corete.data.TEStrand;
 import corete.data.teinsertion.TEinsertion;
 import corete.data.tesignature.FrequencySampleSummary;
-import corete.data.tesignature.InsertionSignature;
-import corete.data.tesignature.PopulationID;
+import corete.io.tesignature.FrequencySampleSummaryFormater;
 import corete.io.tesignature.PopolutionIDParser;
 import corete.io.tesignature.TESignatureSymbols;
 
@@ -22,9 +21,11 @@ public class TEInsertionWriter {
 	private final static String sep="\t";
 	private Logger logger;
 	private BufferedWriter writer;
+	private final TEInsertionOutputDetailLevel odl;
 
-	public TEInsertionWriter(String outputFile, Logger logger) {
+	public TEInsertionWriter(String outputFile,TEInsertionOutputDetailLevel odl, Logger logger) {
 		this.logger = logger;
+		this.odl=odl;
 		this.logger.info("Writing TE insertions to file "+outputFile);
 		try {
 			this.writer = new BufferedWriter(new FileWriter(outputFile));
@@ -35,9 +36,9 @@ public class TEInsertionWriter {
 	}
 
 
-	public static void writeall(String outputFile,ArrayList<TEinsertion> insertions, Logger logger)
+	public static void writeall(String outputFile,ArrayList<TEinsertion> insertions, TEInsertionOutputDetailLevel odl, Logger logger)
 	{
-		TEInsertionWriter writer=new TEInsertionWriter(outputFile,logger);
+		TEInsertionWriter writer=new TEInsertionWriter(outputFile,odl,logger);
 		for(TEinsertion ins:insertions)
 		{
 			writer.write(ins);
@@ -89,15 +90,35 @@ public class TEInsertionWriter {
 		sb.append(insertion.getComment());
 
 
-
-
-
-
 		// For every
 		for(double pf:insertion.getPopulationfrequencies())
 		{
 			sb.append(sep);
 			sb.append(String.format("%.3f",pf));
+		}
+		if(this.odl==TEInsertionOutputDetailLevel.High || this.odl==TEInsertionOutputDetailLevel.Medium)
+		{
+			ArrayList<FrequencySampleSummary> forward=insertion.getForwardFSS();
+			ArrayList<FrequencySampleSummary> reverse=insertion.getReverseFSS();
+			if(forward.size()!=reverse.size()) throw new IllegalArgumentException("Invalid population numbers");
+			for(int i=0; i<forward.size(); i++)
+			{
+				sb.append(sep);
+				if(odl==TEInsertionOutputDetailLevel.High)
+				{
+					sb.append(FrequencySampleSummaryFormater.jointFormatHighDetail(forward.get(i),reverse.get(i)));
+				}
+				else if(odl==TEInsertionOutputDetailLevel.Medium)
+				{
+					sb.append(FrequencySampleSummaryFormater.jointFormatMediumDetail(forward.get(i),reverse.get(i)));
+				}
+				else
+				{
+					throw new IllegalArgumentException("unknown output mode"+odl);
+				}
+
+			}
+
 		}
 		return sb.toString();
 	}

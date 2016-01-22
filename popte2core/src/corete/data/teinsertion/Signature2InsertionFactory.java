@@ -45,7 +45,7 @@ public class Signature2InsertionFactory {
 			frequencies.add(popfreq);
 		}
 
-		return new TEinsertion(fwd.getPopid(),fwd.getChromosome(),position,SignatureDirection.Both, fwd.getTEStrand(),family,order,"",frequencies);
+		return new TEinsertion(fwd.getPopid(),fwd.getChromosome(),position,SignatureDirection.Both, fwd.getTEStrand(),family,order,"",frequencies,fwd.getFrequencies(),rev.getFrequencies());
 
 	}
 
@@ -63,7 +63,20 @@ public class Signature2InsertionFactory {
 		frequencies.add(popfreq);
 	}
 
-	return new TEinsertion(one.getPopid(),one.getChromosome(),position,one.getSignatureDirection(), one.getTEStrand(),family,order,"",frequencies);
+		// Default frequencies
+		ArrayList<FrequencySampleSummary> fwd=new ArrayList<FrequencySampleSummary>();
+		ArrayList<FrequencySampleSummary> rev=new ArrayList<FrequencySampleSummary>();
+		for(int i=0; i<frequencies.size(); i++)
+		{
+			fwd.add(null);
+			rev.add(null);
+		}
+
+		if(one.getSignatureDirection()==SignatureDirection.Forward)fwd=one.getFrequencies();
+		else if(one.getSignatureDirection()==SignatureDirection.Reverse)rev =one.getFrequencies();
+		else throw new IllegalArgumentException("Unknown signature direction"+one.getSignatureDirection());
+
+	return new TEinsertion(one.getPopid(),one.getChromosome(),position,one.getSignatureDirection(), one.getTEStrand(),family,order,"",frequencies,fwd,rev);
 
 }
 

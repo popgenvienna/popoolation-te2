@@ -1,5 +1,6 @@
 package pt2.pairupsignatures;
 
+import corete.io.teinsertion.TEInsertionOutputDetailLevel;
 import pt2.CommandFormater;
 
 import java.util.LinkedList;
@@ -22,7 +23,8 @@ public class PairupSignatureParser {
 
 			int maxDistance=500;
 			int minDistance=-100;
-			double maxfreqdiff=0.5;
+			double maxfreqdiff=1.0;
+			TEInsertionOutputDetailLevel odl= TEInsertionOutputDetailLevel.Low;
 
 
 
@@ -42,7 +44,7 @@ public class PairupSignatureParser {
 				{
 					refgenome= args.remove(0);
 				}
-				else if(cu.equals("--hier-file"))
+				else if(cu.equals("--hier"))
 				{
 					hierfile=args.remove(0);
 				}
@@ -61,6 +63,10 @@ public class PairupSignatureParser {
 				else if(cu.equals("--max-freq-diff"))
 				{
 					  maxfreqdiff=Double.parseDouble(args.remove(0));
+				}
+				else if(cu.equals("--output-detail"))
+				{
+					odl=parseodl(args.remove(0));
 				}
 				else if(cu.equals("--help"))
 				{
@@ -88,9 +94,11 @@ public class PairupSignatureParser {
 
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
 			PairupSignatureFramework isf =new PairupSignatureFramework(signature, refgenome, hierfile, outputFile,
-					minDistance,maxDistance,maxfreqdiff,detailedLog,logger);
+					minDistance,maxDistance,maxfreqdiff,odl, detailedLog,logger);
 			isf.run();
 		}
+
+
 
 
 
@@ -105,17 +113,35 @@ public class PairupSignatureParser {
 			sb.append("== Main parameters ==\n");
 			sb.append(CommandFormater.format("--signature", "signatures of TE insertions",true));
 			sb.append(CommandFormater.format("--ref-genome","the repeat-masked reference genome",true));
-			sb.append(CommandFormater.format("--hier-file","the TE hierarchy",true));
+			sb.append(CommandFormater.format("--hier","the TE hierarchy",true));
 			sb.append(CommandFormater.format("--output","TE insertions",true));
 			sb.append(CommandFormater.format("--min-distance","the minimum distance between signatures","-100"));
 			sb.append(CommandFormater.format("--max-distance","the maximum distance between signatures", "500"));
 			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(CommandFormater.format("--max-freq-diff","the maximum frequency difference between signatures","0.5"));
+			sb.append(CommandFormater.format("--output-detail","the detail level of the output [low|medium|high]","low"));
+			sb.append(CommandFormater.format("--max-freq-diff","the maximum frequency difference between signatures","1.0"));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
 			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
 
 		}
+
+	private static TEInsertionOutputDetailLevel parseodl(String toparse)
+	{
+		if(toparse.toLowerCase().equals("low"))
+		{
+			return TEInsertionOutputDetailLevel.Low;
+		}
+		else if(toparse.toLowerCase().equals("high"))
+		{
+			return TEInsertionOutputDetailLevel.High;
+		}
+		else if(toparse.toLowerCase().equals("medium"))
+		{
+			return  TEInsertionOutputDetailLevel.Medium;
+		}
+		else throw new IllegalArgumentException("Invalid argument");
+	}
 }
