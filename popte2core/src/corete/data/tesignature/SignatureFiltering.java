@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class SignatureFiltering {
 
 	/**
-	 * Filter for minimum count
+	 * Filter for minimum count; at least one sample should have a count larger than this
 	 * @param signatures
 	 * @param minCount
 	 * @return
@@ -18,11 +18,11 @@ public class SignatureFiltering {
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
 		for(InsertionSignature s:signatures)
 		{
-			boolean valid=true;
+			boolean valid=false;
 			ArrayList<FrequencySampleSummary> fss=s.getFrequencies();
 			for(FrequencySampleSummary f:fss)
 			{
-				if(f.getGivenTEInsertion()<minCount) valid=false;
+				if(f.getGivenTEInsertion()>=minCount) valid=true;
 			}
 			if(valid) toret.add(s);
 		}
@@ -136,11 +136,11 @@ public class SignatureFiltering {
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
 		for(InsertionSignature s:signatures)
 		{
-			boolean valid=true;
+			boolean valid=false;
 			ArrayList<FrequencySampleSummary> fss=s.getFrequencies();
 			for(FrequencySampleSummary f:fss)
 			{
-				if(f.getPopulationFrequency()<minFrequency) valid=false;
+				if(f.getPopulationFrequency()>=minFrequency) valid=true;
 			}
 			if(valid) toret.add(s);
 		}

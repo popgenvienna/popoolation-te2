@@ -1,7 +1,5 @@
 package pt2.pairupsignatures;
 
-import corete.data.polyn.PolyNRecord;
-import corete.data.hier.TEHierarchy;
 import corete.data.polyn.PolyNRecordCollection;
 import corete.data.teinsertion.Signature2InsertionFactory;
 import corete.data.teinsertion.SignaturePairupFramework;
@@ -9,6 +7,7 @@ import corete.data.teinsertion.TEinsertion;
 import corete.data.tesignature.InsertionSignature;
 import corete.io.FastaReader;
 import corete.io.TEHierarchyReader;
+import corete.io.teinsertion.TEInsertionOutputDetailLevel;
 import corete.io.teinsertion.TEInsertionWriter;
 import corete.io.tesignature.PolyNReader;
 import corete.io.tesignature.TESignatureReader;
@@ -33,10 +32,11 @@ public class PairupSignatureFramework {
 	private final double maxfreqdiff;
 	private final boolean detailedLog;
 	private final Logger logger;
+	private final TEInsertionOutputDetailLevel odl;
 
 
 	public PairupSignatureFramework(String signatureFile, String refgenomeFile, String hierFile, String outputFile,
-									int minDistance, int maxDistance, double maxfreqdiff, boolean detailedlog, Logger logger)
+									int minDistance, int maxDistance, double maxfreqdiff, TEInsertionOutputDetailLevel odl, boolean detailedlog, Logger logger)
 	{
 		// signature, refgenome, hierfile, outputFile,
 		// minDistance,maxDistance,maxfreqdiff,detailedLog,logger
@@ -59,6 +59,7 @@ public class PairupSignatureFramework {
 		this.maxDistance=maxDistance;
 		this.maxfreqdiff=maxfreqdiff;
 		this.logger=logger;
+		this.odl=odl;
 	}
 
 	public void run()
@@ -71,7 +72,7 @@ public class PairupSignatureFramework {
 
 		ArrayList<TEinsertion> teinsertions=new SignaturePairupFramework(signatures,s2i,polys,this.maxfreqdiff,this.minDistance, this.maxDistance, logger).getTEinsertions();
 
-		TEInsertionWriter.writeall(this.outputFile,teinsertions,logger);
+		TEInsertionWriter.writeall(this.outputFile,teinsertions,odl,logger);
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
 	}
 

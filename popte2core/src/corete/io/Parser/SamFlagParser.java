@@ -10,6 +10,7 @@ public class SamFlagParser {
 	private static final int unmapped=0x4;
 	private static final int mateunmapped=0x8;
 	private static final int pairedinsequencing=0x1;
+	private static final int issecondaryalignment=0x100;
 
 	public static boolean isForwardStrand(int samflag)
 	{
@@ -24,6 +25,19 @@ public class SamFlagParser {
 		}
 
 	}
+
+	public static boolean isSecondarAlignment(int samflag)
+	{
+		if((samflag & issecondaryalignment)>0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 
 
 

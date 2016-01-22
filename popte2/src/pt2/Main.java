@@ -30,6 +30,9 @@ public class Main {
 			System.out.print(getgeneralHelp());
 			System.exit(1);
 		}
+
+
+
 		String subtask=rawarguments.remove(0);
 		if(subtask.toLowerCase().equals("ppileup"))
 		{
@@ -118,7 +121,7 @@ public class Main {
 
 	public static String getVersionNumber()
 	{
-		return "v1.06.5";
+		return "v1.06.13";
 	}
 
 

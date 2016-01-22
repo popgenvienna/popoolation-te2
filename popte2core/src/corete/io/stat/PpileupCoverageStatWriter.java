@@ -55,7 +55,7 @@ public class PpileupCoverageStatWriter {
 	   {
 		   HashMap<Integer,Integer> act=builder.getCoverageStatistics(i);
 		   int lost=0;
-		   for(int k=1; k<builder.getMaxcoverage(); k++)
+		   for(int k=1; k<=builder.getMaxcoverage(); k++)
 		   {
 			   int count= act.getOrDefault(k,0);
 			   if(count==0)continue;
@@ -70,6 +70,19 @@ public class PpileupCoverageStatWriter {
 		   }
 	   }
 	}
+
+	public void close()
+	{
+		try {
+			this.bw.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
 
 	private String formatCovStat(String sample, int coverage, int count, int lost, double percentlost)
 	{
@@ -91,7 +104,7 @@ public class PpileupCoverageStatWriter {
 
 		HashMap<Integer,Integer> joint=builder.getJointCoverageStatistics();
 		int lost=0; // lost is everything that is smaller
-		for(int i=1; i<this.builder.getMaxcoverage(); i++)
+		for(int i=1; i<=this.builder.getMaxcoverage(); i++)
 		{
 			int count=joint.getOrDefault(i,0);
 			if(count==0) continue;

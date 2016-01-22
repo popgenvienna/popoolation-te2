@@ -22,14 +22,14 @@ public class IdentifySignatureFramework {
 	private final String inputFile;
 	private final String outputFile;
 	private final SignatureIdentificationMode mode;
-	private final int mincount;
+	private final double mincount;
 	private final SignatureWindowMode windowMode;
 	private final SignatureWindowMode minValley;
 	private final int chunkmultiplicator;
 	private final boolean detailedLog;
 	private final Logger logger;
 
-	public IdentifySignatureFramework(String inputFile, String outputFile, SignatureIdentificationMode mode, int mincount
+	public IdentifySignatureFramework(String inputFile, String outputFile, SignatureIdentificationMode mode, double mincount
 									  ,SignatureWindowMode windowMode, SignatureWindowMode minValley, int chunkmultiplicator,
 									  boolean detailedlog, Logger logger)
 	{
@@ -45,7 +45,7 @@ public class IdentifySignatureFramework {
 		}
 		this.mode=mode;
 		this.mincount=mincount;
-		if(mincount<1) throw new IllegalArgumentException("Minimum count must be larger than zero");
+		if(!(mincount>0.0)) throw new IllegalArgumentException("Minimum count must be larger than zero");
 		this.windowMode=windowMode;
 		this.minValley=minValley;
 		this.chunkmultiplicator=chunkmultiplicator;

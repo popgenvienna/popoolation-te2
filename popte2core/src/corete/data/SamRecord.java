@@ -109,6 +109,8 @@ public class SamRecord {
 		return SamFlagParser.isForwardStrand(this.flag);
 	}
 
+	public boolean isSecondaryAlignment(){return SamFlagParser.isSecondarAlignment(this.flag);}
+
 
 	/**
 	 * Is the mate on the forward strand

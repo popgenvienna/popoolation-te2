@@ -25,7 +25,9 @@ public class SamPair {
 	{
 		if(secondRead!=null)
 		{
-			if(firstRead.getStart()>secondRead.getStart()) throw new IllegalArgumentException("First read of pair must have a lower starting position than second read "+firstRead.getReadname()+" "+secondRead.getReadname());
+			if(firstRead.getStart()>secondRead.getStart()) throw new IllegalArgumentException("First read of pair must have a lower starting position than second read "+firstRead.getReadname()+" "+secondRead.getReadname()+
+					"\n"+firstRead.getRefchr()+" "+secondRead.getRefchr()+" "+firstRead.getStart()+" "+secondRead.getStart()+
+					"\nIs your bam/sam file sorted?");
 		}
 		this.firstRead=firstRead;
 		this.secondRead=secondRead;

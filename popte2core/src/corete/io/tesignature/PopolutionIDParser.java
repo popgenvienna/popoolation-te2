@@ -1,6 +1,6 @@
 package corete.io.tesignature;
 
-import com.sun.deploy.util.StringUtils;
+
 import corete.data.tesignature.PopulationID;
 
 import java.util.ArrayList;
@@ -45,7 +45,12 @@ public class PopolutionIDParser {
 		{
 			ArrayList<String> strs= new ArrayList<String>();
 			for(int  i:top)strs.add(String.valueOf(i));
-			return StringUtils.join(strs,",");
+			StringBuilder sb=new StringBuilder();
+			sb.append(strs.get(0));
+			for(int i=1; i<strs.size(); i++){
+				sb.append(","); sb.append(strs.get(i));
+			}
+			return sb.toString();
 		}
 	}
 
