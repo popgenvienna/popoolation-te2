@@ -121,7 +121,7 @@ public class Main {
 
 	public static String getVersionNumber()
 	{
-		return "v1.06.13";
+		return "v1.06.14";
 	}
 
 
