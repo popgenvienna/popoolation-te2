@@ -61,12 +61,13 @@ public class IdentifySignatureFramework {
 		// compute the common variables
 		PpileupReader pr=new PpileupReader(this.inputFile,this.logger);
 
-		int chunkdistance=pr.getEssentialPpileupStats().getMaximumInnerDistance() * this.chunkmultiplicator;
+
 		// int refinementdistance=pr.getEssentialPpileupStats().getMaximumInnerDistance() * this.refinmentmultiplicator;
 
 		ArrayList<Integer> windowsizes= getWindowSize(this.windowMode,pr.getEssentialPpileupStats());
 		ArrayList<Integer> valleysizes= getWindowSize(this.minValley,pr.getEssentialPpileupStats());
 
+		int chunkdistance=(int)(getMax(valleysizes) * this.chunkmultiplicator);
 
 		this.logger.info("Will use a window-mode "+this.windowMode);
 		this.logger.info("Will use a minimum distance to next chromosomal chunk of "+chunkdistance);
@@ -272,6 +273,17 @@ public class IdentifySignatureFramework {
 
 
 	}
+
+	private int getMax(ArrayList<Integer> tomax)
+	{
+		int toret=0;
+		for(int i:tomax)
+		{
+			if(i>toret)toret=i;
+		}
+		return toret;
+	}
+
 
 
 
