@@ -7,6 +7,7 @@ import corete.data.stat.EssentialPpileupStats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
@@ -15,10 +16,14 @@ import java.util.logging.Logger;
 public class PpileupReader implements IPpileupReader {
 	private final IPpileupLightwightReader lwr;
 	private Logger logger;
+	private LinkedList<PpileupSite> buffer;
 	public PpileupReader(String inputFile, Logger logger)
 	{
 		this.lwr=new PpileupLightwightReader(inputFile,logger);
+		this.buffer=new LinkedList<PpileupSite>();
+
 	}
+
 
 
 	@Override
@@ -34,8 +39,17 @@ public class PpileupReader implements IPpileupReader {
 	}
 
 	@Override
+	public void buffer(PpileupSite toBuffer)
+	{
+		this.buffer.add(toBuffer);
+	}
+
+
+	@Override
 	public PpileupSite next()
 	{
+		if(this.buffer.size()>0) return this.buffer.removeFirst();
+
 		PpileupSiteLightwight lw=lwr.next();
 		if(lw==null) return null;
 		ArrayList<PpileupSampleSummary> sum=new ArrayList<PpileupSampleSummary>();

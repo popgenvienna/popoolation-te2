@@ -14,6 +14,7 @@ import java.util.LinkedList;
  */
 public class PpileupDebugReader implements IPpileupReader {
 	private final LinkedList<String> filecontent;
+	private LinkedList<PpileupSite> buffer;
 	private final PpileupHeaderParser headerParser;
 
 	/**
@@ -35,6 +36,7 @@ public class PpileupDebugReader implements IPpileupReader {
 		}
 		headerParser=new PpileupHeaderParser(header);
 		filecontent=tmp;
+		this.buffer=new LinkedList<PpileupSite>();
 	}
 
 	@Override
@@ -48,7 +50,16 @@ public class PpileupDebugReader implements IPpileupReader {
 	}
 
 	@Override
+	public void buffer(PpileupSite toBuffer)
+	{
+		this.buffer.add(toBuffer);
+	}
+
+
+	@Override
 	public PpileupSite next() {
+		if(this.buffer.size()>1)return this.buffer.removeFirst();
+
 		if(filecontent.size()<1)return null;
 		return PpileupTestSupport.ppileupSiteFactory(filecontent.remove(0));
 	}

@@ -126,7 +126,7 @@ public class IdentifySignatureParser {
 			sb.append("== Parameters for fine tuning =="+"\n");
 			sb.append(CommandFormater.format("--signature-window","the window size of the signatures of TE insertions; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","median"));
 			sb.append(CommandFormater.format("--min-valley","the minimum size of the valley between two consecutive signatures of the same family ; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","the same as --signature-window "));
-			sb.append(CommandFormater.format("--chunk-distance","minimum distance between chromosomal chunks in multiples of the median insert size [int]","5"));
+			sb.append(CommandFormater.format("--chunk-distance","minimum distance between chromosomal chunks in multiples of --min-valley [int]","5"));
 			//sb.append(String.format("%-22s%s","--refine-distance","scan-distance for refined positions, in multiples of insert size; default=2\n"));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
 			sb.append("\nSee the online manual for detailed description of the parameters\n");

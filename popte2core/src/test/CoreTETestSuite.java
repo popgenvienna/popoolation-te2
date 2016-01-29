@@ -17,6 +17,6 @@ import test.tesignature.TSignatureFrequencyEstimationFramework;
 		test.data.TPpileupSampleSummary.class,test.data.TPpileupSite.class,  test.data.TPpileupSlidingWindow.class,
 test.ppileup.TPpileupBuilder.class,test.data.TPpileupChunkReader.class,TChunk2SignatureParser.class,
 TSignatureFrequencyEstimationFramework.class, TContigwisePolynRepresentation.class,test.tesignature.TInsertionSignature.class,
-test.tesignature.TSignaturePairupFramework.class,TPopulationID.class})
+test.tesignature.TSignaturePairupFramework.class,TPopulationID.class,test.data.TPpileupChunkReaderRefined.class})
 public class CoreTETestSuite {
 }

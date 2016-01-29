@@ -13,4 +13,6 @@ public interface IPpileupReader {
 	TEFamilyShortcutTranslator getTEFamilyShortcutTranslator();
 
 	PpileupSite next();
+
+	void buffer(PpileupSite tobuffer);
 }
