@@ -109,7 +109,7 @@ public class IdentifySignatureFramework {
 		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
 
 		ArrayList<InsertionSignature> tmp=new ArrayList<InsertionSignature>();
-		PpileupChunkReader chunkReader=new PpileupChunkReader(new PpileupPoolsampleReader(pr),this.mincount,windowsizes,chunkdistance,logger);
+		PpileupChunkReaderRefined chunkReader=new PpileupChunkReaderRefined(new PpileupPoolsampleReader(pr),this.mincount,windowsizes,chunkdistance,logger);
 		PpileupChunk chunk=null;
 		while((chunk=chunkReader.next())!=null)
 		{
@@ -191,7 +191,7 @@ public class IdentifySignatureFramework {
 	{
 		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
 		ArrayList<InsertionSignature> toret=new ArrayList<InsertionSignature>();
-		PpileupChunkReader chunkReader=new PpileupChunkReader(pr,this.mincount,windowsizes,chunkdistance,logger);
+		PpileupChunkReaderRefined chunkReader=new PpileupChunkReaderRefined(pr,this.mincount,windowsizes,chunkdistance,logger);
 		PpileupChunk chunk=null;
 		while((chunk=chunkReader.next())!=null)
 		{
@@ -212,7 +212,7 @@ public class IdentifySignatureFramework {
 	{
 		TEFamilyShortcutTranslator translator=pr.getTEFamilyShortcutTranslator();
 		ArrayList<InsertionSignature> tmp=new ArrayList<InsertionSignature>();
-		PpileupChunkReader chunkReader=new PpileupChunkReader(pr,this.mincount,windowsizes,chunkdistance,logger);
+		PpileupChunkReaderRefined chunkReader=new PpileupChunkReaderRefined(pr,this.mincount,windowsizes,chunkdistance,logger);
 		PpileupChunk chunk=null;
 		while((chunk=chunkReader.next())!=null)
 		{
