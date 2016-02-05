@@ -58,7 +58,7 @@ public class PpileupDebugReader implements IPpileupReader {
 
 	@Override
 	public PpileupSite next() {
-		if(this.buffer.size()>1)return this.buffer.removeFirst();
+		if(this.buffer.size()>0)return this.buffer.removeFirst();
 
 		if(filecontent.size()<1)return null;
 		return PpileupTestSupport.ppileupSiteFactory(filecontent.remove(0));

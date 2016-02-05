@@ -11,4 +11,5 @@ public class TESignatureSymbols {
 	public static String teminus="-";
 	public static String teunknown=".";
 	public static String jointSample="all";
+	public static String emptyComment="-";
 }

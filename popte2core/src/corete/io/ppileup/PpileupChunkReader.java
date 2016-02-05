@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 /**
  * Created by robertkofler on 9/1/15.
  */
+@Deprecated
 public class PpileupChunkReader {
 	private final IPpileupReader pr;
 	private final int scanwindowsize;
@@ -19,8 +20,9 @@ public class PpileupChunkReader {
 	private final HashSet<String> processedChromosomes;
 	private final Logger logger;
 
-
+	@Deprecated
 	public PpileupChunkReader(IPpileupReader pr, double mincount, ArrayList<Integer> windowsizes, int chunkdistance, Logger logger ){
+
 		this.pr=pr;
 		this.mincount=mincount;
 

@@ -87,7 +87,12 @@ public class TEInsertionWriter {
 		sb.append(insertion.getFamily()); sb.append(sep);
 		sb.append(insertion.getOrder()); sb.append(sep);
 		sb.append(formatSignature(insertion.getSignature ()));  sb.append(sep);
-		sb.append(insertion.getComment());
+		if(insertion.getComment().equals(""))
+		{
+			   sb.append(TESignatureSymbols.emptyComment);
+		}   else {
+			sb.append(insertion.getComment());
+		}
 
 
 		// For every

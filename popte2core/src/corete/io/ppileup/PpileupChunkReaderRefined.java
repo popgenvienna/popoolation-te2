@@ -32,6 +32,7 @@ public class PpileupChunkReaderRefined {
 		this.logger=logger;
 		this.minwindow=  getMinwindow(windowsizes);
 		this.maxwindow=getMaxwindow(windowsizes);
+		if(chunkdistance<2*this.maxwindow)throw new IllegalArgumentException("Chunkdistance ("+this.chunkdistance +") must be larger than two times the window-size ("+this.maxwindow+")");
 		this.processedChromosomes = new HashSet<String>();
 	}
 
@@ -105,19 +106,18 @@ public class PpileupChunkReaderRefined {
 				if(startHarvest)
 				{
 
-
-					if(site.getMaxTESupport()>=(double)this.mincount) endPositionLastValidWindow=site.getPosition();
-
 					if((site.getPosition()-endPositionLastValidWindow) > this.chunkdistance) {
 
-							return chunkify(chunk, startHarvestPosition-this.maxwindow, site.getPosition()-(int)(chunkdistance/2));
+							return chunkify(chunk, startHarvestPosition-this.maxwindow, endPositionLastValidWindow+this.maxwindow);
 					}
+					else if(site.getMaxTESupport()>=(double)this.mincount) endPositionLastValidWindow=site.getPosition();
 				}
 				else {
 					// if harvest has not started just ignore the returned sites;
 						if (slider.averageMaxTEsupport() >= (double) this.mincount) {
 							startHarvest = true;
 							startHarvestPosition=slider.getStartPosition();
+							endPositionLastValidWindow=slider.getEndPosition();
 						}
 				}
 			}
