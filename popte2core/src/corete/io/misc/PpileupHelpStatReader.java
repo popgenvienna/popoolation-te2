@@ -21,6 +21,7 @@ public class PpileupHelpStatReader {
 	private TEabundanceContainer abundance=null;
 	private InsertSizeDistributionContainer distribution=null;
 	private RefChrSortingContainer rcsc=null;
+	private InformativeReadCountContainer ircc=null;
 	private int srmd;
 	private final TEHierarchy hier;
 	private LastPositionContainer lpc=null;
@@ -45,6 +46,7 @@ public class PpileupHelpStatReader {
 		ArrayList<InsertSizeDistribution> distributions = new ArrayList<InsertSizeDistribution>();
 		ArrayList<ArrayList<String>> refchrsortings=new ArrayList<ArrayList<String>>();
 		ArrayList<HashMap<String,Integer>> lastPositions=new ArrayList<HashMap<String,Integer>>();
+		ArrayList<Integer> informativeReads=new ArrayList<Integer>();
 
 		for(String file: this.inputFiles)
 		{
@@ -54,7 +56,9 @@ public class PpileupHelpStatReader {
 			distributions.add(stat.distribution);
 			refchrsortings.add(stat.rcs);
 			lastPositions.add(stat.lastPos);
+			informativeReads.add(stat.informativeReadCount);
 		}
+		this.ircc=new InformativeReadCountContainer(informativeReads);
 		this.abundance=new TEabundanceContainer(abundances);
 		this.distribution=new InsertSizeDistributionContainer(distributions);
 		this.rcsc=new RefChrSortingContainer(refchrsortings);
@@ -71,6 +75,18 @@ public class PpileupHelpStatReader {
 		if(abundance==null) readStats();
 		return abundance;
 	}
+
+
+	/**
+	 * Get Informative read counts for all populations
+	 * @return
+	 */
+	public InformativeReadCountContainer getInformativeReadCountContainer()
+	{
+		if(ircc==null) readStats();
+		return ircc;
+	}
+
 
 	/**
 	 * Get the insert size distribution for all populations
@@ -125,6 +141,8 @@ public class PpileupHelpStatReader {
 
 		HashMap<String,Integer> lastEnd=new HashMap<String,Integer>();
 
+		int informativeReadCount=0;
+
 
 
 		while(spr.hasNext())
@@ -132,6 +150,9 @@ public class PpileupHelpStatReader {
 			SamPair sp =spr.next();
 			String chr=null;
 			int pos=-1;
+
+			informativeReadCount++; // sam pair reader will only return TEInserts, Pairs and BrokenPairs
+
 
 			if(sp.getSamPairType() == SamPairType.TEInsert)
 			{
@@ -176,7 +197,7 @@ public class PpileupHelpStatReader {
 
 		InsertSizeDistribution isd=new InsertSizeDistribution(distcount);
 		TEabundance tea=new TEabundance(famcount);
-		return new AISDContainer(tea,isd,rcs,lastEnd);
+		return new AISDContainer(tea,isd,rcs,lastEnd,informativeReadCount);
 	}
 
 
@@ -185,14 +206,16 @@ public class PpileupHelpStatReader {
 	 */
 	private class AISDContainer
 	{
-		public AISDContainer(TEabundance abundance, InsertSizeDistribution distribution, ArrayList<String> rcs,HashMap<String,Integer> lastPos)
+		public AISDContainer(TEabundance abundance, InsertSizeDistribution distribution, ArrayList<String> rcs,HashMap<String,Integer> lastPos,int informativeReadCount)
 		{
 			this.abundance=abundance;
 			this.distribution=distribution;
 			this.rcs=rcs;
 			this.lastPos=lastPos;
+			this.informativeReadCount=informativeReadCount;
 		}
 
+		public int informativeReadCount;
 		public TEabundance abundance;
 		public InsertSizeDistribution distribution;
 		public ArrayList<String> rcs;

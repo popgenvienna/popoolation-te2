@@ -3,9 +3,11 @@ package pt2.ppileup;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
 
+import corete.data.ppileup.PpileupBuilder;
 import corete.data.ppileup.PpileupMultipopBuilder;
 import corete.data.stat.EssentialPpileupStats;
 import corete.data.stat.ISDSummary;
+import corete.data.stat.InformativeReadCountContainer;
 import corete.data.stat.RefChrSortingGeneratorSampleConsensus;
 import corete.io.*;
 import corete.io.misc.PpileupHelpStatReader;
@@ -34,8 +36,10 @@ public class PpileupFramework {
 	private final String hierFile;
 	private final String teshortcuts;
 	private final boolean zippedOutput;
+	private final boolean homogenizeReads;
 
-	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile, int minmapqual,int srmd, float idof, String shortcuts, boolean zippedOutput, Logger logger)
+	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile, int minmapqual,int srmd, float idof, String shortcuts,
+							boolean homogenizeReads, boolean zippedOutput, Logger logger)
 	{
 		this.inputFiles=inputFiles;
 		this.outputFile=outputFile;
@@ -46,6 +50,7 @@ public class PpileupFramework {
 		this.teshortcuts=shortcuts;
 		this.logger=logger;
 		this.zippedOutput=zippedOutput;
+		this.homogenizeReads=homogenizeReads;
 
 		// Set
 		for(String file: inputFiles)
@@ -90,16 +95,35 @@ public class PpileupFramework {
 		EssentialPpileupStats estat=new EssentialPpileupStats(isdsum.getMedians(),this.minmapqual,this.srmd, this.idof, Main.getVersionNumber());
 		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,estat,this.logger);
 
-		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,this.inputFiles,rcs,lastPositions,hier,writer,logger);
+		ArrayList<ISamPairReader> sampairreaders=getSampairReaders(this.inputFiles,estat,hier, hsr.getInformativeReadCountContainer());
+		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,sampairreaders,rcs,lastPositions,hier,writer,logger);
 		ppmpb.buildPpileup();
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
 
 
 
-
-
-
 	}
+
+	public ArrayList<ISamPairReader> getSampairReaders(ArrayList<String> inputFiles, EssentialPpileupStats estats, TEHierarchy hier, InformativeReadCountContainer ircc)
+	{
+		 ArrayList<ISamPairReader> toret     =new ArrayList<ISamPairReader>();
+
+
+		for(int i=0; i<this.inputFiles.size(); i++)
+		{
+			String fileName=this.inputFiles.get(i);
+
+			ISamPairReader spr=new SamPairReader(fileName,hier,estats.getStructuralRearrangementMinimumDistance(),logger);
+			if(this.homogenizeReads) {
+			    this.logger.info("Will homogenize reads of fiel "+fileName);
+				this.logger.info("File contains informative read pairs: "+ircc.getInformativeReadCount(i)+"; will subsample to: "+ircc.minInformativeReadCount());
+					spr = new SamPairReaderSubsampleReads(spr, ircc.minInformativeReadCount(), ircc.getInformativeReadCount(i));
+			}
+			toret.add(spr);
+		}
+		return toret;
+	}
+
 
 }

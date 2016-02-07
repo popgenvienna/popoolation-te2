@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /**
  * Created by robertkofler on 8/17/15.
  */
-public class SamPairReader {
+public class SamPairReader implements ISamPairReader {
 	private final int srmd;
 	private final Logger logger;
 	private final ISamBamReader sbr;
@@ -61,12 +61,14 @@ public class SamPairReader {
 
 
 
+	@Override
 	public boolean hasNext()
 	{
 		if(this.next==null){return false;}
 		else{return true;}
 	}
 
+	@Override
 	public SamPair next()
 	{
 		if(!this.hasNext()){throw new InvalidParameterException("there is no further SamPair; use hasNext() first"); }

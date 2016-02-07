@@ -25,6 +25,7 @@ public class PpileupParser {
 			float idof=0.01F;
 			String shortcuts="";
 			boolean zippedOutput=true;
+			boolean homogenizeReads=false;
 
 			while(args.size()>0)
 			{
@@ -66,6 +67,10 @@ public class PpileupParser {
 				{
 					zippedOutput=false;
 				}
+				else if(cu.equals("--homogenize-pairs"))
+				{
+					homogenizeReads=true;
+				}
 				else if(cu.equals("--help"))
 				{
 					printHelp();
@@ -88,7 +93,7 @@ public class PpileupParser {
 
 			// Create a logger
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			PpileupFramework pfp =new PpileupFramework(inputFiles,outputFile,hierFile,mapQual,srmd,idof,shortcuts,zippedOutput, logger);
+			PpileupFramework pfp =new PpileupFramework(inputFiles,outputFile,hierFile,mapQual,srmd,idof,shortcuts,homogenizeReads, zippedOutput, logger);
 			pfp.run();
 		}
 
@@ -104,6 +109,8 @@ public class PpileupParser {
 			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
+
+			sb.append(CommandFormater.format("--homogenize-pairs","subsample number of read pairs to equal levels among bam files",false));
 			sb.append(CommandFormater.format("--te-shortcuts","use a predefined list of TE family shortcuts [file-path]",null));
 			sb.append(CommandFormater.format("--disable-zipped","disable zipped output",null));
 			sb.append(CommandFormater.format("--sr-mindist","minimum inner distance for structural rearrangements","10000"));

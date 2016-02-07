@@ -3,6 +3,7 @@ package corete.data.ppileup;
 import corete.data.SamPair;
 import corete.data.SamPairType;
 import corete.data.TEFamilyShortcutTranslator;
+import corete.io.ISamPairReader;
 import corete.io.SamPairReader;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class PpileupBuilder {
 
 	private final int minMapQual;
 	private final int averagePairDistance;
-	private final SamPairReader reader;
+	private final ISamPairReader reader;
 	private final TEFamilyShortcutTranslator translator;
 
 	// mutable - used for working
@@ -33,7 +34,7 @@ public class PpileupBuilder {
 	// general whole thing
 	private boolean eof;
 
-	public PpileupBuilder(int minMapQual, int averagePairDistance, SamPairReader reader, TEFamilyShortcutTranslator translator)
+	public PpileupBuilder(int minMapQual, int averagePairDistance, ISamPairReader reader, TEFamilyShortcutTranslator translator)
 	{
 		// immutable
 		this.minMapQual=minMapQual;

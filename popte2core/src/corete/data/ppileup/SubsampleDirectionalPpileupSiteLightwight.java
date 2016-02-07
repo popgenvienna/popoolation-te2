@@ -9,9 +9,11 @@ import java.util.LinkedList;
 public class SubsampleDirectionalPpileupSiteLightwight {
 
 	private final int targetcoverage;
-	public SubsampleDirectionalPpileupSiteLightwight(int targetcoverage)
+	private final boolean withReplace;
+	public SubsampleDirectionalPpileupSiteLightwight(int targetcoverage,boolean withReplace)
 	{
 		this.targetcoverage=targetcoverage;
+		this.withReplace=withReplace;
 	}
 
 
@@ -51,14 +53,24 @@ public class SubsampleDirectionalPpileupSiteLightwight {
 
 	private ArrayList<String> sample(ArrayList<String> tos)
 	{
-
-		LinkedList<String> ts=new LinkedList<String>(tos);
 		ArrayList<String> sample=new ArrayList<String>();
-		while(sample.size()<this.targetcoverage)
+
+		if(this.withReplace)
 		{
-			int index=(int)(Math.random() * (double)ts.size());
-			String sampled=ts.remove(index);
-			sample.add(sampled);
+			while (sample.size() < this.targetcoverage) {
+				int index = (int) (Math.random() * (double) tos.size());
+				String sampled = tos.get(index);
+				sample.add(sampled);
+			}
+
+		}
+		else {
+			LinkedList<String> ts = new LinkedList<String>(tos);
+			while (sample.size() < this.targetcoverage) {
+				int index = (int) (Math.random() * (double) ts.size());
+				String sampled = ts.remove(index);
+				sample.add(sampled);
+			}
 		}
 		return sample;
 
