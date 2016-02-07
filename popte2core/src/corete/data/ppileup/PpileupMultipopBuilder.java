@@ -3,6 +3,7 @@ package corete.data.ppileup;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.data.hier.TEHierarchy;
 import corete.data.stat.EssentialPpileupStats;
+import corete.io.ISamPairReader;
 import corete.io.ppileup.PpileupWriter;
 import corete.io.SamPairReader;
 
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class PpileupMultipopBuilder {
 	private final TEFamilyShortcutTranslator tetranslator;
-	private final ArrayList<String> inputFileNames;
+	//private final ArrayList<String> inputFileNames;
 	private final ArrayList<String> refChrSorting;
 	private final HashMap<String,Integer> lastPositions;
 	private final TEHierarchy hier;
@@ -26,13 +27,13 @@ public class PpileupMultipopBuilder {
 
 	private ArrayList<PpileupBuilder> builders;
 
-	public PpileupMultipopBuilder(TEFamilyShortcutTranslator tetranslator, EssentialPpileupStats estats, ArrayList<String> inputFileNames,
+	public PpileupMultipopBuilder(TEFamilyShortcutTranslator tetranslator, EssentialPpileupStats estats, ArrayList<ISamPairReader> sprs,
 								  ArrayList<String> refChrSorting, HashMap<String,Integer> lastPositions, TEHierarchy hier,
 							 		PpileupWriter writer, Logger logger)
 	{
 		this.tetranslator=tetranslator;
 		this.estats=estats;
-		this.inputFileNames=inputFileNames;
+
 		this.refChrSorting=refChrSorting;
 		this.lastPositions=lastPositions;
 		this.hier=hier;
@@ -42,12 +43,12 @@ public class PpileupMultipopBuilder {
 
 		ArrayList<PpileupBuilder> tmpBuilders=new ArrayList<PpileupBuilder>();
 		int maxdist=0;
-		for(int i=0; i<this.inputFileNames.size(); i++)
+		for(int i=0; i<sprs.size(); i++)
 		{
-			String fileName=this.inputFileNames.get(i);
+
 			int workDist=this.estats.getInnerDistance(i);
 			if(workDist>maxdist)maxdist=workDist;
-			SamPairReader spr=new SamPairReader(fileName,hier,estats.getStructuralRearrangementMinimumDistance(),logger);
+			ISamPairReader spr=sprs.get(i);
 			PpileupBuilder build=new PpileupBuilder(estats.getMinMapQual(),workDist,spr,tetranslator);
 			tmpBuilders.add(build);
 		}

@@ -20,8 +20,9 @@ public class SubsampleFramework {
 	private final String outputFile;
 	private final int targetCoverage;
 	private final boolean zippedOutput;
+	private final boolean withReplace;
 	private final Logger logger;
-	public SubsampleFramework(String inputFile, String outputFile, int targetCoverage, boolean zippedOutput, Logger logger)
+	public SubsampleFramework(String inputFile, String outputFile, int targetCoverage,boolean withReplace, boolean zippedOutput, Logger logger)
 	{
 		this.inputFile=inputFile;
 		if(!new File(inputFile).exists()) throw new IllegalArgumentException("Input file does not exist: "+inputFile);
@@ -35,6 +36,7 @@ public class SubsampleFramework {
 		}
 
 
+		this.withReplace=withReplace;
 		this.targetCoverage = targetCoverage;
 		if(this.targetCoverage<1) throw new IllegalArgumentException("Target coverage can not be smaller than one");
 		this.zippedOutput=zippedOutput;
@@ -46,7 +48,7 @@ public class SubsampleFramework {
 		this.logger.info("Start sub-sampling coverage in ppileup file to "+this.targetCoverage);
 		PpileupLightwightReader plr=new PpileupLightwightReader(this.inputFile,this.logger);
 		DirectionalPpileupLightwightReader dr=new DirectionalPpileupLightwightReader(plr,this.logger);
-		SubsampleDirectionalPpileupSiteLightwight subsframework=new SubsampleDirectionalPpileupSiteLightwight(this.targetCoverage);
+		SubsampleDirectionalPpileupSiteLightwight subsframework=new SubsampleDirectionalPpileupSiteLightwight(this.targetCoverage,this.withReplace);
 		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,plr.getTEFamilyShortcutTranslator(),plr.getEssentialPpileupStats(),this.logger);
 
 		DirectionalPpileupSiteLightwight s=null;

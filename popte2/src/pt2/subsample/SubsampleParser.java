@@ -22,6 +22,7 @@ public class SubsampleParser {
 			String outputFile="";
 			int targetCoverage=0;
 			boolean zippedOutput=true;
+			boolean withReplace=false;
 
 			while(args.size()>0)
 			{
@@ -42,6 +43,10 @@ public class SubsampleParser {
 				else if(cu.equals("--detailed-log"))
 				{
 					detailedLog=true;
+				}
+				else if(cu.equals("--with-replace"))
+				{
+					withReplace=true;
 				}
 				else if(cu.equals("--disable-zipped"))
 				{
@@ -69,7 +74,7 @@ public class SubsampleParser {
 
 			// Create a logger
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
-			SubsampleFramework sf =new SubsampleFramework(inputFile,outputFile,targetCoverage,zippedOutput,logger);
+			SubsampleFramework sf =new SubsampleFramework(inputFile,outputFile,targetCoverage,withReplace,zippedOutput,logger);
 			sf.run();
 		}
 
@@ -84,7 +89,8 @@ public class SubsampleParser {
 			sb.append(CommandFormater.format("--help","show help",null));
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
-			sb.append(CommandFormater.format("--disable-zipped","disable zipped output",null));;
+			sb.append(CommandFormater.format("--with-replace","use sampling with replacement instead of without replacement",null));
+			sb.append(CommandFormater.format("--disable-zipped","disable zipped output",null));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
 			sb.append("See the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
