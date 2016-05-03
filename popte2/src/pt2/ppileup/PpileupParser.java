@@ -120,7 +120,6 @@ public class PpileupParser {
 			sb.append(CommandFormater.format("--disable-zipped","disable zipped output",null));
 			sb.append(CommandFormater.format("--sr-mindist","minimum inner distance for structural rearrangements","10000"));
 			sb.append(CommandFormater.format("--id-up-quant","paired end fragments with an insert size in the upper quantile will be ignored [fraction]","0.01"));
-			sb.append(CommandFormater.format("--extend-clipped","extend soft-clipped for computing start and end positions of read;","disabled"));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
 			sb.append("\nSee the online manual for detailed description of the parameters\n");
 			System.out.print(sb.toString());
