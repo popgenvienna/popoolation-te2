@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by robertkofler on 11/16/15.
  */
-public enum SignatureWindowMode {
+public enum SignatureValleyMode {
 	FixedWindow, MinimumSampleMedian,MaximumSampleMedian, Median;
 
 	private ArrayList<Integer> distance;
@@ -17,10 +17,10 @@ public enum SignatureWindowMode {
 	@Override
 	public String toString()
 	{
-		if(this == SignatureWindowMode.MaximumSampleMedian) return "MaximumSampleMedian";
-		else if(this== SignatureWindowMode.MinimumSampleMedian) return "MinimumSampleMedian";
-		else if(this==SignatureWindowMode.Median) return "Median";
-		else if(this==SignatureWindowMode.FixedWindow) {
+		if(this == SignatureValleyMode.MaximumSampleMedian) return "MaximumSampleMedian";
+		else if(this== SignatureValleyMode.MinimumSampleMedian) return "MinimumSampleMedian";
+		else if(this== SignatureValleyMode.Median) return "Median";
+		else if(this== SignatureValleyMode.FixedWindow) {
 			StringBuilder sb=new StringBuilder();
 			sb.append("Fixed");
 			for(int i:this.distance)

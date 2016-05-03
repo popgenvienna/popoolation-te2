@@ -24,13 +24,13 @@ public class IdentifySignatureFramework {
 	private final SignatureIdentificationMode mode;
 	private final double mincount;
 	private final SignatureWindowMode windowMode;
-	private final SignatureWindowMode minValley;
+	private final SignatureValleyMode minValley;
 	private final int chunkmultiplicator;
 	private final boolean detailedLog;
 	private final Logger logger;
 
 	public IdentifySignatureFramework(String inputFile, String outputFile, SignatureIdentificationMode mode, double mincount
-									  ,SignatureWindowMode windowMode, SignatureWindowMode minValley, int chunkmultiplicator,
+									  ,SignatureWindowMode windowMode, SignatureValleyMode minValley, int chunkmultiplicator,
 									  boolean detailedlog, Logger logger)
 	{
 		this.inputFile=inputFile;
@@ -56,7 +56,8 @@ public class IdentifySignatureFramework {
 
 	public void run()
 	{
-		this.logger.info("Starting identification of TE signatures");
+		this.logger.info("Starting identification of signatures of TE insertions");
+		this.logger.info("Window mode: "+this.windowMode.toString()+ " Valley mode: "+this.minValley.toString());
 
 		// compute the common variables
 		PpileupReader pr=new PpileupReader(this.inputFile,this.logger);
@@ -69,8 +70,8 @@ public class IdentifySignatureFramework {
 
 		int chunkdistance=(int)(getMax(valleysizes) * this.chunkmultiplicator);
 
-		this.logger.info("Will use a window-mode "+this.windowMode);
-		this.logger.info("Will use a minimum distance to next chromosomal chunk of "+chunkdistance);
+
+		this.logger.info("Minimum distance to next chromosomal chunk of "+chunkdistance);
 		for(int i:windowsizes) this.logger.fine("Window size for sample "+i+1+" = "+windowsizes.get(0));
 		for(int i:windowsizes) this.logger.fine("Minimum valley size for sample "+i+1+" = "+valleysizes.get(0));
 		compatibleModeWindow(this.mode,windowsizes,valleysizes);
@@ -160,6 +161,44 @@ public class IdentifySignatureFramework {
 				toret.add(estats.getMinimumInnerDistance());
 			}
 			else if(win==SignatureWindowMode.Median)
+			{
+
+				toret.add(estats.getInnerDistances().get(i));
+			}
+			else throw new IllegalArgumentException("illegal sample mode "+win);
+		}
+		return toret;
+	}
+
+	private ArrayList<Integer> getWindowSize(SignatureValleyMode win, EssentialPpileupStats estats)
+	{
+		int sampleSize=estats.countSamples();
+		ArrayList<Integer> toret=new ArrayList<Integer>();
+		for(int i=0; i<sampleSize; i++)
+		{
+			if(win==SignatureValleyMode.FixedWindow)
+			{
+
+				ArrayList<Integer> distances=windowMode.getDistance();
+
+
+				int mod=i%distances.size();
+				toret.add(distances.get(mod));
+				// size 1, 3 sample => 012=000
+				// size 2, 4 sample => 0123=0101
+				// size 3, 3 sample => 012=012
+			}
+			else if(win==SignatureValleyMode.MaximumSampleMedian)
+			{
+
+				toret.add(estats.getMaximumInnerDistance());
+			}
+			else if(win==SignatureValleyMode.MinimumSampleMedian)
+			{
+
+				toret.add(estats.getMinimumInnerDistance());
+			}
+			else if(win==SignatureValleyMode.Median)
 			{
 
 				toret.add(estats.getInnerDistances().get(i));

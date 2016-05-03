@@ -21,8 +21,8 @@ public class PairupSignatureParser {
 			String signature="";
 			String outputFile="";
 
-			int maxDistance=500;
-			int minDistance=-100;
+			int maxDistance=300;
+			int minDistance=-200;
 			double maxfreqdiff=1.0;
 			TEInsertionOutputDetailLevel odl= TEInsertionOutputDetailLevel.Low;
 

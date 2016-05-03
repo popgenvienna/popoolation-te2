@@ -42,6 +42,17 @@ public class PpileupTestSupport {
 		return pb;
 	}
 
+	public static PpileupBuilder get_simplePpBuilder_clipped(boolean extendClipped) {
+
+		StringBuilder sb = new StringBuilder();
+		// proper pair
+		sb.append("r3\t99\t2L\t1\t20\t20S100M10S\t=\t200\t10\tGTG\t999\trc1\n");
+		sb.append("r3\t147\t2L\t200\t20\t10S100M10S\t=\t1\t-10\tTAA\t899\trc3\n");
+		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), DataTestSupport.getTEHierarchy(), 1000);
+		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short(),extendClipped);
+		return pb;
+	}
+
 
 	public static PpileupBuilder get_simplePpBuildermq(int mapq)
 	{

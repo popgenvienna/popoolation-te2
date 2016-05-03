@@ -97,11 +97,11 @@ public class TContigwisePolynRepresentation {
 		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
 
 		assertEquals(pn.getDistance(1,10),10);
-		assertEquals(pn.distanceIsOutsideBoundary(1,10,-9,19),false);
-		assertEquals(pn.distanceIsOutsideBoundary(1,10,10,10),false);
-		assertEquals(pn.distanceIsOutsideBoundary(1,10,9,9),true);
-		assertEquals(pn.distanceIsOutsideBoundary(1,10,-10,9),true);
-		assertEquals(pn.distanceIsOutsideBoundary(1,10,11,12),true);
+		assertEquals(pn.distanceOutsideBoundary(1,10,-9,19),false);
+		assertEquals(pn.distanceOutsideBoundary(1,10,10,10),false);
+		assertEquals(pn.distanceOutsideBoundary(1,10,9,9),true);
+		assertEquals(pn.distanceOutsideBoundary(1,10,-10,9),true);
+		assertEquals(pn.distanceOutsideBoundary(1,10,11,12),true);
 
 	}
 
@@ -112,11 +112,11 @@ public class TContigwisePolynRepresentation {
 		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
 
 		assertEquals(pn.getDistance(10,1),-10);
-		assertEquals(pn.distanceIsOutsideBoundary(10,1,-19,9),false);
-		assertEquals(pn.distanceIsOutsideBoundary(10,1,-10,-10),false);
-		assertEquals(pn.distanceIsOutsideBoundary(10,1,-9,-9),true);
-		assertEquals(pn.distanceIsOutsideBoundary(10,1,-10,9),false);
-		assertEquals(pn.distanceIsOutsideBoundary(10,1,-11,-12),true);
+		assertEquals(pn.distanceOutsideBoundary(10,1,-19,9),false);
+		assertEquals(pn.distanceOutsideBoundary(10,1,-10,-10),false);
+		assertEquals(pn.distanceOutsideBoundary(10,1,-9,-9),true);
+		assertEquals(pn.distanceOutsideBoundary(10,1,-10,9),false);
+		assertEquals(pn.distanceOutsideBoundary(10,1,-11,-12),true);
 
 	}
 
@@ -128,11 +128,11 @@ public class TContigwisePolynRepresentation {
 		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
 
 		assertEquals(pn.getDistance(5,25),10);
-		assertEquals(pn.distanceIsOutsideBoundary(5,25,5,25),false);
-		assertEquals(pn.distanceIsOutsideBoundary(5,25,10,10),false);
-		assertEquals(pn.distanceIsOutsideBoundary(5,25,9,9),true);
-		assertEquals(pn.distanceIsOutsideBoundary(5,25,11,11),true);
-		assertEquals(pn.distanceIsOutsideBoundary(5,25,11,30),true);
+		assertEquals(pn.distanceOutsideBoundary(5,25,5,25),false);
+		assertEquals(pn.distanceOutsideBoundary(5,25,10,10),false);
+		assertEquals(pn.distanceOutsideBoundary(5,25,9,9),true);
+		assertEquals(pn.distanceOutsideBoundary(5,25,11,11),true);
+		assertEquals(pn.distanceOutsideBoundary(5,25,11,30),true);
 
 	}
 
@@ -144,11 +144,11 @@ public class TContigwisePolynRepresentation {
 		ContigwisePolynRepresentation pn=new ContigwisePolynRepresentation(polyns,"2L");
 
 		assertEquals(pn.getDistance(25,5),-10);
-		assertEquals(pn.distanceIsOutsideBoundary(25,5,-25,-5),false);
-		assertEquals(pn.distanceIsOutsideBoundary(25,5,-10,-10),false);
-		assertEquals(pn.distanceIsOutsideBoundary(25,5,-9,-9),true);
-		assertEquals(pn.distanceIsOutsideBoundary(25,5,-11,-11),true);
-		assertEquals(pn.distanceIsOutsideBoundary(25,5,-11,-30),true);
+		assertEquals(pn.distanceOutsideBoundary(25,5,-25,-5),false);
+		assertEquals(pn.distanceOutsideBoundary(25,5,-10,-10),false);
+		assertEquals(pn.distanceOutsideBoundary(25,5,-9,-9),true);
+		assertEquals(pn.distanceOutsideBoundary(25,5,-11,-11),true);
+		assertEquals(pn.distanceOutsideBoundary(25,5,-11,-30),true);
 
 	}
 

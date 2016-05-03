@@ -64,32 +64,42 @@ public class ContigwisePolynRepresentation {
 
 
 
+   public boolean distanceHigherThanBoundary(int start, int end, int maxDistance)
+   {
+	   // start fwd   s
+	   // end   rev             e
+	   // true if     |maxdist|
 
 
+	   int distance=getDistance(start,end);
+	   if(distance>maxDistance)return true;
+	   else return false;
 
-	public boolean distanceIsOutsideBoundary(int start,int end,int minDistance, int maxDistance)
+   }
+
+
+	public boolean distanceLowerThanBoundary(int start, int end, int minDistance)
 	{
 
-		int absmaxdistance= Math.max(Math.abs(maxDistance),Math.abs(minDistance));
-		int distance=0;
+		// start fwd             s
+		// end   rev   e
+		// true if 	     |mindist|
 
-		if(end>=start) {
+		int distance=getDistance(start,end);
+		if(distance<minDistance) return true;
+		else return false;
 
-			for (int i = start; i <= end; i++) {
-				if (!this.pnr.contains(i)) distance++;
-			}
-			if(distance>absmaxdistance) return true;
-		}
-		else
-		{
-			for(int i=end; i<=start; i++)
-			{
-				if(!this.pnr.contains(i)) distance--;
-			}
-			if(Math.abs(distance)>absmaxdistance) return true;
-		}
 
-		if(distance < minDistance || distance >maxDistance) return true;
+	}
+
+
+	public boolean distanceOutsideBoundary(int start,int end,int minDistance, int maxDistance)
+	{
+
+		boolean isLower=distanceLowerThanBoundary(start,end,minDistance);
+		boolean isHigher=distanceHigherThanBoundary(start,end,maxDistance);
+
+		if(isLower || isHigher) return true;
 		else return false;
 	}
 

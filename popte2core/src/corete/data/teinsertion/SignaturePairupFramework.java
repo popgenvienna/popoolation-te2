@@ -5,6 +5,7 @@ import corete.data.polyn.ContigwisePolynRepresentation;
 import corete.data.polyn.PolyNRecordCollection;
 import corete.data.tesignature.FrequencySampleSummary;
 import corete.data.tesignature.InsertionSignature;
+import htsjdk.samtools.cram.encoding.readfeatures.Insertion;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -102,28 +103,8 @@ public class SignaturePairupFramework {
 
 
 		// Identify the possible pairs
-		ArrayList<PossiblePair> pps=new ArrayList<PossiblePair>();
-		for(InsertionSignature f: fwd)
-		{
-			for(InsertionSignature r:rev)
-			{
-				// Are already chr and fam specific
-				assert(f.getTefamily().equals(r.getTefamily()));
-				assert(f.getChromosome().equals(r.getChromosome()));
-
-				if(!f.getPopid().equals(r.getPopid())) continue;
-				if(f.getTEStrand() !=r.getTEStrand()) continue;
-				if(maxPopFreqDif(f,r)>this.maxDif) continue;
-				// equal popid, chr, strand, family, maxfreqdif < maxallowed
-
-				// distance from forward start
-				if(!chrpolyn.distanceIsOutsideBoundary(f.getDirectionAwarePosition(),r.getDirectionAwarePosition(),minDistance,maxDistance))
-				{
-					int dist= chrpolyn.getDistance(f.getDirectionAwarePosition(),r.getDirectionAwarePosition());
-					pps.add(new PossiblePair(f,r,dist));
-				}
-			}
-		}
+		// ArrayList<PossiblePair> pps=getPossiblePairsExhaustive(fwd,rev,chrpolyn);
+		ArrayList<PossiblePair> pps= getPossiblePairsSmarter(fwd,rev,chrpolyn);
 
 		// Sort the possible pairs most promising first, ie. shortest distance first
 		Collections.sort(pps,new Comparator<PossiblePair>() {
@@ -173,10 +154,93 @@ public class SignaturePairupFramework {
 	}
 
 
+	private ArrayList<PossiblePair> getPossiblePairsSmarter(ArrayList<InsertionSignature> fwd, ArrayList<InsertionSignature> rev,ContigwisePolynRepresentation chrpolyn)
+	{
+
+		LinkedList<InsertionSignature> fwdsig=new LinkedList<InsertionSignature>(fwd);
+		LinkedList<InsertionSignature> revsig=new LinkedList<InsertionSignature>(rev);
+
+		// Sort the possible pairs most promising first, ie. shortest distance first
+		Collections.sort(fwdsig,new Comparator<InsertionSignature>() {
+			@Override
+			public int compare(InsertionSignature o1, InsertionSignature o2) {
+				if(o1.getStart() < o2.getStart() ) return -1;
+				if(o1.getStart() > o2.getStart()) return 1;
+				return 0;
+			}
+		});
+		Collections.sort(revsig,new Comparator<InsertionSignature>() {
+			@Override
+			public int compare(InsertionSignature o1, InsertionSignature o2) {
+				if(o1.getStart() < o2.getStart() ) return -1;
+				if(o1.getStart() > o2.getStart()) return 1;
+				return 0;
+			}
+		});
+
+		ArrayList<PossiblePair> pps=new ArrayList<PossiblePair>();
+		while(fwdsig.size()>0 ){
+			InsertionSignature candfwd=fwdsig.removeFirst();
+
+			while(revsig.size()>0 && chrpolyn.distanceLowerThanBoundary(candfwd.getDirectionAwarePosition(),revsig.getFirst().getDirectionAwarePosition(),this.minDistance))
+			{
+				revsig.removeFirst();
+			}
+
+			for(int i=0; i<revsig.size(); i++)
+			{
+				InsertionSignature candrev = revsig.get(i);
+				if(chrpolyn.distanceHigherThanBoundary(candfwd.getDirectionAwarePosition(),candrev.getDirectionAwarePosition(),maxDistance)) break;
+
+
+				if(!candfwd.getPopid().equals(candrev.getPopid())) continue;
+				if(candfwd.getTEStrand() != candrev.getTEStrand()) continue;
+				if(maxPopFreqDif(candfwd,candrev) > this.maxDif) continue;
+
+				int dist= chrpolyn.getDistance(candfwd.getDirectionAwarePosition(),candrev.getDirectionAwarePosition());
+				pps.add(new PossiblePair(candfwd,candrev,dist));
+
+			}
+		}
+
+		return pps;
+	}
 
 
 
+
+
+
+private ArrayList<PossiblePair> getPossiblePairsExhaustive(ArrayList<InsertionSignature> fwd, ArrayList<InsertionSignature> rev,ContigwisePolynRepresentation chrpolyn)
+{
+	// Identify the possible pairs
+	ArrayList<PossiblePair> pps=new ArrayList<PossiblePair>();
+	for(InsertionSignature f: fwd)
+	{
+		for(InsertionSignature r:rev)
+		{
+			// Are already chr and fam specific
+			assert(f.getTefamily().equals(r.getTefamily()));
+			assert(f.getChromosome().equals(r.getChromosome()));
+
+			if(!f.getPopid().equals(r.getPopid())) continue;
+			if(f.getTEStrand() !=r.getTEStrand()) continue;
+			if(maxPopFreqDif(f,r)>this.maxDif) continue;
+			// equal popid, chr, strand, family, maxfreqdif < maxallowed
+
+			// distance from forward start
+			if(!chrpolyn.distanceOutsideBoundary(f.getDirectionAwarePosition(),r.getDirectionAwarePosition(),minDistance,maxDistance))
+			{
+				int dist= chrpolyn.getDistance(f.getDirectionAwarePosition(),r.getDirectionAwarePosition());
+				pps.add(new PossiblePair(f,r,dist));
+			}
+		}
+
+	}
+	return pps;
 }
+}
+
 
 class PossiblePair
 {
