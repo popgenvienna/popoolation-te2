@@ -24,7 +24,7 @@ public class IdentifySignatureParser {
 			double mincount=2.0;
 			int chunkdistance=5;
 			SignatureWindowMode windowMode= SignatureWindowMode.Median;
-			SignatureWindowMode minValley= null;
+			SignatureValleyMode minValley= SignatureValleyMode.Median;
 
 			boolean detailedLog=false;
 
@@ -56,7 +56,7 @@ public class IdentifySignatureParser {
 				}
 				else if(cu.equals("--min-valley"))
 				{
-					minValley = getSignatureWindowMode(args.remove(0));
+					minValley = getSignatureValleyMode(args.remove(0));
 				}
 				else if(cu.equals("--chunk-distance"))
 				{
@@ -84,7 +84,7 @@ public class IdentifySignatureParser {
 				printHelp();
 				System.exit(1);
 			}
-			if(minValley==null) minValley=windowMode;
+
 
 
 			Logger logger=corete.misc.LogFactory.getLogger(detailedLog);
@@ -125,7 +125,7 @@ public class IdentifySignatureParser {
 			sb.append("\n");
 			sb.append("== Parameters for fine tuning =="+"\n");
 			sb.append(CommandFormater.format("--signature-window","the window size of the signatures of TE insertions; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","median"));
-			sb.append(CommandFormater.format("--min-valley","the minimum size of the valley between two consecutive signatures of the same family ; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","the same as --signature-window "));
+			sb.append(CommandFormater.format("--min-valley","the minimum size of the valley between two consecutive signatures of the same family ; [median|fixNNNN|minimumSampleMedian|maximumSampleMedian] ","median"));
 			sb.append(CommandFormater.format("--chunk-distance","minimum distance between chromosomal chunks in multiples of --min-valley [int]","5"));
 			//sb.append(String.format("%-22s%s","--refine-distance","scan-distance for refined positions, in multiples of insert size; default=2\n"));
 			sb.append(CommandFormater.format("--detailed-log","show a detailed event log",null));
@@ -175,5 +175,50 @@ public class IdentifySignatureParser {
 		}
 		else throw new IllegalArgumentException("Invalid sample mode "+toParse);
 	}
+
+
+	public static SignatureValleyMode getSignatureValleyMode(String toParse)
+	{
+		if(toParse.toLowerCase().equals("minimumsamplemedian"))
+		{
+			return SignatureValleyMode.MinimumSampleMedian;
+		}
+		else if (toParse.toLowerCase().equals("maximumsamplemedian"))
+		{
+			return SignatureValleyMode.MaximumSampleMedian;
+		}
+		else if(toParse.toLowerCase().equals("median"))
+		{
+
+			return SignatureValleyMode.Median;
+		}
+		else if(toParse.toLowerCase().startsWith("fix"))
+		{
+			Pattern p=Pattern.compile("(?i)fix(.+)");
+			Matcher m=p.matcher(toParse);
+			if(m.find()) {
+				String found=m.group(1);
+				String[] ar;
+
+				// Check if composite array
+				if(found.contains(","))
+				{
+					ar=found.split(",");
+				}
+				else ar=new String[]{found};
+				// Translate to array list
+				ArrayList<Integer> ints=new ArrayList<Integer>();
+				for(String s: ar) ints.add(Integer.parseInt(s));
+				// return fixed window mode
+				SignatureValleyMode toret= SignatureValleyMode.FixedWindow;
+				toret.setDistance(ints);
+				return toret;
+			}
+			else throw new IllegalArgumentException("invalid sample mode "+toParse);
+		}
+		else throw new IllegalArgumentException("Invalid sample mode "+toParse);
+	}
+
+
 
 }

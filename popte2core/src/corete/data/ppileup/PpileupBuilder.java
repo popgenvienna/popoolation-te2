@@ -2,6 +2,7 @@ package corete.data.ppileup;
 
 import corete.data.SamPair;
 import corete.data.SamPairType;
+import corete.data.SamRecord;
 import corete.data.TEFamilyShortcutTranslator;
 import corete.io.ISamPairReader;
 import corete.io.SamPairReader;
@@ -29,10 +30,21 @@ public class PpileupBuilder {
 	private int constructionDoneUntil;
 	private String activeChr=null;
 	private boolean requireChromosomeSwitch;
+	private boolean extendClipped;
 
 
 	// general whole thing
 	private boolean eof;
+
+
+
+
+	public PpileupBuilder(int minMapQual, int averagePairDistance, ISamPairReader reader, TEFamilyShortcutTranslator translator, boolean extendClipped)
+	{
+		this(minMapQual,averagePairDistance,reader,translator);
+		this.extendClipped=extendClipped;
+	}
+
 
 	public PpileupBuilder(int minMapQual, int averagePairDistance, ISamPairReader reader, TEFamilyShortcutTranslator translator)
 	{
@@ -44,6 +56,7 @@ public class PpileupBuilder {
 		this.constructionDoneUntil=-1;
 
 		this.eof=false;
+		this.extendClipped=false;
 	}
 
 
@@ -123,7 +136,7 @@ public class PpileupBuilder {
 
 
 		// construction done until what?
-		this.constructionDoneUntil=sp.getFirstRead().getStart()-this.averagePairDistance;
+		this.constructionDoneUntil= getStart(sp.getFirstRead())-this.averagePairDistance;
 
 		// ADD THE READ
 		if(sp.getSamPairType()== SamPairType.Pair)
@@ -132,15 +145,16 @@ public class PpileupBuilder {
 			   {
 				   if( sp.getInnerDistance()<=2*this.averagePairDistance) {
 					   // ok proper pair, and not exceeding max distance than => construct
-					   addFromTo(sp.getFirstRead().getEnd() + 1, sp.getSecondRead().getStart() - 1, PpileupSymbols.ABS);
+					   addFromTo(getEnd(sp.getFirstRead()) + 1, getStart(sp.getSecondRead()) - 1, PpileupSymbols.ABS);
 					   return true;
 				   }else
 				   {
-					   addFromTo(sp.getFirstRead().getEnd()+1, sp.getFirstRead().getEnd()+averagePairDistance, PpileupSymbols.ABS);
-					   addFromTo(sp.getSecondRead().getStart() - averagePairDistance,sp.getSecondRead().getStart() - 1, PpileupSymbols.ABS);
+					   addFromTo(getEnd(sp.getFirstRead())+1, getEnd(sp.getFirstRead())+averagePairDistance, PpileupSymbols.ABS);
+					   addFromTo(getStart(sp.getSecondRead()) - averagePairDistance, getStart(sp.getSecondRead()) - 1, PpileupSymbols.ABS);
 
 					   return true;
 				   }
+
 
 			   }
 		   }
@@ -163,6 +177,34 @@ public class PpileupBuilder {
 	}
 
 
+	private int getStart(SamRecord sr)
+	{
+		if(extendClipped)
+		{
+		   return sr.getStartWithS();
+		}
+		else
+		{
+			return sr.getStart();
+		}
+
+	}
+
+	private int getEnd(SamRecord sr)
+	{
+		if(extendClipped)
+		{
+			return sr.getEndWithS();
+		}
+		else
+		{
+			return sr.getEnd();
+		}
+	}
+
+
+
+
 
 	private void  addBrokenPair(SamPair brokenPair)
 	{
@@ -172,14 +214,14 @@ public class PpileupBuilder {
 		if(brokenPair.getFirstRead().isForwardStrand())
 		{
 			symbol=PpileupSymbols.SvFWD;
-			start=brokenPair.getFirstRead().getEnd()+1;
-			end=brokenPair.getFirstRead().getEnd()+this.averagePairDistance;
+			start=getEnd(brokenPair.getFirstRead())+1;
+			end=getEnd(brokenPair.getFirstRead())+this.averagePairDistance;
 		}
 		else
 		{
 			symbol=PpileupSymbols.SvRev;
-			start=brokenPair.getFirstRead().getStart()-this.averagePairDistance;
-			end=brokenPair.getFirstRead().getStart()-1;
+			start=getStart(brokenPair.getFirstRead())-this.averagePairDistance;
+			end=getStart(brokenPair.getFirstRead())-1;
 		}
 		addFromTo(start,end,symbol);
 	}
@@ -195,14 +237,14 @@ public class PpileupBuilder {
 
 			symbol=this.translator.getShortcutFwd(fam);
 
-			start=tepair.getFirstRead().getEnd()+1;
-			end=tepair.getFirstRead().getEnd()+this.averagePairDistance;
+			start=getEnd(tepair.getFirstRead())+1;
+			end=getEnd(tepair.getFirstRead())+this.averagePairDistance;
 		}
 		else
 		{
 			symbol=this.translator.getShortcutRev(fam);
-			start=tepair.getFirstRead().getStart()-this.averagePairDistance;
-			end=tepair.getFirstRead().getStart()-1;
+			start=getStart(tepair.getFirstRead())-this.averagePairDistance;
+			end=getStart(tepair.getFirstRead())-1;
 		}
 
 		if(symbol.length()>1)symbol=PpileupSymbols.TEstart+symbol+PpileupSymbols.TEend;

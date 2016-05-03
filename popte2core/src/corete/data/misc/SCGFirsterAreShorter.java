@@ -34,11 +34,12 @@ public class SCGFirsterAreShorter implements ITEShortCutGenerator {
 	public String getShortCut(String family)
 	{
 		String lower=family.toLowerCase();
-		if(processed.contains(lower))throw new IllegalArgumentException("Shortcut already exists for family "+family);
+		if(processed.contains(lower))throw new IllegalArgumentException("Your hierarchy is invalid; Have already created shortcut for family "+family);
 		processed.add(lower);
 		String cleaned=cleanID(lower);
 		String sc=getShortCutForFamily(cleaned);
-		if(this.usedShortCuts.contains(sc)) throw new IllegalArgumentException("Error - short cut already exists "+sc);
+
+		if(this.usedShortCuts.contains(sc)) throw new IllegalArgumentException("Error - short cut already exists "+family+" "+sc);
 		this.usedShortCuts.add(sc);
 		return sc;
 	}
@@ -75,7 +76,7 @@ public class SCGFirsterAreShorter implements ITEShortCutGenerator {
 		LinkedList<String> use=new LinkedList<String>(letters);
 		String basic=shortcutchasis;
 		String attempt=basic;
-		while(attempt.toLowerCase().equals(attempt.toUpperCase()) || this.usedShortCuts.contains(attempt))
+		while(!isValid(attempt))
 		{
 			if(use.size()>0)
 			{
@@ -90,6 +91,15 @@ public class SCGFirsterAreShorter implements ITEShortCutGenerator {
 		}
 		return attempt;
 	}
+
+
+	private boolean isValid(String attempt)
+	{
+		if(attempt.toLowerCase().equals(attempt.toUpperCase()))return false;
+		if(this.usedShortCuts.contains(attempt)) return false;
+		return true;
+	}
+
 
 
 	private String getShortCutChasis(String fam)

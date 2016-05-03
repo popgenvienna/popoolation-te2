@@ -37,9 +37,10 @@ public class PpileupFramework {
 	private final String teshortcuts;
 	private final boolean zippedOutput;
 	private final boolean homogenizeReads;
+	private final boolean extendClipped;
 
 	public PpileupFramework(ArrayList<String> inputFiles,String outputFile, String hierFile, int minmapqual,int srmd, float idof, String shortcuts,
-							boolean homogenizeReads, boolean zippedOutput, Logger logger)
+							boolean homogenizeReads,boolean extendClipped, boolean zippedOutput, Logger logger)
 	{
 		this.inputFiles=inputFiles;
 		this.outputFile=outputFile;
@@ -51,6 +52,7 @@ public class PpileupFramework {
 		this.logger=logger;
 		this.zippedOutput=zippedOutput;
 		this.homogenizeReads=homogenizeReads;
+		this.extendClipped=extendClipped;
 
 		// Set
 		for(String file: inputFiles)
@@ -64,13 +66,6 @@ public class PpileupFramework {
 		{
 			throw new IllegalArgumentException("Can not create output file:" +outputFile);
 		}
-
-
-
-
-
-
-
 	}
 
 	public void run()
@@ -96,7 +91,7 @@ public class PpileupFramework {
 		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,estat,this.logger);
 
 		ArrayList<ISamPairReader> sampairreaders=getSampairReaders(this.inputFiles,estat,hier, hsr.getInformativeReadCountContainer());
-		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,sampairreaders,rcs,lastPositions,hier,writer,logger);
+		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,sampairreaders,rcs,lastPositions,hier,extendClipped,writer,logger);
 		ppmpb.buildPpileup();
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");
