@@ -8,6 +8,7 @@ import corete.io.SamPairReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by robertkofler on 8/21/15.
@@ -22,6 +23,7 @@ public class PpileupBuilder {
 	private final int averagePairDistance;
 	private final ISamPairReader reader;
 	private final TEFamilyShortcutTranslator translator;
+	private final int srmd;
 
 	// mutable - used for working
 	// specific for each chromosomes
@@ -30,28 +32,33 @@ public class PpileupBuilder {
 	private String activeChr=null;
 	private boolean requireChromosomeSwitch;
 	private boolean extendClipped=false;
+	private Logger logger;
+	private int readcount;
+	private int reportAt=20000;
+	private int deleteCount;
+	private int lastDeleted=0;
+	private SamPair lastPair;
 
 	// general whole thing
 	private boolean eof;
 
-	public PpileupBuilder(int minMapQual, int averagePairDistance, ISamPairReader reader, TEFamilyShortcutTranslator translator,boolean extendClipped)
-	{
-		this(minMapQual,averagePairDistance,reader,translator);
-		this.extendClipped=extendClipped;
-	}
 
 
 
-	public PpileupBuilder(int minMapQual, int averagePairDistance, ISamPairReader reader, TEFamilyShortcutTranslator translator)
+	public PpileupBuilder(int minMapQual, int averagePairDistance, int srmd, ISamPairReader reader, TEFamilyShortcutTranslator translator, Logger logger)
 	{
 		// immutable
 		this.minMapQual=minMapQual;
 		this.averagePairDistance=averagePairDistance;
+		this.srmd=srmd;
 		this.reader=reader;
 		this.translator=translator;
 		this.constructionDoneUntil=-1;
+		this.readcount=0;
 
 		this.eof=false;
+		this.logger=logger;
+		this.logger.fine("Will used average distance "+averagePairDistance);
 	}
 
 
@@ -105,6 +112,32 @@ public class PpileupBuilder {
 	}
 
 
+	private int setConstructionDone(SamPair sp)
+	{
+		int distance=this.averagePairDistance+this.srmd+10;
+		int suggestedDistance=sp.getFirstRead().getStart()-distance;
+		if(suggestedDistance<1) return this.constructionDoneUntil;
+
+
+		if(suggestedDistance<this.constructionDoneUntil)
+		{
+			return this.constructionDoneUntil;
+
+				//throw new IllegalStateException("Error, construction done until " + this.constructionDoneUntil + " ; Can not make it smaller " + suggestedDistance+
+				//		" with read starting at "+sp.getFirstRead().getStart()+" read with id "+sp.getFirstRead().getReadname()
+				//+ " previous read starting at "+lastPair.getFirstRead().getStart()+" with read id "+lastPair.getFirstRead().getReadname());
+
+		}
+
+		this.lastPair=sp;
+		return suggestedDistance;
+
+
+
+	}
+
+
+
 	/**
 	 * Add a new read to the construction
 	 * four possible effect
@@ -118,20 +151,25 @@ public class PpileupBuilder {
 	{
 		    SamPair sp=this.nextPair();
 
+
 			// eof has been reached
-			if(sp==null){this.eof=true; return false;}
+			if(sp==null){this.eof=true;
+				this.constructionDoneUntil=maxChrPos;
+				return false;}
 
 			// is a chromosome switch necessary
 			if(!sp.getFirstRead().getRefchr().equals(activeChr))
 			{
 				this.requireChromosomeSwitch=true;    // set the flag that a chromosome switch is necessary
 				this.bufferPair(sp);
+				this.constructionDoneUntil=maxChrPos;
 				return false;
 			}
 
 
-		// construction done until what?
-		this.constructionDoneUntil=sp.getFirstRead().getStart()-this.averagePairDistance;
+		constructionDoneUntil=setConstructionDone(sp);
+		this.readcount++;
+		if(this.readcount%this.reportAt==0) reportStatus();
 
 		// ADD THE READ
 		if(sp.getSamPairType()== SamPairType.Pair)
@@ -169,6 +207,26 @@ public class PpileupBuilder {
 		}
 		return false;
 	}
+
+	private void reportStatus()
+	{
+		int max=0;
+		int leaks=0;
+		for(int i:this.construction.keySet())
+		{
+			if(i>max)max=i;
+			if(i<lastDeleted) leaks++;
+
+		}
+
+		this.logger.fine("");
+		this.logger.fine("Added "+this.readcount+" reads; Now at chr. "+this.activeChr+" done until "+this.doneUntil());
+		this.logger.fine("Sites deleted "+deleteCount+"; last deleted "+this.lastDeleted+" ; leaks "+leaks);
+		this.logger.fine("Size of HashMap "+this.construction.size()+" with max. Position "+max);
+
+
+	}
+
 
 
 
@@ -221,10 +279,12 @@ public class PpileupBuilder {
 
 	private void addFromTo(int start, int end, String symbol)
 	{
-		assert(symbol!=null);
 		// test if at least one base will be added    start== end is allowed
 		if(start<1) start=1;
 		if(end-start<0) return;
+		assert(symbol!=null);
+		if(start<constructionDoneUntil) throw new IllegalStateException("Can not start writing at "+start +" ;construction done until "+constructionDoneUntil);
+
 
 
 		// initate the whole stretch
@@ -254,9 +314,13 @@ public class PpileupBuilder {
 	 */
 	public String getSite(int site)
 	{
+		if(site>this.constructionDoneUntil)throw new IllegalStateException("Construction done until "+constructionDoneUntil +" ;Can not access "+site);
+
 		// first deal with empty sites
 		if(!construction.containsKey(site)) return null;
 
+		this.deleteCount++;
+		this.lastDeleted=site;
 		// than remove the finished construction site;
 		ArrayList<String> tobuild=construction.remove(site);
 		StringBuilder sb= new StringBuilder();

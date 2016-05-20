@@ -219,6 +219,11 @@ public class TPpileupBuilder {
 	{
 
 		PpileupBuilder pp=PpileupTestSupport.get_PpB_te_peleine();
+		//sb.append("r3\t99\t2L\t1\t20\t100M\tP-element\t400\t10\tGTG\t999\trc1\n");
+		//sb.append("r4\t147\t2L\t400\t20\t100M\tP-element\t1\t-10\tTAA\t899\trc3\n");
+		//sb.append("r3\t99\t2L\t1\t20\t100M\tIne-1\t400\t10\tGTG\t999\trc1\n");
+		//sb.append("r4\t147\t2L\t400\t20\t100M\tIne-1\t1\t-10\tTAA\t899\trc3\n");
+
 		String chr=pp.switchChromosome();
 		assertEquals(chr,"2L");
 		assertEquals(pp.addRead(),true);
@@ -303,50 +308,6 @@ public class TPpileupBuilder {
 
 	}
 
-	@Test
-	public void Test_simpleppileup_clipdisableed()
-	{
-		//sb.append("r3\t99\t2L\t1\t162\t100M\t=\t200\t10\tGTG\t999\trc1\n");
-		//sb.append("r3\t147\t2L\t200\t178\t100M\t=\t1\t-10\tTAA\t899\trc3\n");
-		PpileupBuilder pp= PpileupTestSupport.get_simplePpBuilder_clipped(false);
-		String chr=pp.switchChromosome();
-		assertEquals(chr,"2L");
-		assertEquals(pp.addRead(), true);
-		assertEquals(pp.addRead(),false);
-
-		//String s1=pp.getSite(150);
-		//String s2=pp.getSite(199);
-		assertEquals(pp.getSite(100),null);
-		assertEquals(pp.getSite(101), "^.");
-		assertEquals(pp.getSite(150),".");
-		assertEquals(pp.getSite(199),".$");
-		assertEquals(pp.getSite(200),null);
-		assertEquals(pp.eof(),true);
-		assertEquals(pp.requireChromosomeSwitch(),false);
-	}
-
-
-	@Test
-	public void Test_simpleppileup_clipenabled()
-	{
-		//sb.append("r3\t99\t2L\t1\t20\t20S100M10S\t=\t200\t10\tGTG\t999\trc1\n");
-		//sb.append("r3\t147\t2L\t200\t20\t10S100M10S\t=\t1\t-10\tTAA\t899\trc3\n");
-		PpileupBuilder pp= PpileupTestSupport.get_simplePpBuilder_clipped(true);
-		String chr=pp.switchChromosome();
-		assertEquals(chr,"2L");
-		assertEquals(pp.addRead(), true);
-		assertEquals(pp.addRead(),false);
-
-		//String s1=pp.getSite(150);
-		//String s2=pp.getSite(199);
-		assertEquals(pp.getSite(110),null);
-		assertEquals(pp.getSite(111), "^.");
-		assertEquals(pp.getSite(150),".");
-		assertEquals(pp.getSite(189),".$");
-		assertEquals(pp.getSite(199),null);
-		assertEquals(pp.eof(),true);
-		assertEquals(pp.requireChromosomeSwitch(),false);
-	}
 
 
 
