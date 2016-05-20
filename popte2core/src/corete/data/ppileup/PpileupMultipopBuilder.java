@@ -25,10 +25,11 @@ public class PpileupMultipopBuilder {
 	private final Logger logger;
 	private final int maxWorkDist;
 	private final boolean extendClipped;
+	private final int srmd;
 
 	private ArrayList<PpileupBuilder> builders;
 
-	public PpileupMultipopBuilder(TEFamilyShortcutTranslator tetranslator, EssentialPpileupStats estats, ArrayList<ISamPairReader> sprs,
+	public PpileupMultipopBuilder(TEFamilyShortcutTranslator tetranslator, EssentialPpileupStats estats, int srmd, ArrayList<ISamPairReader> sprs,
 								  ArrayList<String> refChrSorting, HashMap<String,Integer> lastPositions, TEHierarchy hier, boolean extendClipped,
 							 		PpileupWriter writer, Logger logger)
 	{
@@ -38,6 +39,7 @@ public class PpileupMultipopBuilder {
 		this.refChrSorting=refChrSorting;
 		this.lastPositions=lastPositions;
 		this.hier=hier;
+		this.srmd=srmd;
 
 		this.writer=writer;
 		this.logger=logger;
@@ -52,7 +54,7 @@ public class PpileupMultipopBuilder {
 			int workDist=this.estats.getInnerDistance(i);
 			if(workDist>maxdist)maxdist=workDist;
 			ISamPairReader spr=sprs.get(i);
-			PpileupBuilder build=new PpileupBuilder(estats.getMinMapQual(),workDist,spr,tetranslator,extendClipped);
+			PpileupBuilder build=new PpileupBuilder(estats.getMinMapQual(),workDist,srmd,spr,tetranslator,logger);
 			tmpBuilders.add(build);
 		}
 		this.builders=tmpBuilders;

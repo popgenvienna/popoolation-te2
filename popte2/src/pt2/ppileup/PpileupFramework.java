@@ -91,7 +91,7 @@ public class PpileupFramework {
 		PpileupWriter writer=new PpileupWriter(this.outputFile,this.zippedOutput,sctr,estat,this.logger);
 
 		ArrayList<ISamPairReader> sampairreaders=getSampairReaders(this.inputFiles,estat,hier, hsr.getInformativeReadCountContainer());
-		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,sampairreaders,rcs,lastPositions,hier,extendClipped,writer,logger);
+		PpileupMultipopBuilder ppmpb=new PpileupMultipopBuilder(sctr,estat,srmd,sampairreaders,rcs,lastPositions,hier,extendClipped,writer,logger);
 		ppmpb.buildPpileup();
 
 		this.logger.info("Done - thank you for using PoPoolation TE2 ("+ Main.getVersionNumber()+")");

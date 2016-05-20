@@ -5,6 +5,7 @@ import corete.data.hier.HierarchyEntry;
 import corete.data.hier.TEHierarchy;
 import corete.data.ppileup.*;
 import corete.io.SamPairReader;
+import corete.misc.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -38,20 +39,11 @@ public class PpileupTestSupport {
 		sb.append("r3\t99\t2L\t1\t20\t100M\t=\t200\t10\tGTG\t999\trc1\n");
 		sb.append("r3\t147\t2L\t200\t20\t100M\t=\t1\t-10\tTAA\t899\trc3\n");
 		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), DataTestSupport.getTEHierarchy(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+		PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(), LogFactory.getNullLogger());
 		return pb;
 	}
 
-	public static PpileupBuilder get_simplePpBuilder_clipped(boolean extendClipped) {
 
-		StringBuilder sb = new StringBuilder();
-		// proper pair
-		sb.append("r3\t99\t2L\t1\t20\t20S100M10S\t=\t200\t10\tGTG\t999\trc1\n");
-		sb.append("r3\t147\t2L\t200\t20\t10S100M10S\t=\t1\t-10\tTAA\t899\trc3\n");
-		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), DataTestSupport.getTEHierarchy(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short(),extendClipped);
-		return pb;
-	}
 
 
 	public static PpileupBuilder get_simplePpBuildermq(int mapq)
@@ -66,7 +58,7 @@ public class PpileupTestSupport {
 			sb.append("r3\t99\t2L\t10\t21\t100M\t=\t210\t10\tGTG\t999\trc1\n");
 			sb.append("r3\t147\t2L\t210\t21\t100M\t=\t10\t-10\tTAA\t899\trc3\n");
 			SamPairReader spr=new SamPairReader(new BufferedReader(new StringReader(sb.toString())),DataTestSupport.getTEHierarchy(),1000);
-			PpileupBuilder pb=new PpileupBuilder(mapq,100,spr,DataTestSupport.getTETranslator_iniFull2Short());
+			PpileupBuilder pb=new PpileupBuilder(mapq,100,100,spr,DataTestSupport.getTETranslator_iniFull2Short(), LogFactory.getNullLogger());
 			return pb;
 
 	}
@@ -80,7 +72,7 @@ public class PpileupTestSupport {
 			sb.append("r3\t99\t2L\t1\t20\t100M\t=\t400\t10\tGTG\t999\trc1\n");
 			sb.append("r3\t147\t2L\t400\t20\t100M\t=\t1\t-10\tTAA\t899\trc3\n");
 			SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), DataTestSupport.getTEHierarchy(), 1000);
-			PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+			PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 			return pb;
 		}
 
@@ -91,7 +83,7 @@ public class PpileupTestSupport {
 		sb.append("r3\t99\t2L\t1\t20\t100M\tP-element\t400\t10\tGTG\t999\trc1\n");
 		sb.append("r4\t147\t2L\t400\t20\t100M\tP-element\t1\t-10\tTAA\t899\trc3\n");
 		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), PpileupTestSupport.get_ppb_tehier(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+		PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		return pb;
 	}
 	public static PpileupBuilder get_PpB_teine() {
@@ -101,7 +93,7 @@ public class PpileupTestSupport {
 		sb.append("r3\t99\t2L\t1\t20\t100M\tIne-1\t400\t10\tGTG\t999\trc1\n");
 		sb.append("r4\t147\t2L\t400\t20\t100M\tIne-1\t1\t-10\tTAA\t899\trc3\n");
 		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), PpileupTestSupport.get_ppb_tehier(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+		PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		return pb;
 	}
 
@@ -111,11 +103,11 @@ public class PpileupTestSupport {
 		StringBuilder sb = new StringBuilder();
 		// proper pair
 		sb.append("r3\t99\t2L\t1\t20\t100M\tP-element\t400\t10\tGTG\t999\trc1\n");
-		sb.append("r4\t147\t2L\t400\t20\t100M\tP-element\t1\t-10\tTAA\t899\trc3\n");
 		sb.append("r3\t99\t2L\t1\t20\t100M\tIne-1\t400\t10\tGTG\t999\trc1\n");
+		sb.append("r4\t147\t2L\t400\t20\t100M\tP-element\t1\t-10\tTAA\t899\trc3\n");
 		sb.append("r4\t147\t2L\t400\t20\t100M\tIne-1\t1\t-10\tTAA\t899\trc3\n");
 		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), PpileupTestSupport.get_ppb_tehier(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+		PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		return pb;
 	}
 
@@ -127,7 +119,7 @@ public class PpileupTestSupport {
 		sb.append("r3\t99\t2L\t1\t20\t100M\t2R\t400\t10\tGTG\t999\trc1\n");
 		sb.append("r4\t147\t2L\t400\t20\t100M\t2R\t1\t-10\tTAA\t899\trc3\n");
 		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), PpileupTestSupport.get_ppb_tehier(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+		PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		return pb;
 	}
 
@@ -139,7 +131,7 @@ public class PpileupTestSupport {
 		sb.append("r3\t99\t2L\t1\t20\t100M\t2R\t400\t10\tGTG\t999\trc1\n");
 		sb.append("r4\t99\t2R\t1\t20\t100M\t2L\t1\t-10\tTAA\t899\trc3\n");
 		SamPairReader spr = new SamPairReader(new BufferedReader(new StringReader(sb.toString())), PpileupTestSupport.get_ppb_tehier(), 1000);
-		PpileupBuilder pb = new PpileupBuilder(10, 100, spr, DataTestSupport.getTETranslator_iniFull2Short());
+		PpileupBuilder pb = new PpileupBuilder(10, 100,100, spr, DataTestSupport.getTETranslator_iniFull2Short(),LogFactory.getNullLogger());
 		return pb;
 	}
 
